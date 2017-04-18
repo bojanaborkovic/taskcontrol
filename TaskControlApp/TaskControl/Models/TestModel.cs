@@ -14,6 +14,6 @@ namespace TaskControl.Models
 
 		public string MyProperty { get; set; }
 
-		public string newProperty { get; set; }
+		public string testProperty { get; set; }
 	}
 }
