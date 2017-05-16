@@ -15,13 +15,13 @@ namespace BusinessServices
 {
 	public class ProjectService : IProjectService
 	{
-		private readonly DataModel.UnitOfWork.UnitOfWork _unitOfWork;
+		private readonly DataModel.UnitOfWork.UnitOfWork _unitOfWork = new UnitOfWork();
 		internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
 		
-		public ProjectService()
-		{
-			_unitOfWork = new UnitOfWork();
-		}
+		//public ProjectService()
+		//{
+		//	_unitOfWork = new UnitOfWork();
+		//}
 
 		public long CreateProject(ProjectEntity projectEntity)
 		{
@@ -53,15 +53,20 @@ namespace BusinessServices
 		}
 
 
-		public IEnumerable<ProjectEntity> GetAllProjects()
+		public IEnumerable<TaskControlDTOs.ProjectEntity> GetAllProjects()
 		{
 			try
 			{
-				var projects = _unitOfWork.ProjectRepository.GetAll().ToList();
+				var projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name));
 				if (projects.Any())
 				{
-					var projectsModel = Mapper.Map<List<Project>, List<ProjectEntity>>(projects);
-					return projectsModel;
+					var config = new MapperConfiguration(cfg => {
+						cfg.CreateMap<Project, ProjectEntity>();
+					});
+
+					IMapper mapper = config.CreateMapper();
+					var projectsMapped = mapper.Map<List<Project>,List<ProjectEntity>>(projects.ToList());
+					return projectsMapped;
 				}
 			}
 			catch(Exception ex)

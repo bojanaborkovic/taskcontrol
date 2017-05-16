@@ -12,18 +12,13 @@ namespace DataModel.UnitOfWork
 	{
 
 		#region private members
-		private TaskControlEntities _context = new TaskControlEntities();
+		private TaskControlEntities context = new TaskControlEntities();
 		private GenericRepository<AspNetUser> _userRepository;
 		private GenericRepository<Task> _taskRepostiory;
 		private GenericRepository<Project> _projectRepository;
 		internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
 		private bool disposed = false;
 		#endregion
-
-		public UnitOfWork()
-		{
-			//_context = new TaskControlEntities();
-		}
 
 
 		public GenericRepository<AspNetUser> UserRepository
@@ -32,7 +27,7 @@ namespace DataModel.UnitOfWork
 			{
 				if(this._userRepository == null)
 				{
-					this._userRepository = new GenericRepository<AspNetUser>(_context);
+					this._userRepository = new GenericRepository<AspNetUser>(context);
 				}
 				return _userRepository;
 			}
@@ -44,7 +39,7 @@ namespace DataModel.UnitOfWork
 			{
 				if(this._taskRepostiory == null)
 				{
-					this._taskRepostiory = new GenericRepository<Task>(_context);
+					this._taskRepostiory = new GenericRepository<Task>(context);
 				}
 				return _taskRepostiory;
 			}
@@ -56,7 +51,7 @@ namespace DataModel.UnitOfWork
 			{
 				if (this._projectRepository == null)
 				{
-					this._projectRepository = new GenericRepository<Project>(_context);
+					this._projectRepository = new GenericRepository<Project>(context);
 				}
 				return _projectRepository;
 			}
@@ -69,7 +64,7 @@ namespace DataModel.UnitOfWork
 		{
 			try
 			{
-				_context.SaveChanges();
+				context.SaveChanges();
 			}
 			catch(DbEntityValidationException dbE)
 			{
@@ -100,7 +95,7 @@ namespace DataModel.UnitOfWork
 				if(disposing)
 				{
 					_log.DebugFormat("UnitOfWork is being disposed");
-					_context.Dispose();
+					context.Dispose();
 				}
 			}
 			this.disposed = true;

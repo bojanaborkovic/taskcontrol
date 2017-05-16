@@ -1,9 +1,29 @@
-﻿@{
+﻿
+@model   IEnumerable<TaskControl.Models.ProjectViewModel>
+@{
     ViewBag.Title = "Projects";
 }
 
 
 
-<div class="row">
-    
-</div>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	@foreach (var item in Model)
+	{
+		<tbody>
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+			</tr>
+	</tbody>
+			}
+</table>

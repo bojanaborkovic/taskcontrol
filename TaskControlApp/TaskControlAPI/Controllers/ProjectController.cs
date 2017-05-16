@@ -19,6 +19,8 @@ namespace TaskControlAPI.Controllers
 				{
 					_projectService = new ProjectService();
 				}
+
+
 				// GET: api/Project
 				[HttpGet]
 				[ActionName("GetAllProjects")]
@@ -31,7 +33,7 @@ namespace TaskControlAPI.Controllers
 						if (projectEntities.Any())
 							return Request.CreateResponse(HttpStatusCode.OK, projectEntities);
 					}
-					return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Projects not found");
+					return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
 				}
 
         // GET: api/Project/5

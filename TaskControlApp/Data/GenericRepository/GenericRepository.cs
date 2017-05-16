@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace DataModel
 {
@@ -14,10 +15,12 @@ namespace DataModel
 	{
 		internal TaskControlEntities Context;
 		internal DbSet<TEntity> dbSet;
+		private readonly bool _lazyLoadingEnabled = true;
 
 		public GenericRepository(TaskControlEntities context)
 		{
 			this.Context = context;
+			this.Context.Configuration.LazyLoadingEnabled = _lazyLoadingEnabled;
 			this.dbSet = context.Set<TEntity>();
 		}
 
@@ -82,9 +85,32 @@ namespace DataModel
 		/// </summary>
 		/// <param name="where"></param>
 		/// <returns></returns>
-		public TEntity Get(Func<TEntity, Boolean> where)
+		public virtual IEnumerable<TEntity> Get(
+					 Expression<Func<TEntity, bool>> filter = null,
+					 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+					 string includeProperties = "")
 		{
-			return dbSet.Where(where).FirstOrDefault<TEntity>();
+			IQueryable<TEntity> query = dbSet;
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			foreach (var includeProperty in includeProperties.Split
+					(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProperty);
+			}
+
+			if (orderBy != null)
+			{
+				return orderBy(query).ToList();
+			}
+			else
+			{
+				return query.ToList();
+			}
 		}
 
 
