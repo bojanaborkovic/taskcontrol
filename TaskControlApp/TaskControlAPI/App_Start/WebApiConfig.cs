@@ -26,10 +26,35 @@ namespace TaskControlAPI
                 defaults: new { id = RouteParameter.Optional }
             );
 
-						config.Routes.MapHttpRoute(
+
+			config.Routes.MapHttpRoute(
 						name: "AllProject",
 						routeTemplate: "projects/all",
 						defaults: new { controller = "Project", action = "GetAllProjects" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "AllUsers",
+						routeTemplate: "users/all",
+						defaults: new { controller = "User", action = "GetAllUsers" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "NewUser",
+						routeTemplate: "users/create",
+						defaults: new { controller = "User", action = "GetAllUsers" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "AddUser",
+						routeTemplate: "account/create",
+						defaults: new { controller = "Account", action = "AddUser" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "UpdateUser",
+						routeTemplate: "users/update",
+						defaults: new { controller = "User", action = "UpdateUser" }
 						);
 		}
     }

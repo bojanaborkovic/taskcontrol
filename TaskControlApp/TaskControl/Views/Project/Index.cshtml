@@ -3,27 +3,28 @@
 @{
     ViewBag.Title = "Projects";
 }
+<h2 class="text-primary">Projects</h2>
 
 
-
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Name</th>
-		</tr>
-	</thead>
-	@foreach (var item in Model)
-	{
-		<tbody>
+	<table class="table table-striped col-md-6">
+		<thead>
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Id)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
+				<th>ID</th>
+				<th>Name</th>
 			</tr>
-	</tbody>
+		</thead>
+		@foreach (var item in Model)
+		{
+			<tbody>
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Id)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Name)
+					</td>
+				</tr>
+			</tbody>
 			}
-</table>
+	</table>
+

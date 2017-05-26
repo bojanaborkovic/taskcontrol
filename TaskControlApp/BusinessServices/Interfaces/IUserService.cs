@@ -12,5 +12,6 @@ namespace BusinessServices
 			UserEntity GetUserById(long UserId);
 			IEnumerable<UserEntity> GetAllUsers();
 			long CreateUser(UserEntity user);
+			bool UpdateUser(UserEntity user);
     }
 }

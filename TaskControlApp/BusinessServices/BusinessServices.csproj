@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,9 +69,13 @@
       <Project>{E3288737-9323-489D-8C27-60A5EBCB6D45}</Project>
       <Name>TaskControlDTOs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TaskControl\TaskControl.csproj">
+      <Project>{78142A8B-C080-4FF6-8EB5-FE8C5756C625}</Project>
+      <Name>TaskControl</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="log4net.config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,29 @@
+﻿@using TaskControl.Models
+
+@model  UserSearchViewModel
+@{
+    ViewBag.Title = "Filter";
+}
+
+@using (Html.BeginForm("Search", "User", FormMethod.Get))
+{
+  <form>
+    <div class="form-group">
+
+      <label for="UserName">Username</label>
+      <div class="col-10">
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+      </div>
+
+      <label for="Email">Email</label>
+      <div class="col-10">
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+      </div>
+
+    </div>
+
+    <input type="submit" class="btn btn-primary btn-lg" value="Search" /> 
+  </form>
+
+}
+

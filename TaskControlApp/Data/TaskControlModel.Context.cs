@@ -25,6 +25,11 @@ namespace DataModel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<IssueType> IssueTypes { get; set; }
         public virtual DbSet<Priority> Priorities { get; set; }
@@ -34,10 +39,5 @@ namespace DataModel
         public virtual DbSet<TaskAsigneeHistory> TaskAsigneeHistories { get; set; }
         public virtual DbSet<TaskStatusHistory> TaskStatusHistories { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
-        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
-        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
     }
 }

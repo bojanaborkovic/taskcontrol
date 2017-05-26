@@ -4,8 +4,7 @@ using System.Linq;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(TaskControlAPI.Startup))]
-
+[assembly: OwinStartup("TaskControlAPI", typeof(TaskControl.Startup))]
 namespace TaskControlAPI
 {
     public partial class Startup

@@ -19,10 +19,15 @@ namespace TaskControl
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
-            // Enable the application to use a cookie to store information for the signed in user
-            // and to use a cookie to temporarily store information about a user logging in with a third party login provider
-            // Configure the sign in cookie
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+
+			log4net.Config.XmlConfigurator.Configure();
+
+
+
+      // Enable the application to use a cookie to store information for the signed in user
+      // and to use a cookie to temporarily store information about a user logging in with a third party login provider
+      // Configure the sign in cookie
+      app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
@@ -30,12 +35,11 @@ namespace TaskControl
                 {
 									// Enables the application to validate the security stamp when the user logs in.
 									// This is a security feature which is used when you change a password or add an external login to your account.  
-									OnValidateIdentity = SecurityStampValidator
-									.OnValidateIdentity<ApplicationUserManager, ApplicationUser, long>(
-											validateInterval: TimeSpan.FromMinutes(30),
-											regenerateIdentityCallback: (manager, user) =>
-													user.GenerateUserIdentityAsync(manager),
-											getUserIdCallback: (id) => (id.GetUserId<int>()))
+					OnValidateIdentity = SecurityStampValidator
+							.OnValidateIdentity<ApplicationUserManager, ApplicationUser, long>(
+					validateInterval: TimeSpan.FromMinutes(30),
+					regenerateIdentityCallback: (manager, user) =>user.GenerateUserIdentityAsync(manager),
+					getUserIdCallback: (id) => (id.GetUserId<long>()))
 									}
             });            
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

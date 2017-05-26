@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Data;
 using System.Linq.Expressions;
+using DataModel;
 
 namespace DataModel
 {

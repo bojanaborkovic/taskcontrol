@@ -1,9 +1,13 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@using TaskControl.Models
+@model  ErrorModel
 
 @{
     ViewBag.Title = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+<div>
+    @Html.TextBoxFor(m => m.Message)
+  </div>
+
 

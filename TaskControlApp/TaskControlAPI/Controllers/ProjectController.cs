@@ -1,5 +1,6 @@
 ﻿using BusinessServices;
 using BusinessServices.Interfaces;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,24 +15,29 @@ namespace TaskControlAPI.Controllers
     {
 
 				private readonly IProjectService _projectService;
-
+				internal static readonly ILog _log = log4net.LogManager.GetLogger(typeof(ProjectController));
 				public ProjectController()
 				{
 					_projectService = new ProjectService();
 				}
 
 
-				// GET: api/Project
+				// GET: projects/all
 				[HttpGet]
 				[ActionName("GetAllProjects")]
 				public HttpResponseMessage Get()
 				{
+					_log.DebugFormat("GetAllProjects invoked...");
 					var projects = _projectService.GetAllProjects();
 					if (projects != null)
 					{
 						var projectEntities = projects as List<ProjectEntity> ?? projects.ToList();
 						if (projectEntities.Any())
+						{
+							_log.DebugFormat("GetAllProjects finished with : {0}", projectEntities.ToString());
 							return Request.CreateResponse(HttpStatusCode.OK, projectEntities);
+						}
+					
 					}
 					return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
 				}

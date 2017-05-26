@@ -55,6 +55,7 @@ namespace BusinessServices
 
 		public IEnumerable<TaskControlDTOs.ProjectEntity> GetAllProjects()
 		{
+			_log.DebugFormat("GetAllProjects invoked");
 			try
 			{
 				var projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name));
@@ -66,6 +67,7 @@ namespace BusinessServices
 
 					IMapper mapper = config.CreateMapper();
 					var projectsMapped = mapper.Map<List<Project>,List<ProjectEntity>>(projects.ToList());
+					_log.DebugFormat("GetAllProjects finished with : {0}", projects.ToString());
 					return projectsMapped;
 				}
 			}

@@ -9,41 +9,39 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TaskControl.Models;
+using TaskControl.ServiceClients;
 using TaskControlDTOs;
 
 namespace TaskControl.Controllers
 {
+	[Authorize]
     public class ProjectController : Controller
     {
-				private System.Net.Http.HttpClient client;
-				string url = "http://localhost:64291/projects/all";
+				//private System.Net.Http.HttpClient client;
+				//string url = "http://localhost/TaskControlAPI/projects/all";
 				private UnitOfWork unitOfWork = new UnitOfWork();
+				private ProjectServiceClient serviceClient = new ProjectServiceClient();
 
-		public ProjectController()
+				public ProjectController()
 				{
-					client = new System.Net.Http.HttpClient();
-					client.BaseAddress = new Uri(url);
-					client.DefaultRequestHeaders.Accept.Clear();
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
 				}
+
+				//public ProjectController(ProjectServiceClient serviceClient)
+				//{
+				//		this.serviceClient = serviceClient;
+				//}
 
 
 				// GET: Project
 				[HttpGet]
-				public async Task<ActionResult> Index()
+				public ActionResult Index()
 				{
-					HttpResponseMessage responseMessage = await client.GetAsync(url);
-					if (responseMessage.IsSuccessStatusCode)
-					{
-						var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+					var responseData = serviceClient.GetAllProjects();
 
-						var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(responseData);
-						
-						return View(MapToProjectsViewModel(projects));
-					}
-					return View("Error");
-					//var projects = unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name));
-					//return View(projects.ToList());
+					var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(responseData);
+
+					return View("Index", MapToProjectsViewModel(projects));
 				}
 
 		private List<ProjectViewModel> MapToProjectsViewModel(List<ProjectEntity> projects)
