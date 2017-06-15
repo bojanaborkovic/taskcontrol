@@ -94,5 +94,32 @@ namespace BusinessServices
 			}
 			return false;
 		}
-	}
+
+    public IEnumerable<RoleEntity> GetAllRoles()
+    {
+      _log.DebugFormat("GetAllRoles invoked");
+      try
+      {
+        var allRoles = _unitOfWork.RoleRepository.Get(orderBy: q => q.OrderBy(d => d.Id));
+        if (allRoles.Any())
+        {
+          var config = new MapperConfiguration(cfg => {
+            cfg.CreateMap<AspNetRole, RoleEntity>();
+          });
+
+          IMapper mapper = config.CreateMapper();
+          var rolesMapped = mapper.Map<List<AspNetRole>, List<RoleEntity>>(allRoles.ToList());
+          _log.DebugFormat("GetAllRoles finished with : {0}", allRoles.ToString());
+          return rolesMapped;
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching roles... {0}", ex.Message);
+      }
+
+
+      return null;
+    }
+  }
 }

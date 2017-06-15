@@ -56,6 +56,12 @@ namespace TaskControlAPI
 						routeTemplate: "users/update",
 						defaults: new { controller = "User", action = "UpdateUser" }
 						);
-		}
+
+      config.Routes.MapHttpRoute(
+            name: "AllRoles",
+            routeTemplate: "roles/all",
+            defaults: new { controller = "User", action = "GetAllRoles" }
+            );
+    }
     }
 }

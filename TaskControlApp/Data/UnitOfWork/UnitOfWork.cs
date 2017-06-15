@@ -16,12 +16,13 @@ namespace DataModel.UnitOfWork
 		private GenericRepository<AspNetUser> _userRepository;
 		private GenericRepository<Task> _taskRepostiory;
 		private GenericRepository<Project> _projectRepository;
+    private GenericRepository<AspNetRole> _roleRepository;
 		internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
 		private bool disposed = false;
-		#endregion
+    #endregion
 
-
-		public GenericRepository<AspNetUser> UserRepository
+    #region repositories
+    public GenericRepository<AspNetUser> UserRepository
 		{
 			get
 			{
@@ -57,10 +58,22 @@ namespace DataModel.UnitOfWork
 			}
 		}
 
+    public GenericRepository<AspNetRole> RoleRepository
+    {
+      get
+      {
+        if (this._roleRepository == null)
+        {
+          this._roleRepository = new GenericRepository<AspNetRole>(context);
+        }
+        return _roleRepository;
+      }
+    }
+    #endregion
 
-		#region public member methods
+    #region public member methods
 
-		public void Save()
+    public void Save()
 		{
 			try
 			{

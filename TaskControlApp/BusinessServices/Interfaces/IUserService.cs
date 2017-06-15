@@ -13,5 +13,6 @@ namespace BusinessServices
 			IEnumerable<UserEntity> GetAllUsers();
 			long CreateUser(UserEntity user);
 			bool UpdateUser(UserEntity user);
+      IEnumerable<RoleEntity> GetAllRoles();
     }
 }

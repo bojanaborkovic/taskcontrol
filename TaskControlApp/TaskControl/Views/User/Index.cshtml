@@ -21,7 +21,28 @@
 <br/>
 
 <div class="input-group">
-  @Html.Partial("Partials/Filter", new UserSearchViewModel())
+@using (Html.BeginForm("Search", "User", FormMethod.Get))
+{
+  <form>
+    <div class="form-group">
+
+      Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+      <input type="submit" value="Search" class="btn btn-primary btn-lg" />
+      @*<label for="UserName">Username</label>
+      <div class="col-10">
+        @Html.TextBoxFor(m => m.UserName, ViewBag.CurrentFilter as string, new { @class = "form-control" })
+      </div>
+
+      <label for="Email">Email</label>
+      <div class="col-10">
+        @Html.TextBoxFor(m => m.Email, ViewBag.CurrentFilter as string, new { @class = "form-control" })
+      </div>*@
+
+    </div>
+
+  </form>
+
+}
 </div>
 <br />
 <br />
@@ -75,7 +96,8 @@
     @Html.PagedListPager(Model, pageNumber => Url.Action("Search", new
     {
       pageNumber,
-      sortOrder = ViewBag.currentSort
+      sortOrder = ViewBag.currentSort, 
+      currentFilter = ViewBag.CurrentFilter
     }))
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
   </div>

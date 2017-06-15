@@ -1,0 +1,85 @@
+﻿@using TaskControl.Models
+@using PagedList.Mvc;
+
+@model PagedList.IPagedList<RoleViewModel>
+
+@{
+  ViewBag.Title = "Roles";
+  string currentFilter = ViewBag.CurrentFilter;
+  string currentSort = ViewBag.CurrentSort;
+  string urlUserRole = Url.Action("AddUserToRole", "Roles");
+
+  if (string.IsNullOrEmpty(currentSort))
+  {
+    currentSort = "Id_desc";
+  }
+}
+
+
+<script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>
+
+<h2>Roles</h2>
+
+<div id='userInRoleModal' class="modal fade" role="dialog" tabindex="-1" data-url='@urlUserRole'>
+ 
+</div>
+
+<button id='addUserToRole' class="btn btn-primary">Add User To Role</button>
+
+
+<table class="table table-striped col-md-6">
+  <thead>
+    <tr>
+      <th>
+        @Html.ActionLink("#", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.IdSortParam))
+        @Html.SortIdentifier(currentSort, "Id")
+      </th>
+      <th>
+        @Html.ActionLink("Role Name", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.RoleNameSortParam))
+        @Html.SortIdentifier(currentSort, "rolename")
+      </th>
+    </tr>
+  </thead>
+  @foreach (var item in Model)
+  {
+  <tbody>
+    <tr>
+      <td>
+        @Html.DisplayFor(modelItem => item.RoleId)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.RoleName)
+      </td>
+    </tr>
+  </tbody>
+  }
+</table>
+
+
+@if (Model.Count > 1)
+{
+  <div class="pager">
+    @Html.PagedListPager(Model, pageNumber => Url.Action("Index", new
+{
+  pageNumber,
+  sortOrder = ViewBag.currentSort,
+  currentFilter = ViewBag.CurrentFilter
+}))
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+  </div>
+}
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#addUserToRole').click(function () {
+      var url = $('#userInRoleModal').data('url');
+
+      $.get(url, function (data) {
+        $('#userInRoleModal').html(data);
+
+        $('#userInRoleModal').modal('show');
+      });
+    });
+  });
+</script>

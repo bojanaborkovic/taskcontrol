@@ -24,7 +24,7 @@ namespace TaskControlAPI.Controllers
 		// GET: users/all
 		[HttpGet]
 		[ActionName("GetAllUsers")]
-		public HttpResponseMessage Get()
+		public HttpResponseMessage GetAllUsers()
 		{
 			_log.DebugFormat("GetAllProjects invoked...");
 			var users = _userService.GetAllUsers();
@@ -75,5 +75,24 @@ namespace TaskControlAPI.Controllers
 
 		}
 
-	}
+    [HttpGet]
+    [ActionName("GetAllRoles")]
+    public HttpResponseMessage GetRoles()
+    {
+      _log.DebugFormat("GetAllRoles invoked...");
+      var roles = _userService.GetAllRoles();
+      if (roles != null)
+      {
+        var rolesEntities = roles as List<RoleEntity> ?? roles.ToList();
+        if (rolesEntities.Any())
+        {
+          _log.DebugFormat("GetAllRoles finished with : {0}", rolesEntities.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, rolesEntities);
+        }
+
+      }
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Users not found");
+    }
+
+  }
 }

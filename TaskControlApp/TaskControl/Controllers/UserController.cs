@@ -17,7 +17,7 @@ namespace TaskControl.Controllers
 	public class UserController : Controller
     {
         private UnitOfWork unitOfWork = new UnitOfWork();
-        private UserServiceClient serviceClient = new UserServiceClient();
+        private UserServiceClient serviceClient = new UserServiceClient("users");
 		    private ApplicationUserManager _userManager;
 
 		public UserController()
@@ -44,7 +44,7 @@ namespace TaskControl.Controllers
 
 		// GET: User
 		public ActionResult Index()
-        {
+    {
 			var responseData = serviceClient.GetAllUsers();
 
 			var users = JsonConvert.DeserializeObject<List<UserEntity>>(responseData);
@@ -55,10 +55,10 @@ namespace TaskControl.Controllers
 		}
 
     [HttpGet]
-    public ActionResult Search(string sortOrder, int pageNumber = 1, int pageSize = 5)
+    public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 5)
     {
       var users = serviceClient.GetAllUsers();
-
+      ViewBag.CurrentFilter = searchString;
       pageNumber = pageNumber > 0 ? pageNumber : 1;
       pageSize = pageSize > 0 ? pageSize : 25;
 
@@ -70,6 +70,23 @@ namespace TaskControl.Controllers
 
       var ret = JsonConvert.DeserializeObject<List<UserEntity>>(users);
       List<UserEntity> sortedUsers = new List<UserEntity>();
+
+
+
+      if (!string.IsNullOrEmpty(searchString))
+      {
+        ret = ret.Where(x => x.UserName.Contains(searchString) || x.Email.Contains(searchString)).ToList();
+      }
+
+      if (searchString != null)
+      {
+        pageNumber = 1;
+      }
+      else
+      {
+        searchString = currentFilter;
+      }
+
 
       switch (sortOrder)
       {

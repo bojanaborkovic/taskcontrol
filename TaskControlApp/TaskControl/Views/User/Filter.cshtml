@@ -12,12 +12,12 @@
 
       <label for="UserName">Username</label>
       <div class="col-10">
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+        @Html.TextBoxFor(m => m.UserName, ViewBag.CurrentFilter as string, new { @class = "form-control" })
       </div>
 
       <label for="Email">Email</label>
       <div class="col-10">
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+        @Html.TextBoxFor(m => m.Email, ViewBag.CurrentFilter as string, new { @class = "form-control" })
       </div>
 
     </div>
