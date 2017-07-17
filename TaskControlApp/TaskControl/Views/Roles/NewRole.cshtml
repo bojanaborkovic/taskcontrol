@@ -1,0 +1,75 @@
+﻿@using TaskControl.Models
+
+@model  RoleViewModel
+@{
+	ViewBag.Title = "New role";
+}
+
+
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title">Create new role</h3>
+		</div>
+
+		<div class="modal-body">
+			@using (Ajax.BeginForm("NewRole", "Roles", new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnSuccess = "newRoleSuccess()",
+				// OnFailure = "addUserToRoleFailure()"
+
+			}))
+			{
+
+
+			<div class="form-group">
+				<label for="UserName">Role name</label>
+				<div class="col-10">
+					@Html.TextBoxFor(m => m.RoleName, new { @class = "form-control", @id = "rolename" })
+					@Html.ValidationMessageFor(model => model.RoleName)
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="UserName">Description</label>
+				<div class="col-10">
+					@Html.TextBoxFor(m => m.Description, new { @class = "form-control", @id = "description" })
+					@Html.ValidationMessageFor(model => model.Description)
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Save changes</button>
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+			}
+
+		</div>
+
+	</div>
+</div>
+
+
+<div class="modal fade" id="OKModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Info</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Success!
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function newRoleSuccess()
+  {
+    $('#OKModal').modal('show');
+  }
+</script>

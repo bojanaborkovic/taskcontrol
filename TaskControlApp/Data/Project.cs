@@ -24,6 +24,7 @@ namespace DataModel
         public long Id { get; set; }
         public string Name { get; set; }
         public Nullable<long> OwnerId { get; set; }
+        public string Description { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

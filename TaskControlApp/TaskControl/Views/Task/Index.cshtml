@@ -1,0 +1,61 @@
+﻿@model IEnumerable<TaskControl.Models.TaskViewModel>
+
+@{
+    ViewBag.Title = "Tasks";
+}
+
+<h2>Tasks</h2>
+
+<p>
+	<button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Task")'">
+		Create new task
+	</button>
+</p>
+
+<div class="grid">
+	@foreach (var item in Model)
+	{
+	<div class="grid-item">
+		
+		<div class="card">
+			
+			<div class="card-block">
+				<span style="float:right;  margin-left: 10em; margin-top: 1em;" class="label label-primary">Status: @Html.DisplayFor(modelItem => item.Status)</span>
+				<h2 class="card-title">
+					@Html.ActionLink(item.Title, "Edit", new { id = item.TaskId })
+
+				</h2>
+				@*<button style="float:right; margin-left: 10em;">@Html.ActionLink("Edit", "EditTask", new { Id = item.TaskId })</button>*@
+				
+
+				<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+				<span><p class="glyphicon glyphicon-user"></p> @Html.DisplayFor(modelItem => item.Asignee)</span>
+				<p class="card-block"><b>Project:</b> @Html.DisplayFor(modelItem => item.Project)</p>
+
+				<br />
+				<br />
+				<span><b>Date Created:</b>@Html.DisplayFor(modelItem => item.DateCreated)</span>
+				<br/>
+				<span><b>Issue type: </b>@Html.DisplayFor(modelItem => item.IssueType)</span>
+				<br/>
+				<span><b>Reporter :	</b>@Html.DisplayFor(modelItem => item.Reporter)</span>
+				<br />
+				<span><b>Priority:</b> @Html.DisplayFor(modelItem => item.Priority)</span>
+				<br/>
+				<span><b>Due date :</b> @Html.DisplayFor(modelItem => item.DueDate)</span>
+			</div>
+		</div>
+	</div>
+	
+	}
+	</div>
+
+	<script type="text/javascript">
+		$('.grid').masonry({
+			// options
+			// use outer width of grid-sizer for columnWidth
+			percentPosition: true,
+			transitionDuration: 5,
+			gutter: 10
+		});
+	</script>

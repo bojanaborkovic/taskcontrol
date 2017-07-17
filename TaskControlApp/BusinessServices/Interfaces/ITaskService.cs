@@ -10,7 +10,8 @@ namespace BusinessServices.Interfaces
 	public interface ITaskService
 	{
 		TaskEntity GetTaskById(long TaskId);
-		IEnumerable<TaskEntity> GetAllTasks();
+		List<TaskEntity> GetAllTasks();
 		long CreateTask(TaskEntity task);
+		List<TaskEntityExtended> GetAllTasksDetails();
 	}
 }

@@ -12,6 +12,8 @@ namespace BusinessServices.Interfaces
 		ProjectEntity GetProjectById(long Id);
 		IEnumerable<ProjectEntity> GetAllProjects();
 		long CreateProject(ProjectEntity project);
+		bool UpdateProject(ProjectEntity project);
+		List<ProjectEntity> GetProjectsWithOwner();
 
 	}
 }

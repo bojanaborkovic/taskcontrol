@@ -33,6 +33,20 @@ namespace TaskControlAPI
 						defaults: new { controller = "Project", action = "GetAllProjects" }
 						);
 
+      config.Routes.MapHttpRoute(
+          name: "GetProjectById",
+          routeTemplate: "projects/get",
+          defaults: new { controller = "Project", action = "GetProjectById" }
+      );
+
+
+			config.Routes.MapHttpRoute(
+					name: "UpdateProject",
+					routeTemplate: "projects/update",
+					defaults: new { controller = "Project", action = "UpdateProject" }
+			);
+
+
 			config.Routes.MapHttpRoute(
 						name: "AllUsers",
 						routeTemplate: "users/all",
@@ -40,6 +54,24 @@ namespace TaskControlAPI
 						);
 
 			config.Routes.MapHttpRoute(
+						name: "GetUserByUsername",
+						routeTemplate: "users/get",
+						defaults: new { controller = "User", action = "GetUserByUsername" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetUserById",
+						routeTemplate: "users/getbyid",
+						defaults: new { controller = "User", action = "GetUserById" }
+						);
+
+			config.Routes.MapHttpRoute(
+            name: "SearchUsers",
+            routeTemplate: "users/search",
+            defaults: new { controller = "User", action = "SearchUsers" }
+            );
+
+      config.Routes.MapHttpRoute(
 						name: "NewUser",
 						routeTemplate: "users/create",
 						defaults: new { controller = "User", action = "GetAllUsers" }
@@ -62,6 +94,48 @@ namespace TaskControlAPI
             routeTemplate: "roles/all",
             defaults: new { controller = "User", action = "GetAllRoles" }
             );
-    }
+
+      config.Routes.MapHttpRoute(
+            name: "AddUserToRole",
+            routeTemplate: "roles/adduser",
+            defaults: new { controller = "User", action = "AddUserToRole" }
+            );
+
+			config.Routes.MapHttpRoute(
+						name: "AddNewRole",
+						routeTemplate: "roles/new",
+						defaults: new { controller = "User", action = "AddNewRole" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetIssueTypes",
+						routeTemplate: "issueTypes/all",
+						defaults: new { controller = "Utility", action = "GetIssueTypes" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetAllStatuses",
+						routeTemplate: "status/all",
+						defaults: new { controller = "Utility", action = "GetAllStatuses" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetPriorities",
+						routeTemplate: "priority/all",
+						defaults: new { controller = "Utility", action = "GetPriorities" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetAllTasks",
+						routeTemplate: "tasks/all",
+						defaults: new { controller = "Task", action = "GetAllTasks" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetAllTasksDetails",
+						routeTemplate: "tasks/details",
+						defaults: new { controller = "Task", action = "GetAllTasksDetails" }
+						);
+		}
     }
 }

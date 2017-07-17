@@ -57,7 +57,7 @@ namespace TaskControl.Controllers
     [HttpGet]
     public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 5)
     {
-      var users = serviceClient.GetAllUsers();
+      var users = serviceClient.SearchUsers();
       ViewBag.CurrentFilter = searchString;
       pageNumber = pageNumber > 0 ? pageNumber : 1;
       pageSize = pageSize > 0 ? pageSize : 25;
@@ -188,7 +188,8 @@ namespace TaskControl.Controllers
 				UserName = user.UserName, 
 				FirstName = user.FirstName,
 				LastName = user.LastName,
-				Email = user.Email
+				Email = user.Email,
+        RoleName = user.RoleName
 				});
 			}
 

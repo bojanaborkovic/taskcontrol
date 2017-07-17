@@ -14,7 +14,7 @@
 }
 <h2 class="text-primary">Users</h2>
 <br/>
-<button class="btn btn-default btn-lg" type="button" onclick="location.href='@Url.Action("CreateUser", "User")'">
+<button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("CreateUser", "User")'">
 	Add new user
 </button>
 <br/>
@@ -64,6 +64,7 @@
           @Html.SortIdentifier(currentSort, "firstname")
         </th>
         <th>Last Name</th>
+        <th>Role</th>
       </tr>
     </thead>
     @foreach (var item in Model)
@@ -85,13 +86,15 @@
         <td>
           @Html.DisplayFor(modelItem => item.LastName)
         </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.RoleName)
+        </td>
       </tr>
     </tbody>
     }
   </table>
 
-@if (Model.Count > 1)
-{
+
   <div class="pager">
     @Html.PagedListPager(Model, pageNumber => Url.Action("Search", new
     {
@@ -101,5 +104,5 @@
     }))
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
   </div>
-}
+
 

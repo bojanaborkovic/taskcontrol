@@ -17,6 +17,10 @@ namespace DataModel.UnitOfWork
 		private GenericRepository<Task> _taskRepostiory;
 		private GenericRepository<Project> _projectRepository;
     private GenericRepository<AspNetRole> _roleRepository;
+    private GenericRepository<AspNetUserRole> _usersInRoleRepository;
+		private GenericRepository<IssueType> _issueTypeRepository;
+		private GenericRepository<Status> _statusRepository;
+		private GenericRepository<Priority> _priorityRepository;
 		internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
 		private bool disposed = false;
     #endregion
@@ -69,11 +73,59 @@ namespace DataModel.UnitOfWork
         return _roleRepository;
       }
     }
-    #endregion
 
-    #region public member methods
+    public GenericRepository<AspNetUserRole> UserInRoleRepository
+    {
+      get
+      {
+        if (this._usersInRoleRepository == null)
+        {
+          this._usersInRoleRepository = new GenericRepository<AspNetUserRole>(context);
+        }
+        return _usersInRoleRepository;
+      }
+    }
 
-    public void Save()
+		public GenericRepository<IssueType> IssueTypeRepositorsy
+		{
+			get
+			{
+				if (this._issueTypeRepository == null)
+				{
+					this._issueTypeRepository = new GenericRepository<IssueType>(context);
+				}
+				return _issueTypeRepository;
+			}
+		}
+
+		public GenericRepository<Status> StatusRepository
+		{
+			get
+			{
+				if (this._statusRepository == null)
+				{
+					this._statusRepository = new GenericRepository<Status>(context);
+				}
+				return _statusRepository;
+			}
+		}
+
+		public GenericRepository<Priority> PriorityRepository
+		{
+			get
+			{
+				if (this._priorityRepository == null)
+				{
+					this._priorityRepository = new GenericRepository<Priority>(context);
+				}
+				return _priorityRepository;
+			}
+		}
+		#endregion
+
+		#region public member methods
+
+		public void Save()
 		{
 			try
 			{
@@ -97,6 +149,42 @@ namespace DataModel.UnitOfWork
 				}
 			}
 		}
+    #endregion
+
+
+    #region stored procedures
+
+    public List<SearchUsersResult> SearchUsers()
+    {
+      using (var context = new TaskControlEntities())
+      {
+        var users = context.SearchUsers();
+
+        return users.ToList();
+      }
+    }
+
+		public List<ProjectResult> GetProjectsWithOwner()
+		{
+			using (var context = new TaskControlEntities())
+			{
+				var projects = context.GetAllProjectsWithOwner();
+
+				return projects.ToList();
+			}
+		}
+
+
+		public List<TaskDetailsResult> GetAllTasksDetails()
+		{
+			using (var context = new TaskControlEntities())
+			{
+				var tasks = context.GetAllTasksDetails();
+
+				return tasks.ToList();
+			}
+		}
+
 		#endregion
 
 		#region IDisposable implementation

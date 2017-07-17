@@ -162,12 +162,17 @@ namespace DataModel
 			return dbSet.Find(primaryKey) != null;
 		}
 
-		/// <summary>
-		/// get a single record by the specified criteria (usually the unique identifier)
-		/// </summary>
-		/// <param name="predicate">Criteria to match on</param>
-		/// <returns></returns>
-		public TEntity GetSingle(Func<TEntity, bool> predicate)
+    public object GetByID(long userId, long roleId)
+    {
+      return dbSet.Find(userId, roleId);
+    }
+
+    /// <summary>
+    /// get a single record by the specified criteria (usually the unique identifier)
+    /// </summary>
+    /// <param name="predicate">Criteria to match on</param>
+    /// <returns></returns>
+    public TEntity GetSingle(Func<TEntity, bool> predicate)
 		{
 			return dbSet.Single<TEntity>(predicate);
 		}

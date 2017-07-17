@@ -50,7 +50,9 @@
     <Compile Include="BaseRestClient.cs" />
     <Compile Include="ProjectServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskServiceClient.cs" />
     <Compile Include="UserServiceClient.cs" />
+    <Compile Include="UtilityServiceClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

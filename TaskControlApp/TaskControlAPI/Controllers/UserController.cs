@@ -21,24 +21,80 @@ namespace TaskControlAPI.Controllers
             _userService = new UserService();
         }
 
-		// GET: users/all
+		// GET: users/search
 		[HttpGet]
-		[ActionName("GetAllUsers")]
-		public HttpResponseMessage GetAllUsers()
+		[ActionName("SearchUsers")]
+		public HttpResponseMessage SearchUsers()
 		{
-			_log.DebugFormat("GetAllProjects invoked...");
-			var users = _userService.GetAllUsers();
+			_log.DebugFormat("SearchUsers invoked...");
+      var users = _userService.SearchUsers();
 			if (users != null)
 			{
 				var userEntities = users as List<UserEntity> ?? users.ToList();
 				if (userEntities.Any())
 				{
-					_log.DebugFormat("GetAllUsers finished with : {0}", userEntities.ToString());
+					_log.DebugFormat("SearchUsers finished with : {0}", userEntities.ToString());
 					return Request.CreateResponse(HttpStatusCode.OK, userEntities);
 				}
 
 			}
 			return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Users not found");
+		}
+
+    [HttpGet]
+    [ActionName("GetAllUsers")]
+    public HttpResponseMessage GetAllUsers()
+    {
+      _log.DebugFormat("GetAllUsers invoked...");
+      var users = _userService.GetAllUsers();
+
+      if (users != null)
+      {
+        var userEntities = users as List<UserEntity> ?? users.ToList();
+        if (userEntities.Any())
+        {
+          _log.DebugFormat("GetAllUsers finished with : {0}", userEntities.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, userEntities);
+        }
+
+      }
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Users not found");
+    }
+
+		[HttpGet]
+		[ActionName("GetUserByUsername")]
+		public HttpResponseMessage GetUserByUsername([FromUri] string userName)
+		{
+			_log.DebugFormat("GetUserByUsername invoked for {0}...", userName);
+
+			var user = _userService.GetUserByUsername(userName);
+			if (user != null)
+			{
+
+				_log.DebugFormat("GetUserByUsername finished with : {0}", user.ToString());
+				return Request.CreateResponse(HttpStatusCode.OK, user);
+
+			}
+			return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "User not found");
+
+		}
+
+		[HttpGet]
+		[ActionName("GetUserById")]
+		public HttpResponseMessage GetUserById([FromUri] long userId)
+		{
+			_log.DebugFormat("GetUserByUsername invoked for userId : {0}...", userId);
+
+			var user = _userService.GetUserById(userId);
+			if (user != null)
+			{
+
+				_log.DebugFormat("GetUserById finished with : {0}", user.ToString());
+				return Request.CreateResponse(HttpStatusCode.OK, user);
+
+			}
+			return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "User not found");
+
 		}
 
 		[HttpPost]
@@ -66,7 +122,7 @@ namespace TaskControlAPI.Controllers
 			bool created =_userService.UpdateUser(user);
 			if (!created)
 			{
-				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not create user");
+				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not update user");
 			}
 			else
 			{
@@ -74,6 +130,7 @@ namespace TaskControlAPI.Controllers
 			}
 
 		}
+
 
     [HttpGet]
     [ActionName("GetAllRoles")]
@@ -94,5 +151,61 @@ namespace TaskControlAPI.Controllers
       return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Users not found");
     }
 
-  }
+    [HttpPost]
+    [ActionName("AddUserToRole")]
+    public HttpResponseMessage AddUserToRole(long roleId, long userId)
+    {
+      _log.DebugFormat("AddUserToRole invoked...");
+      HttpResponseMessage response = new HttpResponseMessage();
+      try
+      {
+        var ret =_userService.AddUserToRole(roleId, userId);
+        if (string.IsNullOrEmpty(ret.ErrorCode) && string.IsNullOrEmpty(ret.ErrorMessage))
+        {
+          _log.DebugFormat("AddUserToRole finished with");
+          return Request.CreateResponse(HttpStatusCode.OK);
+        }
+        else
+        {
+          return Request.CreateResponse(HttpStatusCode.InternalServerError, ret.ErrorMessage);
+        }
+      }
+      catch(Exception ex)
+      {
+        _log.ErrorFormat("Error during adding user to role : {0}", ex.Message);
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, string.Format("Error adding user {0} to role {1}", userId, roleId));
+      }
+
+  
+    }
+
+		[HttpPost]
+		[ActionName("AddNewRole")]
+		public HttpResponseMessage AddNewRole(RoleEntity role)
+		{
+			_log.DebugFormat("AddNewRole invoked...");
+			HttpResponseMessage response = new HttpResponseMessage();
+			try
+			{
+				var ret = _userService.AddNewRole(role);
+				if (string.IsNullOrEmpty(ret.ErrorCode) && string.IsNullOrEmpty(ret.ErrorMessage))
+				{
+					_log.DebugFormat("AddUserToRole finished with");
+					return Request.CreateResponse(HttpStatusCode.OK);
+				}
+				else
+				{
+					return Request.CreateResponse(HttpStatusCode.InternalServerError, ret.ErrorMessage);
+				}
+			}
+			catch (Exception ex)
+			{
+				_log.ErrorFormat("Error during creating new role : {0}", ex.Message);
+				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, string.Format("Error adding role with name {0}", role.Name));
+			}
+
+
+		}
+
+	}
 }

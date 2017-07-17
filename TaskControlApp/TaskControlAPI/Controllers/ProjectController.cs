@@ -28,7 +28,8 @@ namespace TaskControlAPI.Controllers
 				public HttpResponseMessage Get()
 				{
 					_log.DebugFormat("GetAllProjects invoked...");
-					var projects = _projectService.GetAllProjects();
+					//var projects = _projectService.GetAllProjects();
+					var projects = _projectService.GetProjectsWithOwner();
 					if (projects != null)
 					{
 						var projectEntities = projects as List<ProjectEntity> ?? projects.ToList();
@@ -42,11 +43,41 @@ namespace TaskControlAPI.Controllers
 					return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
 				}
 
-        // GET: api/Project/5
-        public string Get(int id)
+    // GET: projects/get/5
+        [HttpGet]
+        [ActionName("GetProjectById")]
+        public HttpResponseMessage Get([FromUri] long projectId)
         {
-            return "value";
+          _log.DebugFormat("Get project with id {0}", projectId);
+          var project = _projectService.GetProjectById(projectId);
+          if (project != null)
+          {
+            _log.DebugFormat("Get project with finished with : {0}", project.ToString());
+            return Request.CreateResponse(HttpStatusCode.OK, project);
+          }
+
+          return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
         }
+
+
+				[HttpPost]
+				[ActionName("UpdateProject")]
+				public HttpResponseMessage UpdateProject(ProjectEntity project)
+				{
+					_log.DebugFormat("UpdateProject with id {0}", project.Id);
+					bool updated = _projectService.UpdateProject(project);
+					if (!updated)
+					{
+						return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not update project");
+					}
+					else
+					{
+						return Request.CreateResponse(HttpStatusCode.OK);
+					}
+
+		}
+         
+    
 
         // POST: api/Project
         public void Post([FromBody]string value)

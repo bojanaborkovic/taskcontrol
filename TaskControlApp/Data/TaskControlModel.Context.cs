@@ -12,6 +12,8 @@ namespace DataModel
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class TaskControlEntities : DbContext
     {
@@ -39,5 +41,21 @@ namespace DataModel
         public virtual DbSet<TaskAsigneeHistory> TaskAsigneeHistories { get; set; }
         public virtual DbSet<TaskStatusHistory> TaskStatusHistories { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
+    
+        public virtual ObjectResult<SearchUsersResult> SearchUsers()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchUsersResult>("SearchUsers");
+        }
+    
+        public virtual ObjectResult<ProjectResult> GetAllProjectsWithOwner()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ProjectResult>("GetAllProjectsWithOwner");
+        }
+    
+    
+        public virtual ObjectResult<TaskDetailsResult> GetAllTasksDetails()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TaskDetailsResult>("GetAllTasksDetails");
+        }
     }
 }

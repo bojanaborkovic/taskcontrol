@@ -32,8 +32,13 @@ namespace TaskControl.Controllers
     [HttpPost]
     public ActionResult AddUserToRole(long userId, long roleId)
     {
+      var ret = rolesServiceClient.AddUserToRole(roleId, userId);
+      if(string.IsNullOrEmpty(ret))
+      {
+        return RedirectToAction("Index");
+      }
 
-      return Json(new { success = true });
+      return RedirectToAction("AddUserToRole");
     }
 
     [HttpGet]
@@ -54,8 +59,40 @@ namespace TaskControl.Controllers
     }
 
 
-    #region helpers
-    private List<RoleViewModel> MapToRolesViewModel(List<RoleEntity> rolesRet)
+
+		[HttpGet]
+		public ActionResult NewRole()
+		{
+			RoleViewModel newRole = new RoleViewModel();
+			return PartialView("NewRole", newRole);
+		}
+
+		[HttpPost]
+		public ActionResult NewRole(RoleViewModel model)
+		{
+			if(ModelState.IsValid)
+			{
+				model.DateCreated = DateTime.UtcNow;
+				var ret = rolesServiceClient.AddNewRole(MapRoleModelToEntity(model));
+				return RedirectToAction("Index");
+			}
+			else
+			{
+				return PartialView("NewRole", model);
+			}
+		}
+
+		private RoleEntity MapRoleModelToEntity(RoleViewModel model)
+		{
+			RoleEntity role = new RoleEntity();
+			role.Name = model.RoleName;
+			role.Description = model.Description;
+			role.DateCreated = model.DateCreated;
+			return role;
+		}
+
+		#region helpers
+		private List<RoleViewModel> MapToRolesViewModel(List<RoleEntity> rolesRet)
     {
       List<RoleViewModel> viewMOdel = new List<RoleViewModel>();
       foreach (var role in rolesRet)
@@ -63,7 +100,9 @@ namespace TaskControl.Controllers
         viewMOdel.Add(new RoleViewModel()
         {
           RoleId = role.Id,
-          RoleName = role.Name
+          RoleName = role.Name,
+					Description = role.Description,
+					DateCreated = role.DateCreated
           
         });
       }

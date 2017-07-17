@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessServices.Responses;
 using DataModel;
 using DataModel.UnitOfWork;
 using log4net;
@@ -16,7 +17,7 @@ namespace BusinessServices
 	{
 
 		private readonly UnitOfWork _unitOfWork = new UnitOfWork();
-        internal static readonly ILog _log = log4net.LogManager.GetLogger(typeof(UnitOfWork));
+    internal static readonly ILog _log = log4net.LogManager.GetLogger(typeof(UserService));
 		
 		public UserService()
 		{
@@ -69,8 +70,35 @@ namespace BusinessServices
 			var user = _unitOfWork.UserRepository.GetByID(UserId);
 			if(user != null)
 			{
-				var userModel = Mapper.Map<AspNetUser, UserEntity>(user);
+				var config = new MapperConfiguration(cfg => {
+					cfg.CreateMap<AspNetUser, UserEntity>();
+				});
+
+				IMapper mapper = config.CreateMapper();
+				var userModel = mapper.Map<AspNetUser, UserEntity>(user);
 				return userModel;
+			}
+			return null;
+		}
+
+		public UserEntity GetUserByUsername(string username)
+		{
+			var user = _unitOfWork.UserRepository.Get().Where(x => x.UserName == username).FirstOrDefault();
+			try
+			{
+				if (user != null)
+				{
+					var config = new MapperConfiguration(cfg => {
+						cfg.CreateMap<AspNetUser, UserEntity>();
+					});
+
+					IMapper mapper = config.CreateMapper();
+					var userModel = mapper.Map<AspNetUser, UserEntity>(user);
+					return userModel;
+				}
+			}catch(Exception ex)
+			{
+				_log.ErrorFormat("Error during get user : {0}  {1}", username, ex.Message);
 			}
 			return null;
 		}
@@ -121,5 +149,117 @@ namespace BusinessServices
 
       return null;
     }
-  }
+
+    public BasicReturn AddUserToRole(long roleId, long userId)
+    {
+      BasicReturn ret = new BasicReturn();
+      _log.DebugFormat("AddUserToRole invoked");
+      try
+      {
+        var user = _unitOfWork.UserRepository.GetByID(userId);
+        if(user == null)
+        {
+          throw new Exception(string.Format("User with Id {0} does not exist!", userId));
+        }
+
+        var role = _unitOfWork.RoleRepository.GetByID(roleId);
+        if (role == null)
+        {
+          throw new Exception(string.Format("Role with Id {0} does not exist!", roleId));
+        }
+
+        var userInRoleEntity = new AspNetUserRole() { UserId = userId, RoleId = roleId };
+
+        var usersRole = _unitOfWork.UserInRoleRepository.GetByID(userId, roleId);
+
+        if(usersRole == null)
+        {
+          _unitOfWork.UserInRoleRepository.Insert(userInRoleEntity);
+          _unitOfWork.Save();
+        }
+
+        else
+        {
+          var message = string.Format("User {0} is already in role {1}", userId, roleId);
+          _log.DebugFormat(message);
+          ret.ErrorMessage = message;
+          return ret;
+        }
+
+
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during adding user to role... {0}", ex.Message);
+      }
+
+      return ret;
+    }
+
+    public List<UserEntity> SearchUsers()
+    {
+      _log.DebugFormat("SearchUsers invoked");
+      try
+      {
+        var users = _unitOfWork.SearchUsers();
+        List<UserEntity> listOfUsers = new List<UserEntity>();
+        listOfUsers = MapUsersList(users);
+        return listOfUsers;
+
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error search users... {0}", ex.Message);
+      }
+      return null;
+    }
+
+		public RoleReturn AddNewRole(RoleEntity role)
+		{
+			RoleReturn ret = new RoleReturn();
+			_log.DebugFormat("AddUserToRole invoked");
+			try
+			{
+				var config = new MapperConfiguration(cfg => {
+					cfg.CreateMap<RoleEntity, AspNetRole>();
+				});
+				IMapper mapper = config.CreateMapper();
+				var roleToInsert = mapper.Map<AspNetRole>(role);
+
+				_unitOfWork.RoleRepository.Insert(roleToInsert);
+				_unitOfWork.Save();
+				ret.RoleId = roleToInsert.Id;
+				return ret;
+			}
+			catch (Exception ex)
+			{
+				_log.ErrorFormat("Error during creating new role... {0}", ex.Message);
+				ret.ErrorMessage = ex.Message;
+			}
+
+			return ret;
+
+		}
+
+		private List<UserEntity> MapUsersList(List<SearchUsersResult> users)
+    {
+      List<UserEntity> listOfUsers = new List<UserEntity>();
+      foreach (var user in users)
+      {
+        listOfUsers.Add(new UserEntity()
+        {
+          Id = user.UserId,
+          UserName = user.Username,
+          Email = user.Email,
+          FirstName = user.FirstName,
+          LastName = user.LastName,
+          RoleName = user.RoleName
+        });
+      }
+
+      return listOfUsers;
+    }
+
+		
+	}
 }

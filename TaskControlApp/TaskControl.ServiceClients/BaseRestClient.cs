@@ -21,6 +21,7 @@ namespace TaskControl.ServiceClients
 		public string PostData { get; set; }
 
 		public string endpoint;
+		public string address;
 
 		public BaseRestClient()
 		{
@@ -58,7 +59,8 @@ namespace TaskControl.ServiceClients
 
 		public string MakeRequest(string parameters)
 		{
-			var request = (HttpWebRequest)WebRequest.Create(endpoint + parameters);
+			string uri = endpoint + address;
+			var request = (HttpWebRequest)WebRequest.Create(uri + parameters);
 			if(_log.IsDebugEnabled)
 			{
 				_log.DebugFormat("Creating request with endpoint {0} and parameters {1}", endpoint, parameters);

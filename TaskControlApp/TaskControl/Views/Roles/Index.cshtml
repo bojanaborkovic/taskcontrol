@@ -8,6 +8,7 @@
   string currentFilter = ViewBag.CurrentFilter;
   string currentSort = ViewBag.CurrentSort;
   string urlUserRole = Url.Action("AddUserToRole", "Roles");
+	string urlNewRole = Url.Action("NewRole", "Roles");
 
   if (string.IsNullOrEmpty(currentSort))
   {
@@ -24,7 +25,13 @@
  
 </div>
 
+<div id='newRoleModal' class="modal fade" role="dialog" tabindex="-1" data-url='@urlNewRole'>
+
+</div>
+
 <button id='addUserToRole' class="btn btn-primary">Add User To Role</button>
+<button id='addNewRole' class="btn btn-secondary btn-success">Add New Role</button>
+
 
 
 <table class="table table-striped col-md-6">
@@ -38,6 +45,12 @@
         @Html.ActionLink("Role Name", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.RoleNameSortParam))
         @Html.SortIdentifier(currentSort, "rolename")
       </th>
+			<th>
+				Description
+			</th>
+			<th>
+				Date created
+			</th>
     </tr>
   </thead>
   @foreach (var item in Model)
@@ -50,6 +63,12 @@
       <td>
         @Html.DisplayFor(modelItem => item.RoleName)
       </td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Description)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.DateCreated)
+			</td>
     </tr>
   </tbody>
   }
@@ -80,6 +99,16 @@
 
         $('#userInRoleModal').modal('show');
       });
+    });
+
+    $('#addNewRole').click(function () {
+    	var url = $('#newRoleModal').data('url');
+
+    	$.get(url, function (data) {
+    		$('#newRoleModal').html(data);
+
+    		$('#newRoleModal').modal('show');
+    	});
     });
   });
 </script>

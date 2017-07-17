@@ -11,11 +11,11 @@ namespace TaskControl.Models
   {
    
     [Display(Name = "User Role")]
-    public int SelectedRoleId { get; set; }
+    public int RoleId { get; set; }
     public IEnumerable<SelectListItem> UserRoles { get; set; }
 
     [Display(Name = "User")]
-    public int SelectedUserId { get; set; }
+    public int UserId { get; set; }
     public IEnumerable<SelectListItem> Users { get; set; }
 
   }

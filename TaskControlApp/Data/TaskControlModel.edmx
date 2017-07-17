@@ -11,6 +11,8 @@
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="DateCreated" Type="date" />
         </EntityType>
         <EntityType Name="AspNetUserClaims">
           <Key>
@@ -102,6 +104,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="Id" Type="bigint" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="OwnerId" Type="bigint" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -296,6 +299,9 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetAllProjectsWithOwner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAllTasksDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SearchUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="TaskControlModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
@@ -378,6 +384,8 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="AspNetUserClaim">
           <Key>
@@ -469,6 +477,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Project_AspNetUsers" FromRole="Project" ToRole="AspNetUsers" />
           <NavigationProperty Name="Notes" Relationship="Self.FK_Note_Project" FromRole="Project" ToRole="Note" />
           <NavigationProperty Name="Tasks" Relationship="Self.FK_Task_Project" FromRole="Project" ToRole="Task" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -685,7 +694,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="TaskControlEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="TaskControlEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
@@ -748,16 +757,50 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
             <End Role="Task" EntitySet="Tasks" />
             <End Role="TaskStatusHistory" EntitySet="TaskStatusHistories" />
           </AssociationSet>
+          <FunctionImport Name="SearchUsers" ReturnType="Collection(TaskControlModel.SearchUsersResult)" />
+          <FunctionImport Name="GetAllProjectsWithOwner" ReturnType="Collection(TaskControlModel.ProjectResult)" />
+          <FunctionImport Name="GetAllTasksDetails" ReturnType="Collection(TaskControlModel.TaskDetailsResult)" />
+        
         </EntityContainer>
+        <ComplexType Name="SearchUsersResult">
+          <Property Type="Int64" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" />
+        </ComplexType>
+        <ComplexType Name="ProjectResult">
+          <Property Type="Int64" Name="ProjectId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="Owner" Nullable="false" MaxLength="256" />
+          <Property Type="Int64" Name="OwnerId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="TaskDetailsResult">
+          <Property Type="Int64" Name="TaskId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Asignee" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="true" Precision="23" />
+          <Property Type="String" Name="IssueType" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Priority" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="TaskStatus" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Reporter" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Project" Nullable="false" MaxLength="250" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TaskControlModelStoreContainer" CdmEntityContainer="TaskControlEntities1">
+        <EntityContainerMapping StorageEntityContainer="TaskControlModelStoreContainer" CdmEntityContainer="TaskControlEntities">
           <EntitySetMapping Name="AspNetRoles">
             <EntityTypeMapping TypeName="TaskControlModel.AspNetRole">
               <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
@@ -840,6 +883,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <EntitySetMapping Name="Projects">
             <EntityTypeMapping TypeName="TaskControlModel.Project">
               <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
@@ -904,6 +948,46 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SearchUsers" FunctionName="TaskControlModel.Store.SearchUsers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.SearchUsersResult">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllProjectsWithOwner" FunctionName="TaskControlModel.Store.GetAllProjectsWithOwner">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.ProjectResult">
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllTasksDetails" FunctionName="TaskControlModel.Store.GetAllTasksDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.TaskDetailsResult">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Asignee" ColumnName="Asignee" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IssueType" ColumnName="IssueType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="TaskStatus" ColumnName="TaskStatus" />
+                <ScalarProperty Name="Reporter" ColumnName="Reporter" />
+                <ScalarProperty Name="Project" ColumnName="Project" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
