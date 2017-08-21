@@ -132,9 +132,34 @@ namespace TaskControlAPI
 						);
 
 			config.Routes.MapHttpRoute(
+						name: "CreateTask",
+						routeTemplate: "tasks/create",
+						defaults: new { controller = "Task", action = "CreateTask" }
+						);
+
+      config.Routes.MapHttpRoute(
+            name: "UpdateTask",
+            routeTemplate: "tasks/update",
+            defaults: new { controller = "Task", action = "UpdateTask" }
+            );
+
+      config.Routes.MapHttpRoute(
 						name: "GetAllTasksDetails",
 						routeTemplate: "tasks/details",
 						defaults: new { controller = "Task", action = "GetAllTasksDetails" }
+						);
+
+			config.Routes.MapHttpRoute(
+						name: "GetTaskById",
+						routeTemplate: "tasks/getbyid",
+						defaults: new { controller = "Task", action = "GetTaskById" }
+						);
+
+
+			config.Routes.MapHttpRoute(
+						name: "GetTaskByIdCustom",
+						routeTemplate: "tasks/getbyidcustom",
+						defaults: new { controller = "Task", action = "GetTaskByIdCustom" }
 						);
 		}
     }

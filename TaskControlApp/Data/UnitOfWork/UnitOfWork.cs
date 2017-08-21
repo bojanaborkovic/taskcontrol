@@ -185,6 +185,16 @@ namespace DataModel.UnitOfWork
 			}
 		}
 
+		public List<GetTaskResult> GetTaskById(long taskId)
+		{
+			using (var context = new TaskControlEntities())
+			{
+				var task = context.GetTaskById(taskId).ToList();
+
+				return task;
+			}
+		}
+
 		#endregion
 
 		#region IDisposable implementation

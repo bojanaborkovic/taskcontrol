@@ -76,9 +76,6 @@
       <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GenericRepository\GenericRepository.cs" />
-    <Compile Include="GetAllTasksDetails_Result.cs">
-      <DependentUpon>TaskControlModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="IssueType.cs">
       <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
@@ -121,6 +118,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TaskControlModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="TaskDetailsResult.cs">
+      <DependentUpon>TaskControlModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetTaskResult.cs">
+      <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
     <Compile Include="TaskStatusHistory.cs">
       <DependentUpon>TaskControlModel.tt</DependentUpon>

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace TaskControl.Models
 {
-	public class TaskViewModel
+	public class TaskSearchViewModel
 	{
 		public long TaskId { get; set; }
 
@@ -19,20 +19,17 @@ namespace TaskControl.Models
 
 		public DateTime? DateCreated { get; set; }
 
-		public int IssueType { get; set; }
+		public string IssueType { get; set; }
 
-		public int Status { get; set; }
+		public string Status { get; set; }
 
 		public string Reporter { get; set; }
 
-		public int Priority { get; set; }
+		public string Priority { get; set; }
 
-		public long Project { get; set; }
-
-    public string ProjectName { get; set; }
+		public string Project { get; set; }
 
 		[DataType(DataType.Date)]
 		public DateTime? DueDate { get; set; }
-
-	}
+	}		
 }

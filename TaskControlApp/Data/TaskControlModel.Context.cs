@@ -52,10 +52,20 @@ namespace DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ProjectResult>("GetAllProjectsWithOwner");
         }
     
-    
         public virtual ObjectResult<TaskDetailsResult> GetAllTasksDetails()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TaskDetailsResult>("GetAllTasksDetails");
         }
+    
+        public virtual ObjectResult<GetTaskResult> GetTaskById(Nullable<long> taskId)
+        {
+            var taskIdParameter = taskId.HasValue ?
+                new ObjectParameter("taskId", taskId) :
+                new ObjectParameter("taskId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTaskResult>("GetTaskById", taskIdParameter);
+        }
+    
+        
     }
 }

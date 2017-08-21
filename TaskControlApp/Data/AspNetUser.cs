@@ -21,6 +21,7 @@ namespace DataModel
             this.AspNetUserLogins = new HashSet<AspNetUserLogin>();
             this.AspNetUserRoles = new HashSet<AspNetUserRole>();
             this.Projects = new HashSet<Project>();
+            this.Tasks = new HashSet<Task>();
         }
     
         public long Id { get; set; }
@@ -46,5 +47,7 @@ namespace DataModel
         public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Project> Projects { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

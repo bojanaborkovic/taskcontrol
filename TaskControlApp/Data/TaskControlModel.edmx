@@ -94,8 +94,8 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="bigint" Nullable="false" />
-          <Property Name="Name" Type="nchar" MaxLength="10" />
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -117,7 +117,6 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="bigint" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="IssueType" Type="int" Nullable="false" />
           <Property Name="Asignee" Type="bigint" />
@@ -125,9 +124,10 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="Reporter" Type="int" />
-          <Property Name="Priority" Type="bigint" />
+          <Property Name="Priority" Type="int" Nullable="false" />
           <Property Name="ProjectId" Type="bigint" Nullable="false" />
           <Property Name="DueDate" Type="datetime" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="TaskAsigneeHistory">
           <Key>
@@ -149,18 +149,6 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="ChangeDate" Type="datetime" />
           <Property Name="TaskId" Type="bigint" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Comment_Task">
-          <End Role="Task" Type="Self.Task" Multiplicity="1" />
-          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Task">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comment">
-              <PropertyRef Name="TaskId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -239,8 +227,20 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Task_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Asignee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Task_Priority">
-          <End Role="Priority" Type="Self.Priority" Multiplicity="0..1" />
+          <End Role="Priority" Type="Self.Priority" Multiplicity="1" />
           <End Role="Task" Type="Self.Task" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Priority">
@@ -301,6 +301,9 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
         </Association>
         <Function Name="GetAllProjectsWithOwner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllTasksDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetTaskById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="taskId" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="SearchUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="TaskControlModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -325,10 +328,6 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
     [Note].[ProjectId] AS [ProjectId]
     FROM [dbo].[Note] AS [Note]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_Comment_Task" Association="Self.FK_Comment_Task">
-            <End Role="Task" EntitySet="Task" />
-            <End Role="Comment" EntitySet="Comment" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -352,6 +351,10 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <AssociationSet Name="FK_Project_AspNetUsers" Association="Self.FK_Project_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_AspNetUsers" Association="Self.FK_Task_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Task" EntitySet="Task" />
           </AssociationSet>
           <AssociationSet Name="FK_Task_Priority" Association="Self.FK_Task_Priority">
             <End Role="Priority" EntitySet="Priority" />
@@ -439,6 +442,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <NavigationProperty Name="Projects" Relationship="Self.FK_Project_AspNetUsers" FromRole="AspNetUsers" ToRole="Project" />
           <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Tasks" Relationship="TaskControlModel.FK_Task_AspNetUsers" FromRole="AspNetUser" ToRole="Task" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -463,8 +467,8 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Tasks" Relationship="Self.FK_Task_Priority" FromRole="Priority" ToRole="Task" />
         </EntityType>
         <EntityType Name="Project">
@@ -499,16 +503,13 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Reporter" Type="Int32" />
-          <Property Name="Priority" Type="Int64" />
+          <Property Name="Priority" Type="Int32"  Nullable="false" />
           <Property Name="ProjectId" Type="Int64" Nullable="false" />
           <Property Name="DueDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Task" FromRole="Task" ToRole="Comment" />
-          <NavigationProperty Name="IssueType1" Relationship="Self.FK_Issue_Type" FromRole="Task" ToRole="IssueType" />
-          <NavigationProperty Name="Priority1" Relationship="Self.FK_Task_Priority" FromRole="Task" ToRole="Priority" />
-          <NavigationProperty Name="Project" Relationship="Self.FK_Task_Project" FromRole="Task" ToRole="Project" />
-          <NavigationProperty Name="Status1" Relationship="Self.FK_Task_Status" FromRole="Task" ToRole="Status" />
           <NavigationProperty Name="TaskAsigneeHistories" Relationship="Self.FK_TaskAsigneeHistory_Task" FromRole="Task" ToRole="TaskAsigneeHistory" />
           <NavigationProperty Name="TaskStatusHistories" Relationship="Self.FK_TaskStatusHistory_Task" FromRole="Task" ToRole="TaskStatusHistory" />
+          <NavigationProperty Name="AspNetUser" Relationship="TaskControlModel.FK_Task_AspNetUsers" FromRole="Task" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="TaskAsigneeHistory">
           <Key>
@@ -623,7 +624,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Task_Priority">
-          <End Role="Priority" Type="Self.Priority" Multiplicity="0..1" />
+          <End Role="Priority" Type="Self.Priority" Multiplicity="1" />
           <End Role="Task" Type="Self.Task" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Priority">
@@ -760,6 +761,14 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <FunctionImport Name="SearchUsers" ReturnType="Collection(TaskControlModel.SearchUsersResult)" />
           <FunctionImport Name="GetAllProjectsWithOwner" ReturnType="Collection(TaskControlModel.ProjectResult)" />
           <FunctionImport Name="GetAllTasksDetails" ReturnType="Collection(TaskControlModel.TaskDetailsResult)" />
+          <AssociationSet Name="FK_Task_AspNetUsers" Association="TaskControlModel.FK_Task_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Task" EntitySet="Tasks" />
+          </AssociationSet>
+          <FunctionImport Name="GetTaskById" ReturnType="Collection(TaskControlModel.GetTaskResult)">
+            <Parameter Name="taskId" Mode="In" Type="Int64" />
+          </FunctionImport>
+
         
         </EntityContainer>
         <ComplexType Name="SearchUsersResult">
@@ -785,10 +794,37 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="DateCreated" Nullable="true" Precision="23" />
           <Property Type="String" Name="IssueType" Nullable="false" MaxLength="250" />
-          <Property Type="String" Name="Priority" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Priority" Nullable="false" MaxLength="250" />
           <Property Type="String" Name="TaskStatus" Nullable="false" MaxLength="250" />
           <Property Type="String" Name="Reporter" Nullable="false" MaxLength="256" />
           <Property Type="String" Name="Project" Nullable="false" MaxLength="250" />
+        </ComplexType>
+        <Association Name="FK_Task_AspNetUsers">
+          <End Type="TaskControlModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="TaskControlModel.Task" Role="Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Asignee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetTaskResult">
+          <Property Type="Int64" Name="TaskId" Nullable="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="250" />
+          <Property Type="Int32" Name="IssueType" Nullable="false" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Int32" Name="Status" Nullable="false" />
+          <Property Type="Int64" Name="ProjectId" Nullable="false" />
+          <Property Type="String" Name="Reporter" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Asignee" Nullable="false" MaxLength="256" />
+          <Property Type="Int64" Name="ReporterId" Nullable="false" />
+          <Property Type="Int64" Name="AsigneeId" Nullable="false" />
+          <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -985,6 +1021,25 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
                 <ScalarProperty Name="TaskStatus" ColumnName="TaskStatus" />
                 <ScalarProperty Name="Reporter" ColumnName="Reporter" />
                 <ScalarProperty Name="Project" ColumnName="Project" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetTaskById" FunctionName="TaskControlModel.Store.GetTaskById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.GetTaskResult">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IssueType" ColumnName="IssueType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Reporter" ColumnName="Reporter" />
+                <ScalarProperty Name="Asignee" ColumnName="Asignee" />
+                <ScalarProperty Name="ReporterId" ColumnName="ReporterId" />
+                <ScalarProperty Name="AsigneeId" ColumnName="AsigneeId" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

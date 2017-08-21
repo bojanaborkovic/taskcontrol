@@ -30,19 +30,16 @@ namespace DataModel
         public int Status { get; set; }
         public string Description { get; set; }
         public Nullable<int> Reporter { get; set; }
-        public Nullable<long> Priority { get; set; }
+        public int Priority { get; set; }
         public long ProjectId { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual IssueType IssueType1 { get; set; }
-        public virtual Priority Priority1 { get; set; }
-        public virtual Project Project { get; set; }
-        public virtual Status Status1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaskAsigneeHistory> TaskAsigneeHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaskStatusHistory> TaskStatusHistories { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

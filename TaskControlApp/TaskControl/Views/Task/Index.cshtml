@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaskControl.Models.TaskViewModel>
+﻿@model IEnumerable<TaskControl.Models.TaskSearchViewModel>
 
 @{
     ViewBag.Title = "Tasks";
@@ -22,7 +22,7 @@
 			<div class="card-block">
 				<span style="float:right;  margin-left: 10em; margin-top: 1em;" class="label label-primary">Status: @Html.DisplayFor(modelItem => item.Status)</span>
 				<h2 class="card-title">
-					@Html.ActionLink(item.Title, "Edit", new { id = item.TaskId })
+					@Html.ActionLink(item.Title, "Edit", new { taskId = item.TaskId })
 
 				</h2>
 				@*<button style="float:right; margin-left: 10em;">@Html.ActionLink("Edit", "EditTask", new { Id = item.TaskId })</button>*@
@@ -56,6 +56,9 @@
 			// use outer width of grid-sizer for columnWidth
 			percentPosition: true,
 			transitionDuration: 5,
-			gutter: 10
+			gutter: 10,
+			transitionDuration: '0.8s',
+			stagger: 130
+      
 		});
 	</script>

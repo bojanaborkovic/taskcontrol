@@ -4,20 +4,20 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="63127d9e225c4ebcb194a467c4f32adb" Name="Diagram1" ZoomLevel="97">
+      <Diagram DiagramId="63127d9e225c4ebcb194a467c4f32adb" Name="Diagram1" ZoomLevel="63">
         <EntityTypeShape EntityType="TaskControlModel.AspNetRole" Width="1.5" PointX="6.25" PointY="6.25" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.AspNetUserClaim" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.AspNetUserLogin" Width="1.5" PointX="3" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.AspNetUserRole" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.AspNetUser" Width="1.5" PointX="0.75" PointY="9" IsExpanded="true" />
-        <EntityTypeShape EntityType="TaskControlModel.Comment" Width="1.5" PointX="7.5" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskControlModel.Comment" Width="1.5" PointX="8.125" PointY="10.125" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.IssueType" Width="1.5" PointX="3" PointY="16.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.Priority" Width="1.5" PointX="3" PointY="19" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.Project" Width="1.5" PointX="3" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.Status" Width="1.5" PointX="3" PointY="21.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="TaskControlModel.Task" Width="1.5" PointX="5.25" PointY="12.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="TaskControlModel.TaskAsigneeHistory" Width="1.5" PointX="7.5" PointY="13.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TaskControlModel.TaskStatusHistory" Width="1.5" PointX="7.5" PointY="16.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskControlModel.Task" Width="2.125" PointX="5.25" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskControlModel.TaskAsigneeHistory" Width="1.5" PointX="9.625" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TaskControlModel.TaskStatusHistory" Width="1.5" PointX="8.75" PointY="16.625" IsExpanded="true" />
         <EntityTypeShape EntityType="TaskControlModel.Note" Width="1.5" PointX="5.25" PointY="22.5" IsExpanded="true" />
         <AssociationConnector Association="TaskControlModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="TaskControlModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
@@ -31,6 +31,7 @@
         <AssociationConnector Association="TaskControlModel.FK_Task_Status" ManuallyRouted="false" />
         <AssociationConnector Association="TaskControlModel.FK_TaskAsigneeHistory_Task" ManuallyRouted="false" />
         <AssociationConnector Association="TaskControlModel.FK_TaskStatusHistory_Task" ManuallyRouted="false" />
+        <AssociationConnector Association="TaskControlModel.FK_Task_AspNetUsers" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

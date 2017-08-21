@@ -207,6 +207,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
+    <Compile Include="Models\TaskSearchViewModel.cs" />
     <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Models\TestModel.cs" />
     <Compile Include="Models\UserInRoleViewModel.cs" />
@@ -335,6 +336,7 @@
     <Content Include="Views\Roles\NewRole.cshtml" />
     <Content Include="Views\Task\Index.cshtml" />
     <Content Include="Views\Task\New.cshtml" />
+    <Content Include="Views\Task\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

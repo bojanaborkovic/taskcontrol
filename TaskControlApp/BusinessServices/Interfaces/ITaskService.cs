@@ -10,8 +10,11 @@ namespace BusinessServices.Interfaces
 	public interface ITaskService
 	{
 		TaskEntity GetTaskById(long TaskId);
+		TaskEntityExtended GetTaskByIdCustom(long TaskId);
 		List<TaskEntity> GetAllTasks();
 		long CreateTask(TaskEntity task);
 		List<TaskEntityExtended> GetAllTasksDetails();
-	}
+    void UpdateTask(TaskEntity task);
+
+  }
 }

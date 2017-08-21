@@ -26,20 +26,18 @@
   <form>
     <div class="form-group">
 
-      Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-      <input type="submit" value="Search" class="btn btn-primary btn-lg" />
-      @*<label for="UserName">Username</label>
-      <div class="col-10">
-        @Html.TextBoxFor(m => m.UserName, ViewBag.CurrentFilter as string, new { @class = "form-control" })
-      </div>
-
-      <label for="Email">Email</label>
-      <div class="col-10">
-        @Html.TextBoxFor(m => m.Email, ViewBag.CurrentFilter as string, new { @class = "form-control" })
-      </div>*@
-
-    </div>
-
+			@Html.Label("Find by name:", htmlAttributes: new { @class = "control-label" })
+			<div class="col-md-10">
+				@Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+				<br/>
+				
+				</div>
+			<div class="col-md-offset-10">
+				<input type="submit" value="Search" class="btn btn-primary btn-lg" id="searchUsers" />
+			</div>
+			</div>
+			
+		
   </form>
 
 }

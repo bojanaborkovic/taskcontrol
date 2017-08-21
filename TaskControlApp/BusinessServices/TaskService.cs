@@ -18,15 +18,42 @@ namespace BusinessServices
 		private readonly UnitOfWork _unitOfWork;
 		internal static readonly ILog _log = log4net.LogManager.GetLogger(typeof(TaskService));
 
+		#region constructors
 		public TaskService()
 		{
 			_unitOfWork = new UnitOfWork();
 		}
+		#endregion
 
-		long ITaskService.CreateTask(TaskEntity task)
+
+		#region ITaskService members
+
+		public long CreateTask(TaskEntity task)
 		{
-			throw new NotImplementedException();
+			var config = new MapperConfiguration(cfg => {
+				cfg.CreateMap<TaskEntity, Task>();
+			});
+			IMapper mapper = config.CreateMapper();
+			var taskToInsert = mapper.Map<Task>(task);
+
+			_unitOfWork.TaskRepository.Insert(taskToInsert);
+			_unitOfWork.Save();
+			long Id = taskToInsert.Id;
+			return Id;
 		}
+
+    public void UpdateTask(TaskEntity task)
+    {
+      var config = new MapperConfiguration(cfg => {
+        cfg.CreateMap<TaskEntity, Task>();
+      });
+      IMapper mapper = config.CreateMapper();
+      var taskToUpdate = mapper.Map<Task>(task);
+
+      _unitOfWork.TaskRepository.Update(taskToUpdate);
+      _unitOfWork.Save();
+
+    }
 
 		public List<TaskEntity> GetAllTasks()
 		{
@@ -55,7 +82,7 @@ namespace BusinessServices
 			return null;
 		}
 
-		TaskEntity ITaskService.GetTaskById(long TaskId)
+		public TaskEntity GetTaskById(long TaskId)
 		{
 			var task = _unitOfWork.TaskRepository.GetByID(TaskId);
 			if (task != null)
@@ -85,6 +112,51 @@ namespace BusinessServices
 
 		}
 
+		public TaskEntityExtended GetTaskByIdCustom(long TaskId)
+		{
+			_log.DebugFormat("GetTaskByIdCustom invoked for task with Id : {0}", TaskId);
+			try
+			{
+				var task = _unitOfWork.GetTaskById(TaskId);
+				TaskEntityExtended taskEntity = MapToTaskEntity(task.FirstOrDefault());
+				return taskEntity;
+
+			}
+			catch (Exception ex)
+			{
+				_log.ErrorFormat("Error fetching task... {0}", ex.Message);
+			}
+			return null;
+		}
+
+		private TaskEntityExtended MapToTaskEntity(GetTaskResult getTaskResult)
+		{
+			TaskEntityExtended taskEntity = new TaskEntityExtended();
+			taskEntity.Asignee = getTaskResult.Asignee;
+			taskEntity.AsigneeId = getTaskResult.AsigneeId;
+			taskEntity.Reporter = getTaskResult.Reporter;
+			taskEntity.ReporterId = getTaskResult.ReporterId;
+			taskEntity.DateCreated = getTaskResult.DateCreated;
+			taskEntity.DueDate = getTaskResult.DueDate;
+			taskEntity.Description = getTaskResult.Description;
+			taskEntity.IssueType = _unitOfWork.IssueTypeRepositorsy.GetByID(getTaskResult.IssueType).Name;
+      taskEntity.IssueTypeId = getTaskResult.IssueType;
+			taskEntity.Status = _unitOfWork.StatusRepository.GetByID(getTaskResult.Status).Name;
+      taskEntity.StatusId = getTaskResult.Status;
+			taskEntity.Priority = _unitOfWork.PriorityRepository.GetByID((long)getTaskResult.Priority).Name;
+      taskEntity.PriorityId = (int)getTaskResult.Priority;
+			taskEntity.TaskId = getTaskResult.TaskId;
+			taskEntity.Title = getTaskResult.Title;
+      taskEntity.ProjectId = getTaskResult.ProjectId;
+      taskEntity.Project = _unitOfWork.ProjectRepository.GetByID(getTaskResult.ProjectId).Name;
+
+			return taskEntity;
+		}
+
+
+
+		#endregion
+
 		private List<TaskEntityExtended> MapTasks(List<TaskDetailsResult> tasks)
 		{
 			List<TaskEntityExtended> tasksDetails = new List<TaskEntityExtended>();
@@ -110,5 +182,7 @@ namespace BusinessServices
 
 			return tasksDetails;
 		}
+
+		
 	}
 }
