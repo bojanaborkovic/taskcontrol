@@ -10,33 +10,33 @@ using TaskControlDTOs;
 
 namespace TaskControl.ViewDataPreparers
 {
-	public class PriorityPreparer : ActionFilterAttribute, IDataPreparer<PriorityEntity>
-	{
-		private UtilityServiceClient utilityServiceClient = new UtilityServiceClient("priority");
-		//public IssueTypePreparer()
-		//{
-		//	AddDefaultItem = false;
-		//}
-		public IList<PriorityEntity> GetDataItems()
-		{
-			var ret = utilityServiceClient.GetPriorities();
-			List<PriorityEntity> statuses = JsonConvert.DeserializeObject<List<PriorityEntity>>(ret);
-			return statuses;
-		}
+  public class PriorityPreparer : ActionFilterAttribute, IDataPreparer<PriorityEntity>
+  {
+    private UtilityServiceClient utilityServiceClient = new UtilityServiceClient("priority");
+    //public IssueTypePreparer()
+    //{
+    //	AddDefaultItem = false;
+    //}
+    public IList<PriorityEntity> GetDataItems()
+    {
+      var ret = utilityServiceClient.GetPriorities();
+      List<PriorityEntity> statuses = JsonConvert.DeserializeObject<List<PriorityEntity>>(ret);
+      return statuses;
+    }
 
-		//public bool AddDefaultItem { get; set; }
+    //public bool AddDefaultItem { get; set; }
 
-		public static string ViewDataKey { get { return "Priority"; } }
+    public static string ViewDataKey { get { return "Priority"; } }
 
-		public override void OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
-		{
-			base.OnActionExecuting(filterContext);
-			var dataItems = GetDataItems();
+    public override void OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
+    {
+      base.OnActionExecuting(filterContext);
+      var dataItems = GetDataItems();
 
-			filterContext.Controller.ViewData[ViewDataKey] = dataItems;
-		}
+      filterContext.Controller.ViewData[ViewDataKey] = dataItems;
+    }
 
 
-		
-	}
+
+  }
 }

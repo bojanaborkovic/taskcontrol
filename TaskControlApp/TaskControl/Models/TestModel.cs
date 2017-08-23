@@ -5,16 +5,16 @@ using System.Web;
 
 namespace TaskControl.Models
 {
-	//this whole class is just testing jenkins integration with bitbucket
-	public class TestModel
-	{
-		public TestModel()
-		{
+  //this whole class is just testing jenkins integration with bitbucket
+  public class TestModel
+  {
+    public TestModel()
+    {
 
-		}
+    }
 
-		public string MyProperty { get; set; }
+    public string MyProperty { get; set; }
 
-		public string testProperty { get; set; }
-	}
+    public string testProperty { get; set; }
+  }
 }

@@ -13,46 +13,46 @@ using PagedList;
 
 namespace TaskControl.Controllers
 {
-	[Authorize]
-	public class UserController : Controller
+  [Authorize]
+  public class UserController : Controller
+  {
+    private UnitOfWork unitOfWork = new UnitOfWork();
+    private UserServiceClient serviceClient = new UserServiceClient("users");
+    private ApplicationUserManager _userManager;
+
+    public UserController()
     {
-        private UnitOfWork unitOfWork = new UnitOfWork();
-        private UserServiceClient serviceClient = new UserServiceClient("users");
-		    private ApplicationUserManager _userManager;
 
-		public UserController()
-		{
+    }
 
-		}
-
-		public UserController(ApplicationUserManager userManager)
-		{
-			UserManager = userManager;
-		}
-
-		public ApplicationUserManager UserManager
-		{
-			get
-			{
-				return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-			}
-			private set
-			{
-				_userManager = value;
-			}
-		}
-
-		// GET: User
-		public ActionResult Index()
+    public UserController(ApplicationUserManager userManager)
     {
-			var responseData = serviceClient.GetAllUsers();
+      UserManager = userManager;
+    }
 
-			var users = JsonConvert.DeserializeObject<List<UserEntity>>(responseData);
+    public ApplicationUserManager UserManager
+    {
+      get
+      {
+        return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+      }
+      private set
+      {
+        _userManager = value;
+      }
+    }
+
+    // GET: User
+    public ActionResult Index()
+    {
+      var responseData = serviceClient.GetAllUsers();
+
+      var users = JsonConvert.DeserializeObject<List<UserEntity>>(responseData);
       var mappedUsers = MapToUsersViewModel(users);
 
 
       return View("Index", mappedUsers.ToPagedList(1, 5));
-		}
+    }
 
     [HttpGet]
     public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 5)
@@ -117,18 +117,18 @@ namespace TaskControl.Controllers
     }
 
     public ActionResult CreateUser()
-		{
-			return View("CreateUser");
-		}
+    {
+      return View("CreateUser");
+    }
 
-		[HttpPost]
-		public async Task<ActionResult> CreateUser(CreateUserViewModel user)
-		{
+    [HttpPost]
+    public async Task<ActionResult> CreateUser(CreateUserViewModel user)
+    {
 
       if (!ModelState.IsValid)
       { // re-render the view when validation failed.
         return View("CreateUser", user);
-      } 
+      }
       else
       {
         var newUser = new ApplicationUser()
@@ -152,10 +152,10 @@ namespace TaskControl.Controllers
           return View("Error", new ErrorModel() { Message = string.Join(",", appuser.Errors) });
         }
 
-      } 
-        
-     
-		}
+      }
+
+
+    }
 
     //[HttpGet]
     //public ActionResult Search(UserSearchViewModel model)
@@ -165,35 +165,36 @@ namespace TaskControl.Controllers
     //  return RedirectToAction("Index");
     //}
 
-		private UserEntity MapUserEnity(CreateUserViewModel user)
-		{
-			UserEntity entity = new UserEntity();
-			entity.Email = user.Email;
-			entity.FirstName = user.FirstName;
-			entity.LastName = user.LastName;
-			entity.PhoneNumber = user.PhoneNumber;
-			entity.UserName = user.UserName;
+    private UserEntity MapUserEnity(CreateUserViewModel user)
+    {
+      UserEntity entity = new UserEntity();
+      entity.Email = user.Email;
+      entity.FirstName = user.FirstName;
+      entity.LastName = user.LastName;
+      entity.PhoneNumber = user.PhoneNumber;
+      entity.UserName = user.UserName;
       entity.Password = user.Password;
       entity.Id = user.UserId;
-			return entity;
-		}
+      return entity;
+    }
 
-		private List<UserViewModel> MapToUsersViewModel(List<UserEntity> users)
-		{
-			List<UserViewModel> viewMOdel = new List<UserViewModel>();
-			foreach (var user in users)
-			{
-				viewMOdel.Add(new UserViewModel() {
-				UserId = user.Id,
-				UserName = user.UserName, 
-				FirstName = user.FirstName,
-				LastName = user.LastName,
-				Email = user.Email,
-        RoleName = user.RoleName
-				});
-			}
+    private List<UserViewModel> MapToUsersViewModel(List<UserEntity> users)
+    {
+      List<UserViewModel> viewMOdel = new List<UserViewModel>();
+      foreach (var user in users)
+      {
+        viewMOdel.Add(new UserViewModel()
+        {
+          UserId = user.Id,
+          UserName = user.UserName,
+          FirstName = user.FirstName,
+          LastName = user.LastName,
+          Email = user.Email,
+          RoleName = user.RoleName
+        });
+      }
 
-			return viewMOdel;
-		}
-	}
+      return viewMOdel;
+    }
+  }
 }

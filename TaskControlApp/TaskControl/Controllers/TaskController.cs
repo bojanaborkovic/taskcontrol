@@ -36,7 +36,7 @@ namespace TaskControl.Controllers
       ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
       //var projectNames = projectServiceClient.GetAllProjects();
       //var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(projectNames);
-     // ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Select(x => x.Name));
+      // ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Select(x => x.Name));
       return View("New");
     }
 
@@ -78,7 +78,7 @@ namespace TaskControl.Controllers
       var users = userServiceClient.GetAllUsers();
       var usersList = JsonConvert.DeserializeObject<List<UserEntity>>(users);
 
-     // var projectNamesList = projectList.Select(x => x.Name).ToList();
+      // var projectNamesList = projectList.Select(x => x.Name).ToList();
       //ViewBag.ProjectNames = JsonConvert.SerializeObject(projectNamesList);
       ViewBag.UserNames = JsonConvert.SerializeObject(usersList.Select(x => x.UserName).ToList());
       TaskViewModel taskModel = MapToViewModel(task);
@@ -88,7 +88,7 @@ namespace TaskControl.Controllers
     [HttpPost]
     public ActionResult Edit(TaskViewModel model)
     {
-      if(ModelState.IsValid)
+      if (ModelState.IsValid)
       {
         var updateTask = MapToEntity(model);
         var ret = taskServiceClient.UpdateTask(updateTask);

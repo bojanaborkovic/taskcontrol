@@ -9,7 +9,7 @@ namespace TaskControl.Models
 {
   public class UserInRoleViewModel
   {
-   
+
     [Display(Name = "User Role")]
     public int RoleId { get; set; }
     public IEnumerable<SelectListItem> UserRoles { get; set; }

@@ -9,32 +9,32 @@ using System.Web.Routing;
 namespace TaskControl
 {
   public static class Extensions
-  { 
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="htmlHelper"></param>
-      /// <param name="sortOrder"> ascending or descending</param>
-      /// <param name="sortField"> field we are sorting by</param>
-      /// <returns></returns>
-      public static IHtmlString SortIdentifier(this HtmlHelper htmlHelper, string sortOrder, string sortField)
+  {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="htmlHelper"></param>
+    /// <param name="sortOrder"> ascending or descending</param>
+    /// <param name="sortField"> field we are sorting by</param>
+    /// <returns></returns>
+    public static IHtmlString SortIdentifier(this HtmlHelper htmlHelper, string sortOrder, string sortField)
+    {
+      if (string.IsNullOrEmpty(sortOrder) || (sortOrder.Trim() != sortField && sortOrder.Replace("_desc", "").Trim() != sortField)) return null;
+
+      string glyph = "";
+      if (sortOrder.ToLower().Contains("desc"))
       {
-        if(string.IsNullOrEmpty(sortOrder) || (sortOrder.Trim() != sortField && sortOrder.Replace("_desc", "").Trim() != sortField)) return null;
+        glyph = "glyphicon glyphicon-chevron-down";
+      }
+      else
+      {
+        glyph = "glyphicon glyphicon-chevron-up";
+      }
 
-        string glyph = "";
-        if (sortOrder.ToLower().Contains("desc"))
-        {
-          glyph = "glyphicon glyphicon-chevron-down";
-        }
-        else
-        {
-          glyph = "glyphicon glyphicon-chevron-up";
-        }
+      var span = new TagBuilder("span");
+      span.Attributes["class"] = glyph;
 
-				var span = new TagBuilder("span");
-        span.Attributes["class"] = glyph;
-
-        return MvcHtmlString.Create(span.ToString());
+      return MvcHtmlString.Create(span.ToString());
 
     }
 

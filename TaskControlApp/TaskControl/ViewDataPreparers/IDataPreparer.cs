@@ -6,8 +6,8 @@ using System.Web;
 
 namespace TaskControl.ViewDataPreparers
 {
-	interface IDataPreparer<TModel>
-	{
-		IList<TModel> GetDataItems();
-	}
+  interface IDataPreparer<TModel>
+  {
+    IList<TModel> GetDataItems();
+  }
 }

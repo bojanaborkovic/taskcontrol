@@ -7,14 +7,14 @@ using TaskControlDTOs;
 
 namespace TaskControl.Models
 {
-	public class ProjectViewModel
-	{
-		public long Id { get; set; }
-		public string Name { get; set; }
-		public long OwnerId { get; set; }
-		public string Owner { get; set; }
+  public class ProjectViewModel
+  {
+    public long Id { get; set; }
+    public string Name { get; set; }
+    public long OwnerId { get; set; }
+    public string Owner { get; set; }
 
     [DataType(DataType.MultilineText)]
     public string Description { get; set; }
-	}
+  }
 }

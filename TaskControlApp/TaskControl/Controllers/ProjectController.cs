@@ -34,7 +34,7 @@ namespace TaskControl.Controllers
     {
       GetProjectReturn responseData = serviceClient.GetAllProjects();
 
-      if(responseData != null && responseData.Projects.Count > 0)
+      if (responseData != null && responseData.Projects.Count > 0)
       {
         return View("Index", MapToProjectsViewModel(responseData.Projects));
       }
@@ -43,7 +43,7 @@ namespace TaskControl.Controllers
         return View("Index", new ProjectViewModel());
       }
 
-     
+
     }
 
     [HttpGet]

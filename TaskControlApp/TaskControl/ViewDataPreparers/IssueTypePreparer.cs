@@ -10,33 +10,33 @@ using TaskControlDTOs;
 
 namespace TaskControl.ViewDataPreparers
 {
-	public class IssueTypePreparer : ActionFilterAttribute, IDataPreparer<IssueTypeEntity>
-	{
-		private UtilityServiceClient utilityServiceClient = new UtilityServiceClient("issueTypes");
-		//public IssueTypePreparer()
-		//{
-		//	AddDefaultItem = false;
-		//}
-		public IList<IssueTypeEntity> GetDataItems()
-		{
-			var ret = utilityServiceClient.GetAllIssueTypes();
-			List<IssueTypeEntity> issueTypes = JsonConvert.DeserializeObject<List<IssueTypeEntity>>(ret);
-			return issueTypes;
-		}
+  public class IssueTypePreparer : ActionFilterAttribute, IDataPreparer<IssueTypeEntity>
+  {
+    private UtilityServiceClient utilityServiceClient = new UtilityServiceClient("issueTypes");
+    //public IssueTypePreparer()
+    //{
+    //	AddDefaultItem = false;
+    //}
+    public IList<IssueTypeEntity> GetDataItems()
+    {
+      var ret = utilityServiceClient.GetAllIssueTypes();
+      List<IssueTypeEntity> issueTypes = JsonConvert.DeserializeObject<List<IssueTypeEntity>>(ret);
+      return issueTypes;
+    }
 
-		//public bool AddDefaultItem { get; set; }
+    //public bool AddDefaultItem { get; set; }
 
-		public static string ViewDataKey { get { return "IssueTypes"; } }
+    public static string ViewDataKey { get { return "IssueTypes"; } }
 
-		public override void OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
-		{
-			base.OnActionExecuting(filterContext);
-			var dataItems = GetDataItems();
+    public override void OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
+    {
+      base.OnActionExecuting(filterContext);
+      var dataItems = GetDataItems();
 
-			filterContext.Controller.ViewData[ViewDataKey] = dataItems;
-		}
+      filterContext.Controller.ViewData[ViewDataKey] = dataItems;
+    }
 
 
-		
-	}
+
+  }
 }
