@@ -13,16 +13,16 @@ using TaskControlDTOs;
 
 namespace TaskControl.ServiceClients
 {
-	public class ProjectServiceClient : BaseRestClient, IProjectService
-	{
+  public class ProjectServiceClient : BaseRestClient, IProjectService
+  {
 
-    public ProjectServiceClient() 
-		{
+    public ProjectServiceClient()
+    {
       DoSerialize = true;
       BaseUri = new Uri(ConfigurationManager.AppSettings["TaskControlApiURL"]);
-			client.DefaultRequestHeaders.Accept.Clear();
-			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-		}
+      client.DefaultRequestHeaders.Accept.Clear();
+      client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    }
 
 
     //public string CreateProject(ProjectEntity project)
@@ -55,16 +55,16 @@ namespace TaskControl.ServiceClients
     }
 
     public string UpdateProject(ProjectEntity project)
-		{
-			string address = string.Format("{0}{1}", endpoint, "projects/update");
-			endpoint = address;
-			Method = HttpVerb.POST;
-			PostData = new JavaScriptSerializer().Serialize(project);
-			var json = MakeRequest();
+    {
+      string address = string.Format("{0}{1}", endpoint, "projects/update");
+      endpoint = address;
+      Method = HttpVerb.POST;
+      PostData = new JavaScriptSerializer().Serialize(project);
+      var json = MakeRequest();
 
-			return json;
+      return json;
 
-		}
+    }
 
     public BaseProjectReturn CreateProject(ProjectEntity project)
     {
@@ -98,7 +98,7 @@ namespace TaskControl.ServiceClients
       throw new NotImplementedException();
     }
 
-   
+
   }
 
 }

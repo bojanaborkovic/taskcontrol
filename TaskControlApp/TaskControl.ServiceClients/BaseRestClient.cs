@@ -12,14 +12,14 @@ using System.Web;
 
 namespace TaskControl.ServiceClients
 {
-	public class BaseRestClient
-	{
-		protected System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-		internal static readonly ILog _log = log4net.LogManager.GetLogger(typeof(BaseRestClient));
+  public class BaseRestClient
+  {
+    protected System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+    internal static readonly ILog _log = log4net.LogManager.GetLogger(typeof(BaseRestClient));
 
-		public HttpVerb Method { get; set; }
-		public string ContentType { get; set; }
-		public string PostData { get; set; }
+    public HttpVerb Method { get; set; }
+    public string ContentType { get; set; }
+    public string PostData { get; set; }
 
     public bool DoSerialize { get; set; }
 
@@ -28,8 +28,8 @@ namespace TaskControl.ServiceClients
     public int? Timeout { get; set; }
 
     public string endpoint;
-		public string address;
-    public Uri BaseUri { get;  set; }
+    public string address;
+    public Uri BaseUri { get; set; }
 
     public BaseRestClient(Uri baseUri)
     {
@@ -44,105 +44,94 @@ namespace TaskControl.ServiceClients
     }
 
     public BaseRestClient()
-		{
-			endpoint = "";
-			Method = HttpVerb.GET;
-			ContentType = "application/json";
-			PostData = "";
-			log4net.Config.XmlConfigurator.Configure();
-		}
+    {
+      endpoint = "";
+      Method = HttpVerb.GET;
+      ContentType = "application/json";
+      PostData = "";
+      log4net.Config.XmlConfigurator.Configure();
+    }
+
+    public BaseRestClient(string endpoint, HttpVerb method)
+    {
+      this.endpoint = endpoint;
+      this.Method = method;
+      this.ContentType = "application/json";
+      this.PostData = "";
+      log4net.Config.XmlConfigurator.Configure();
+    }
+
+    public string MakeRequest()
+    {
+      return MakeRequest("");
+    }
+
+    public string MakeRequest(string parameters)
+    {
+      string uri = endpoint + address;
+      var request = (HttpWebRequest)WebRequest.Create(uri + parameters);
+      if (_log.IsDebugEnabled)
+      {
+        _log.DebugFormat("Creating request with endpoint {0} and parameters {1}", endpoint, parameters);
+      }
 
 
-		//public BaseRestClient(string endpoint)
-		//{
-		//	this.endpoint = endpoint;
-		//	Method = HttpVerb.GET;
-		//	ContentType = "application/json";
-		//	PostData = "";
-		//	log4net.Config.XmlConfigurator.Configure();
-		//}
+      request.Method = Method.ToString();
+      request.ContentLength = 0;
+      request.ContentType = ContentType;
 
+      if (!string.IsNullOrEmpty(PostData) && Method == HttpVerb.POST)
+      {
+        var encoding = new UTF8Encoding();
+        var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
+        request.ContentLength = bytes.Length;
 
-		public BaseRestClient(string endpoint, HttpVerb method)
-		{
-			this.endpoint = endpoint;
-			this.Method = method;
-			this.ContentType = "application/json";
-			this.PostData = "";
-			log4net.Config.XmlConfigurator.Configure();
-		}
+        using (var writeStream = request.GetRequestStream())
+        {
+          writeStream.Write(bytes, 0, bytes.Length);
+        }
 
-		public string MakeRequest()
-		{
-			return MakeRequest("");
-		}
+      }
 
-		public string MakeRequest(string parameters)
-		{
-			string uri = endpoint + address;
-			var request = (HttpWebRequest)WebRequest.Create(uri + parameters);
-			if(_log.IsDebugEnabled)
-			{
-				_log.DebugFormat("Creating request with endpoint {0} and parameters {1}", endpoint, parameters);
-			}
+      #region grabing response
+      try
+      {
+        using (var response = (HttpWebResponse)request.GetResponse())
+        {
+          var responseValue = string.Empty;
 
-			
-			request.Method = Method.ToString();
-			request.ContentLength = 0;
-			request.ContentType = ContentType;
+          if (response.StatusCode != HttpStatusCode.OK)
+          {
+            var message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
+            _log.ErrorFormat(message);
+            throw new ApplicationException(message);
+          }
 
-			if (!string.IsNullOrEmpty(PostData) && Method == HttpVerb.POST)
-			{
-				var encoding = new UTF8Encoding();
-				var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
-				request.ContentLength = bytes.Length;
+          // grab the response
+          using (var responseStream = response.GetResponseStream())
+          {
+            if (responseStream != null)
+              using (var reader = new StreamReader(responseStream))
+              {
+                responseValue = reader.ReadToEnd();
+              }
+          }
 
-				using (var writeStream = request.GetRequestStream())
-				{
-					writeStream.Write(bytes, 0, bytes.Length);
-				}
+          _log.DebugFormat("Request finishd with status code : {0} and response value : {1}", response.StatusCode, responseValue);
 
-			}
+          return responseValue;
 
-			#region grabing response
-			try
-			{
-				using (var response = (HttpWebResponse)request.GetResponse())
-				{
-					var responseValue = string.Empty;
+        }
 
-					if (response.StatusCode != HttpStatusCode.OK)
-					{
-						var message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
-						_log.ErrorFormat(message);
-						throw new ApplicationException(message);
-					}
+      }
+      catch (Exception httpEx)
+      {
+        _log.ErrorFormat("Error during getting reponse : {0}", httpEx.Message);
+      }
 
-					// grab the response
-					using (var responseStream = response.GetResponseStream())
-					{
-						if (responseStream != null)
-							using (var reader = new StreamReader(responseStream))
-							{
-								responseValue = reader.ReadToEnd();
-							}
-					}
-
-					_log.DebugFormat("Request finishd with status code : {0} and response value : {1}", response.StatusCode, responseValue);
-
-					return responseValue;
-
-				}
-				
-			}
-			catch(Exception httpEx)
-			{
-				_log.ErrorFormat("Error during getting reponse : {0}", httpEx.Message);
-			}
-
-			return null;
-			#endregion
-		}
+      return null;
+      #endregion
+    }
 
     public T Execute<T>(Uri uri, HttpVerb method, object input)
     {
@@ -157,7 +146,7 @@ namespace TaskControl.ServiceClients
       }
 
       var request = (HttpWebRequest)WebRequest.Create(uri);
-      
+
       request.Method = method.ToString();
       request.ContentLength = 0;
       request.ContentType = ContentType;
@@ -274,13 +263,13 @@ namespace TaskControl.ServiceClients
       return Delete<T>(new Uri(this.BaseUri, action), input);
     }
 
-    public Dictionary<string ,string> GetSessionProperties()
-		{
-			var clientIP = HttpContext.Current.Request.UserHostAddress;
-			Dictionary<string, string> properties = new Dictionary<string, string>();
-			properties.Add("ClientIP", clientIP);
-			return properties;
-		}
+    public Dictionary<string, string> GetSessionProperties()
+    {
+      var clientIP = HttpContext.Current.Request.UserHostAddress;
+      Dictionary<string, string> properties = new Dictionary<string, string>();
+      properties.Add("ClientIP", clientIP);
+      return properties;
+    }
 
     #region serialize/deserialize methods
     protected static string Serialize(object input)
@@ -311,10 +300,10 @@ namespace TaskControl.ServiceClients
   }
 
   public enum HttpVerb
-	{
-		GET,
-		POST,
-		PUT,
-		DELETE
-	}
+  {
+    GET,
+    POST,
+    PUT,
+    DELETE
+  }
 }
