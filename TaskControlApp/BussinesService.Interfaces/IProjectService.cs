@@ -8,13 +8,13 @@ using TaskControlDTOs;
 
 namespace BusinessServices.Interfaces
 {
-	public interface IProjectService
-	{
-		ProjectEntity GetProjectById(long Id);
+  public interface IProjectService
+  {
+    ProjectEntity GetProjectById(long Id);
     GetProjectReturn GetAllProjects();
     BaseProjectReturn CreateProject(ProjectEntity project);
-		bool UpdateProject(ProjectEntity project);
+    bool UpdateProject(ProjectEntity project);
     GetProjectReturn GetProjectsWithOwner();
 
-	}
+  }
 }

@@ -18,7 +18,7 @@ namespace BusinessServices.Interfaces.Responses
 
     public override string ToString()
     {
-      return  String.Format("StatusCode={0},ErrorMessage={1}", StatusCode, ErrorMessage);
+      return String.Format("StatusCode={0},ErrorMessage={1}", StatusCode, ErrorMessage);
     }
   }
 }

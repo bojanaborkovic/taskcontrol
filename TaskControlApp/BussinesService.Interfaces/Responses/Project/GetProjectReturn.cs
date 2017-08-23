@@ -19,6 +19,6 @@ namespace BussinesService.Interfaces.Responses.Project
     [DataMember]
     public int RecordCount { get; set; }
 
-  
+
   }
 }

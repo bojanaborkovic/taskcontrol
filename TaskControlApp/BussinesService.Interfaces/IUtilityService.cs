@@ -7,10 +7,10 @@ using TaskControlDTOs;
 
 namespace BusinessServices.Interfaces
 {
-	public interface IUtilityService
-	{
-		IEnumerable<IssueTypeEntity> GetIssueTypes();
-		IEnumerable<StatusEntity> GetAllStatuses();
-		IEnumerable<PriorityEntity> GetPriorities();
-	}
+  public interface IUtilityService
+  {
+    IEnumerable<IssueTypeEntity> GetIssueTypes();
+    IEnumerable<StatusEntity> GetAllStatuses();
+    IEnumerable<PriorityEntity> GetPriorities();
+  }
 }

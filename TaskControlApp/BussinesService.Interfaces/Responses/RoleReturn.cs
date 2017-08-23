@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BusinessServices.Interfaces.Responses
 {
-	public class RoleReturn : BasicReturn
-	{
-		public long RoleId { get; set; }
-	}
+  public class RoleReturn : BasicReturn
+  {
+    public long RoleId { get; set; }
+  }
 }
