@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskControlAPI", "TaskContr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskControl.ServiceClients", "TaskControl.ServiceClients\TaskControl.ServiceClients.csproj", "{D328268F-851D-4EBF-8C13-90200931477D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BussinesService.Interfaces", "BussinesService.Interfaces\BussinesService.Interfaces.csproj", "{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D328268F-851D-4EBF-8C13-90200931477D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D328268F-851D-4EBF-8C13-90200931477D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D328268F-851D-4EBF-8C13-90200931477D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 ﻿using BusinessServices;
+using BusinessServices.Interfaces;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -160,7 +161,7 @@ namespace TaskControlAPI.Controllers
       try
       {
         var ret =_userService.AddUserToRole(roleId, userId);
-        if (string.IsNullOrEmpty(ret.ErrorCode) && string.IsNullOrEmpty(ret.ErrorMessage))
+        if (string.IsNullOrEmpty(ret.StatusCode) && string.IsNullOrEmpty(ret.ErrorMessage))
         {
           _log.DebugFormat("AddUserToRole finished with");
           return Request.CreateResponse(HttpStatusCode.OK);
@@ -188,7 +189,7 @@ namespace TaskControlAPI.Controllers
 			try
 			{
 				var ret = _userService.AddNewRole(role);
-				if (string.IsNullOrEmpty(ret.ErrorCode) && string.IsNullOrEmpty(ret.ErrorMessage))
+				if (string.IsNullOrEmpty(ret.StatusCode) && string.IsNullOrEmpty(ret.ErrorMessage))
 				{
 					_log.DebugFormat("AddUserToRole finished with");
 					return Request.CreateResponse(HttpStatusCode.OK);

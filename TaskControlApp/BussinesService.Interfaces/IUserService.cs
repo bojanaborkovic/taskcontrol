@@ -1,4 +1,4 @@
-﻿using BusinessServices.Responses;
+﻿using BusinessServices.Interfaces.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskControlDTOs;
 
-namespace BusinessServices
+namespace BusinessServices.Interfaces
 {
     public interface IUserService
     {

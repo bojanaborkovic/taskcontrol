@@ -37,7 +37,8 @@
 		};
 	});
 
-	var usernames = ViewBag.ProjectNames;
+  var userNames = ViewBag.UserNames;
+  var projectNames = ViewBag.ProjectNames;
 
 }
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
@@ -75,7 +76,7 @@
             <div class="col-md-10">
                 @*@Html.EditorFor(model => model.Asignee, new { htmlAttributes = new { @class = "form-control" } })*@
 				
-									@Html.EditorFor(m => m.Asignee, new { htmlAttributes = new { @class = "form-control autocomplete", @placeholder = "Enter username" } })
+									@Html.EditorFor(m => m.Asignee, new { htmlAttributes = new { @class = "form-control autoasignee", @placeholder = "Enter username" } })
 							
                 @Html.ValidationMessageFor(model => model.Asignee, "", new { @class = "text-danger" })
             </div>
@@ -101,7 +102,7 @@
             @Html.LabelFor(model => model.Reporter, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @*@Html.EditorFor(model => model.Reporter, new { htmlAttributes = new { @class = "form-control" } })*@
-							@Html.EditorFor(m => m.Reporter, new { htmlAttributes = new { @class = "form-control autocomplete", @placeholder = "Enter username" } })
+							@Html.EditorFor(m => m.Reporter, new { htmlAttributes = new { @class = "form-control autoasignee", @placeholder = "Enter username" } })
                 @Html.ValidationMessageFor(model => model.Reporter, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -116,7 +117,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Project, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Project, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Project, new { htmlAttributes = new { @class = "form-control autoproject" } })
                 @Html.ValidationMessageFor(model => model.Project, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -146,10 +147,17 @@
 	$(document).ready(function () { // will trigger when the document is ready
 		$('.datepicker').datepicker(); //Initialise any date pickers
 
-		var availableTags = @Html.Raw(usernames);
+		var availableUsers = @Html.Raw(userNames);
+    var availbleProjects = @Html.Raw(projectNames);
 
-		$(".autocomplete").autocomplete({
-			source: availableTags
-			});
+
+		$(".autoasignee").autocomplete({
+		  source: availableUsers
+		});
+
+		$(".autoproject").autocomplete({
+		  source: availbleProjects
+		});
+
     });
 </script>

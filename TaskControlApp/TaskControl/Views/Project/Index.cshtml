@@ -3,11 +3,14 @@
 @{
     ViewBag.Title = "Projects";
 }
-@*<script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="~/Scripts/masonry.pkgd.js"></script>
-<h2 class="text-primary">Projects</h2>*@
+<h2>Projects</h2>
 
+<p>
+  <button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Project")'">
+    Create new project
+  </button>
+</p>
 
 <div class="grid">
 
@@ -25,7 +28,7 @@
 				</h2>
 
 				<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
-					<span>Owner : @Html.DisplayFor(modelItem => item.Username)</span>
+					<span>Owner : @Html.DisplayFor(modelItem => item.Owner)</span>
 					
 					<br />
 					<br />

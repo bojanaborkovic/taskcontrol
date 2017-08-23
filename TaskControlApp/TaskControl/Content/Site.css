@@ -23,7 +23,7 @@ textarea {
     max-width: 280px;
 }
 
-.grid-item { width:20%; border: 2px solid #ddd;  border-radius: 5px;
+.grid-item { width:30%; border: 2px solid #ddd;  border-radius: 15px;
 margin-bottom: 10px;
 margin-top: 10px;
 padding: 10px;

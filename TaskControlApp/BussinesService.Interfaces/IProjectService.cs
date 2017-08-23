@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BussinesService.Interfaces.Responses.Project;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,10 @@ namespace BusinessServices.Interfaces
 	public interface IProjectService
 	{
 		ProjectEntity GetProjectById(long Id);
-		IEnumerable<ProjectEntity> GetAllProjects();
-		long CreateProject(ProjectEntity project);
+    GetProjectReturn GetAllProjects();
+    BaseProjectReturn CreateProject(ProjectEntity project);
 		bool UpdateProject(ProjectEntity project);
-		List<ProjectEntity> GetProjectsWithOwner();
+    GetProjectReturn GetProjectsWithOwner();
 
 	}
 }

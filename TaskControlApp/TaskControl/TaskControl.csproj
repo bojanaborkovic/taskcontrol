@@ -337,6 +337,7 @@
     <Content Include="Views\Task\Index.cshtml" />
     <Content Include="Views\Task\New.cshtml" />
     <Content Include="Views\Task\Edit.cshtml" />
+    <Content Include="Views\Project\New.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -352,6 +353,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">
+      <Project>{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}</Project>
+      <Name>BussinesService.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\DataModel.csproj">
       <Project>{ED19EE05-45DA-454E-996B-2C19C3ED0585}</Project>
       <Name>DataModel</Name>

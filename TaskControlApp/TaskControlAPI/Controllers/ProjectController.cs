@@ -1,5 +1,6 @@
 ﻿using BusinessServices;
 using BusinessServices.Interfaces;
+using BussinesService.Interfaces.Responses.Project;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -25,18 +26,17 @@ namespace TaskControlAPI.Controllers
     // GET: projects/all
     [HttpGet]
     [ActionName("GetAllProjects")]
-    public HttpResponseMessage Get()
+    public HttpResponseMessage GetAllProjects()
     {
       _log.DebugFormat("GetAllProjects invoked...");
       //var projects = _projectService.GetAllProjects();
-      var projects = _projectService.GetProjectsWithOwner();
-      if (projects != null)
+      var retProjects = _projectService.GetProjectsWithOwner();
+      if (retProjects != null)
       {
-        var projectEntities = projects as List<ProjectEntity> ?? projects.ToList();
-        if (projectEntities.Any())
+        if (retProjects.Projects.Any())
         {
-          _log.DebugFormat("GetAllProjects finished with : {0}", projectEntities.ToString());
-          return Request.CreateResponse(HttpStatusCode.OK, projectEntities);
+          _log.DebugFormat("GetAllProjects finished with : {0}", retProjects.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, retProjects);
         }
 
       }
@@ -77,6 +77,21 @@ namespace TaskControlAPI.Controllers
 
     }
 
+    [HttpPost]
+    [ActionName("CreateProject")]
+    public HttpResponseMessage CreateProject(ProjectEntity project)
+    {
+      BaseProjectReturn createProjectRet = _projectService.CreateProject(project);
+      if (createProjectRet != null && string.IsNullOrEmpty(createProjectRet.ErrorMessage))
+      {
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not update project");
+      }
+      else
+      {
+        return Request.CreateResponse(HttpStatusCode.OK);
+      }
+
+    }
 
 
     // POST: api/Project

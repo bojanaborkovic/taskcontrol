@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using BusinessServices.Responses;
+using BusinessServices.Interfaces;
+using BusinessServices.Interfaces.Responses;
+
 using DataModel;
 using DataModel.UnitOfWork;
 using log4net;

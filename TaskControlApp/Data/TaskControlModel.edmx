@@ -101,7 +101,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="bigint" Nullable="false" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="OwnerId" Type="bigint" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
@@ -766,7 +766,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
             <End Role="Task" EntitySet="Tasks" />
           </AssociationSet>
           <FunctionImport Name="GetTaskById" ReturnType="Collection(TaskControlModel.GetTaskResult)">
-            <Parameter Name="taskId" Mode="In" Type="Int64" />
+          <Parameter Name="taskId" Mode="In" Type="Int64" />
           </FunctionImport>
 
         

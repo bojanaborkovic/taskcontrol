@@ -34,6 +34,9 @@ namespace TaskControl.Controllers
       var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
       var userNamesList = users.Select(x => x.UserName).ToList();
       ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+      //var projectNames = projectServiceClient.GetAllProjects();
+      //var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(projectNames);
+     // ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Select(x => x.Name));
       return View("New");
     }
 
@@ -45,6 +48,7 @@ namespace TaskControl.Controllers
 
         TaskEntity taskMapped = MapToEntity(model);
         var ret = taskServiceClient.CreateTask(taskMapped);
+
         if (string.IsNullOrEmpty(ret))
         {
           return View("New", model);
@@ -68,14 +72,14 @@ namespace TaskControl.Controllers
       var retTask = taskServiceClient.GetTaskByIdCustom(taskId);
       var task = JsonConvert.DeserializeObject<TaskEntityExtended>(retTask);
 
-      var projects = projectServiceClient.GetAllProjects();
-      var projectList = JsonConvert.DeserializeObject<List<ProjectEntity>>(projects);
+      //var projects = projectServiceClient.GetAllProjects();
+      //var projectList = JsonConvert.DeserializeObject<List<ProjectEntity>>(projects);
 
       var users = userServiceClient.GetAllUsers();
       var usersList = JsonConvert.DeserializeObject<List<UserEntity>>(users);
 
-      var projectNamesList = projectList.Select(x => x.Name).ToList();
-      ViewBag.ProjectNames = JsonConvert.SerializeObject(projectNamesList);
+     // var projectNamesList = projectList.Select(x => x.Name).ToList();
+      //ViewBag.ProjectNames = JsonConvert.SerializeObject(projectNamesList);
       ViewBag.UserNames = JsonConvert.SerializeObject(usersList.Select(x => x.UserName).ToList());
       TaskViewModel taskModel = MapToViewModel(task);
       return View("Edit", taskModel);

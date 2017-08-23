@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessServices.Responses
+namespace BusinessServices.Interfaces.Responses
 {
 	public class RoleReturn : BasicReturn
 	{

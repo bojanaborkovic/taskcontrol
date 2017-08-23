@@ -10,137 +10,163 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskControlDTOs;
 using log4net;
+using BussinesService.Interfaces.Responses.Project;
 
 namespace BusinessServices
 {
-	public class ProjectService : IProjectService
-	{
-		private readonly DataModel.UnitOfWork.UnitOfWork _unitOfWork = new UnitOfWork();
-		internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
-		
-		//public ProjectService()
-		//{
-		//	_unitOfWork = new UnitOfWork();
-		//}
+  public class ProjectService : IProjectService
+  {
+    private readonly DataModel.UnitOfWork.UnitOfWork _unitOfWork = new UnitOfWork();
+    internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
 
-		public long CreateProject(ProjectEntity projectEntity)
-		{
-			using (var scope = new TransactionScope())
-			{
-				var project = new Project()
-				{
-					Name = projectEntity.Name,
-					OwnerId = projectEntity.OwnerId
-				};
+    //public ProjectService()
+    //{
+    //	_unitOfWork = new UnitOfWork();
+    //}
 
-				_unitOfWork.ProjectRepository.Insert(project);
-				_unitOfWork.Save();
-				scope.Complete();
+    public BaseProjectReturn CreateProject(ProjectEntity projectEntity)
+    {
+      
+      BaseProjectReturn ret = new BaseProjectReturn();
+      try
+      {
+        using (var scope = new TransactionScope())
+        {
+          var config = new MapperConfiguration(cfg =>
+          {
+            cfg.CreateMap<ProjectEntity, Project>();
+          });
+          IMapper mapper = config.CreateMapper();
+          var mappedProject = mapper.Map<ProjectEntity, Project>(projectEntity);
 
-				return project.Id;
-			}
-		}
+          _log.DebugFormat("Creating project with : {0}", projectEntity.ToString());
 
-		public ProjectEntity GetProjectById(long Id)
-		{
-			var project = _unitOfWork.ProjectRepository.GetByID(Id);
-			if (project != null)
-			{
-        var config = new MapperConfiguration(cfg => {
+          _unitOfWork.ProjectRepository.Insert(mappedProject);
+          _unitOfWork.Save();
+          scope.Complete();
+          ret.ProjectId = mappedProject.Id;
+
+        }
+      }catch(Exception ex)
+      {
+        _log.ErrorFormat("Error creating new  project... {0}", ex.Message);
+        ret.StatusCode = "Error";
+        ret.ErrorMessage = ex.Message;
+      }
+      return ret;
+    }
+
+    public ProjectEntity GetProjectById(long Id)
+    {
+      var project = _unitOfWork.ProjectRepository.GetByID(Id);
+      if (project != null)
+      {
+        var config = new MapperConfiguration(cfg =>
+        {
           cfg.CreateMap<Project, ProjectEntity>();
         });
         IMapper mapper = config.CreateMapper();
         var mappedProject = mapper.Map<Project, ProjectEntity>(project);
-				return mappedProject;
-			}
-			return null;
-		}
+        return mappedProject;
+      }
+      return null;
+    }
 
 
-		public IEnumerable<TaskControlDTOs.ProjectEntity> GetAllProjects()
-		{
-			_log.DebugFormat("GetAllProjects invoked");
-			try
-			{
-				var projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name));
-				if (projects.Any())
-				{
-					var config = new MapperConfiguration(cfg => {
-						cfg.CreateMap<Project, ProjectEntity>();
-					});
+    public GetProjectReturn GetAllProjects()
+    {
+      _log.DebugFormat("GetAllProjects invoked");
+      GetProjectReturn ret = new GetProjectReturn();
 
-					IMapper mapper = config.CreateMapper();
-					var projectsMapped = mapper.Map<List<Project>,List<ProjectEntity>>(projects.ToList());
-					_log.DebugFormat("GetAllProjects finished with : {0}", projects.ToString());
-					return projectsMapped;
-				}
-			}
-			catch(Exception ex)
-			{
-				_log.ErrorFormat("Error during fetching projects... {0}", ex.Message);
-			}
+      try
+      {
+        var projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name));
+        if (projects.Any())
+        {
+          var config = new MapperConfiguration(cfg =>
+          {
+            cfg.CreateMap<Project, ProjectEntity>();
+          });
 
-			
-			return null;
-		}
+          IMapper mapper = config.CreateMapper();
+          var projectsMapped = mapper.Map<List<Project>, List<ProjectEntity>>(projects.ToList());
+          _log.DebugFormat("GetAllProjects finished with : {0}", projects.ToString());
+          ret.Projects = projectsMapped;
+          ret.RecordCount = projectsMapped.Count;
+          return ret;
 
-		public bool UpdateProject(ProjectEntity project)
-		{
-			_log.DebugFormat("UpdateProject invoked");
-            try
-            {
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching projects... {0}", ex.Message);
+      }
 
-                var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<ProjectEntity, Project>();
-                });
 
-                IMapper mapper = config.CreateMapper();
-                var projectToUpdate = mapper.Map<Project>(project);
+      return null;
+    }
 
-                _unitOfWork.ProjectRepository.Update(projectToUpdate);
-                _unitOfWork.Save();
-                _log.DebugFormat("UpdateProject with Id:{0} finished", projectToUpdate.Id);
-                return true;
+    public bool UpdateProject(ProjectEntity project)
+    {
+      _log.DebugFormat("UpdateProject invoked");
+      try
+      {
 
-            }
-            catch (Exception ex)
-            {
-                _log.ErrorFormat("Error during update project... {0}", ex.Message);
-            }
+        var config = new MapperConfiguration(cfg =>
+        {
+          cfg.CreateMap<ProjectEntity, Project>();
+        });
 
-			return false;
-			
-		}
+        IMapper mapper = config.CreateMapper();
+        var projectToUpdate = mapper.Map<Project>(project);
 
-		public List<ProjectEntity> GetProjectsWithOwner()
-		{
-			_log.DebugFormat("GetProjectsWithOwner invoked");
-			try
-			{
-				var projects = _unitOfWork.GetProjectsWithOwner();
-				List<ProjectEntity> listOfProjects = new List<ProjectEntity>();
-				listOfProjects = MapProjectsList(projects);
-				return listOfProjects;
+        _unitOfWork.ProjectRepository.Update(projectToUpdate);
+        _unitOfWork.Save();
+        _log.DebugFormat("UpdateProject with Id:{0} finished", projectToUpdate.Id);
+        return true;
 
-			}
-			catch (Exception ex)
-			{
-				_log.ErrorFormat("Error search users... {0}", ex.Message);
-			}
-			return null;
-		}
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during update project... {0}", ex.Message);
+      }
 
-		private List<ProjectEntity> MapProjectsList(List<ProjectResult> projects)
-		{
-			List<ProjectEntity> projectsMapped = new List<ProjectEntity>();
+      return false;
 
-			foreach(var item in projects)
-			{
-				projectsMapped.Add(new ProjectEntity() { Id = item.ProjectId, Name = item.Name, OwnerId = item.OwnerId, Owner = item.Owner });
-			}
+    }
 
-			return projectsMapped;
-		}
-	}
+    public GetProjectReturn GetProjectsWithOwner()
+    {
+      _log.DebugFormat("GetProjectsWithOwner invoked");
+      GetProjectReturn ret = new GetProjectReturn();
+
+      try
+      {
+        var projects = _unitOfWork.GetProjectsWithOwner();
+        List<ProjectEntity> listOfProjects = new List<ProjectEntity>();
+        listOfProjects = MapProjectsList(projects);
+        ret.Projects = listOfProjects;
+        ret.RecordCount = listOfProjects.Count;
+        return ret;
+
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error search users... {0}", ex.Message);
+      }
+      return null;
+    }
+
+    private List<ProjectEntity> MapProjectsList(List<ProjectResult> projects)
+    {
+      List<ProjectEntity> projectsMapped = new List<ProjectEntity>();
+
+      foreach (var item in projects)
+      {
+        projectsMapped.Add(new ProjectEntity() { Id = item.ProjectId, Name = item.Name, OwnerId = item.OwnerId, Owner = item.Owner });
+      }
+
+      return projectsMapped;
+    }
+  }
 }

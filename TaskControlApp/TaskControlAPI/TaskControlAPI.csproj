@@ -300,6 +300,10 @@
       <Project>{5831B339-EA54-4CA1-A086-2EFC573FA283}</Project>
       <Name>BusinessServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">
+      <Project>{B9388DC9-2AF5-4594-8184-B9CDB5CA322B}</Project>
+      <Name>BussinesService.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TaskControlDTOs\TaskControlDTOs.csproj">
       <Project>{e3288737-9323-489d-8c27-60a5ebcb6d45}</Project>
       <Name>TaskControlDTOs</Name>

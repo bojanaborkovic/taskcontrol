@@ -65,7 +65,5 @@ namespace DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTaskResult>("GetTaskById", taskIdParameter);
         }
-    
-        
     }
 }
