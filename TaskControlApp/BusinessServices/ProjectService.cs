@@ -26,7 +26,7 @@ namespace BusinessServices
 
     public BaseProjectReturn CreateProject(ProjectEntity projectEntity)
     {
-      
+
       BaseProjectReturn ret = new BaseProjectReturn();
       try
       {
@@ -47,7 +47,8 @@ namespace BusinessServices
           ret.ProjectId = mappedProject.Id;
 
         }
-      }catch(Exception ex)
+      }
+      catch (Exception ex)
       {
         _log.ErrorFormat("Error creating new  project... {0}", ex.Message);
         ret.StatusCode = "Error";
