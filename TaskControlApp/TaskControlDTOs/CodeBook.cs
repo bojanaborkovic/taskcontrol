@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace TaskControlDTOs
 {
-	public class CodeBook 
-	{
-		public long Id { get; set; }
+  public class CodeBook
+  {
+    public long Id { get; set; }
 
-		public string Name { get; set; }
-	}
+    public string Name { get; set; }
+  }
 }

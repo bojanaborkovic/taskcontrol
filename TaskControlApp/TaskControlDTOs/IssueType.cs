@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TaskControlDTOs
 {
-	public class IssueTypeEntity : CodeBook
-	{
-		
-	}
+  public class IssueTypeEntity : CodeBook
+  {
+
+  }
 }

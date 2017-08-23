@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace TaskControlDTOs
 {
   [DataContract]
-	public class ProjectEntity
-	{
+  public class ProjectEntity
+  {
     [DataMember]
     public long Id { get; set; }
     [DataMember]

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskControlDTOs
 {
-	public class PriorityEntity : CodeBook
-	{
-	}
+  public class PriorityEntity : CodeBook
+  {
+  }
 }
