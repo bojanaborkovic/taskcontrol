@@ -31,8 +31,8 @@ namespace TaskControl.Controllers
     public ActionResult Create()
     {
       var usernames = userServiceClient.GetAllUsers();
-      var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
-      var userNamesList = users.Select(x => x.UserName).ToList();
+      //var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
+      var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
       ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
       //var projectNames = projectServiceClient.GetAllProjects();
       //var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(projectNames);
@@ -76,11 +76,11 @@ namespace TaskControl.Controllers
       //var projectList = JsonConvert.DeserializeObject<List<ProjectEntity>>(projects);
 
       var users = userServiceClient.GetAllUsers();
-      var usersList = JsonConvert.DeserializeObject<List<UserEntity>>(users);
+      //var usersList = JsonConvert.DeserializeObject<List<UserEntity>>(users);
 
       // var projectNamesList = projectList.Select(x => x.Name).ToList();
       //ViewBag.ProjectNames = JsonConvert.SerializeObject(projectNamesList);
-      ViewBag.UserNames = JsonConvert.SerializeObject(usersList.Select(x => x.UserName).ToList());
+      ViewBag.UserNames = JsonConvert.SerializeObject(users.Users.Select(x => x.UserName).ToList());
       TaskViewModel taskModel = MapToViewModel(task);
       return View("Edit", taskModel);
     }
@@ -103,17 +103,17 @@ namespace TaskControl.Controllers
     private TaskEntity MapToEntity(TaskViewModel model)
     {
       var asigneeRet = userServiceClient.GetUserByUsername(model.Asignee);
-      var asignee = JsonConvert.DeserializeObject<UserEntity>(asigneeRet);
+      //var asignee = JsonConvert.DeserializeObject<UserEntity>(asigneeRet);
 
       var reporterRet = userServiceClient.GetUserByUsername(model.Reporter);
-      var reporter = JsonConvert.DeserializeObject<UserEntity>(reporterRet);
+      //var reporter = JsonConvert.DeserializeObject<UserEntity>(reporterRet);
 
       TaskEntity task = new TaskEntity();
-      task.Asignee = asignee.Id;
+      task.Asignee = asigneeRet.Id;
       task.DateCreated = DateTime.UtcNow;
       task.Description = model.Description;
       task.DueDate = model.DueDate;
-      task.Reporter = reporter.Id;
+      task.Reporter = reporterRet.Id;
       task.IssueType = model.IssueType;
       task.Priority = model.Priority;
       task.Status = model.Status;

@@ -65,8 +65,8 @@ namespace TaskControlAPI.Controllers
     public HttpResponseMessage UpdateProject(ProjectEntity project)
     {
       _log.DebugFormat("UpdateProject with id {0}", project.Id);
-      bool updated = _projectService.UpdateProject(project);
-      if (!updated)
+      var updated = _projectService.UpdateProject(project);
+      if (updated == null)
       {
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not update project");
       }

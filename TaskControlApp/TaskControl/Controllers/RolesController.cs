@@ -49,11 +49,11 @@ namespace TaskControl.Controllers
       var rolesRet = JsonConvert.DeserializeObject<List<RoleEntity>>(response);
 
       var responseUsers = usersServiceClient.GetAllUsers();
-      var usersRet = JsonConvert.DeserializeObject<List<UserEntity>>(responseUsers);
+      //var usersRet = JsonConvert.DeserializeObject<List<UserEntity>>(responseUsers);
 
       var roles = rolesRet.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name });
       userInRole.UserRoles = roles;
-      var users = usersRet.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.UserName });
+      var users = responseUsers.Users.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.UserName });
       userInRole.Users = users;
       return PartialView("AddUserToRole", userInRole);
     }

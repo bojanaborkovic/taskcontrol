@@ -50,8 +50,8 @@ namespace TaskControl.Controllers
     public ActionResult Create()
     {
       var usernames = userServiceClient.GetAllUsers();
-      var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
-      var userNamesList = users.Select(x => x.UserName).ToList();
+      //var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
+      var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
       ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
 
       return View("New");
@@ -84,28 +84,34 @@ namespace TaskControl.Controllers
     public ActionResult EditProject(long projectId)
     {
       var responseData = serviceClient.GetProjectById(projectId);
-      ProjectViewModel project = new ProjectViewModel();
-      var projectEntity = JsonConvert.DeserializeObject<ProjectEntity>(responseData);
-      project.Id = projectEntity.Id;
-      project.Name = projectEntity.Name;
-      project.Description = projectEntity.Description;
-      var ownerRet = userServiceClient.GetUserById(projectEntity.OwnerId);
-      var owner = JsonConvert.DeserializeObject<UserEntity>(ownerRet);
-      project.Owner = owner.UserName;
+      if (responseData != null && string.IsNullOrEmpty(responseData.ErrorMessage))
+      {
+        ProjectViewModel project = new ProjectViewModel();
+        project.Id = responseData.Id;
+        project.Name = responseData.Name;
+        project.Description = responseData.Description;
+        var ownerRet = userServiceClient.GetUserById(responseData.OwnerId);
+        project.Owner = ownerRet.UserName;
 
-      var usernames = userServiceClient.GetAllUsers();
-      var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
-      var userNamesList = users.Select(x => x.UserName).ToList();
-      ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+        var usernames = userServiceClient.GetAllUsers();
+        //var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
+        var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
+        ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+        return View(project);
+      }
+      else
+      {
+        return View("Error", new ErrorModel() { Message = responseData.ErrorMessage });
+      }
 
-      return View(project);
+      
     }
 
     [HttpPost]
     public ActionResult EditProject(ProjectViewModel projectViewModel)
     {
       var ret = serviceClient.UpdateProject(MapToProjectEntity(projectViewModel));
-      if (!string.IsNullOrEmpty(ret))
+      if (ret != null && !string.IsNullOrEmpty(ret.ErrorMessage))
       {
         return View("Error", ret);
       }
@@ -123,9 +129,9 @@ namespace TaskControl.Controllers
       model.Id = projectViewModel.Id;
       model.Name = projectViewModel.Name;
       model.Description = projectViewModel.Description;
-      string userRet = userServiceClient.GetUserByUsername(projectViewModel.Owner);
-      var user = JsonConvert.DeserializeObject<UserEntity>(userRet);
-      model.OwnerId = user.Id;
+      var userRet = userServiceClient.GetUserByUsername(projectViewModel.Owner);
+      //var user = JsonConvert.DeserializeObject<UserEntity>(userRet);
+      model.OwnerId = userRet.Id;
       return model;
     }
 

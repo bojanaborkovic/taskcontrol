@@ -47,8 +47,8 @@ namespace TaskControl.Controllers
     {
       var responseData = serviceClient.GetAllUsers();
 
-      var users = JsonConvert.DeserializeObject<List<UserEntity>>(responseData);
-      var mappedUsers = MapToUsersViewModel(users);
+      //var users = JsonConvert.DeserializeObject<List<UserEntity>>(responseData);
+      var mappedUsers = MapToUsersViewModel(responseData.Users);
 
 
       return View("Index", mappedUsers.ToPagedList(1, 5));

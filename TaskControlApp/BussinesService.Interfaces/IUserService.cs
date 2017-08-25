@@ -1,4 +1,5 @@
 ﻿using BusinessServices.Interfaces.Responses;
+using BussinesService.Interfaces.Responses.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace BusinessServices.Interfaces
 {
   public interface IUserService
   {
-    UserEntity GetUserById(long UserId);
-    UserEntity GetUserByUsername(string username);
-    IEnumerable<UserEntity> GetAllUsers();
-    long CreateUser(UserEntity user);
+    BaseUserReturn GetUserById(long UserId);
+    BaseUserReturn GetUserByUsername(string username);
+    SearchUsersReturn GetAllUsers();
+    BaseUserReturn CreateUser(UserEntity user);
     bool UpdateUser(UserEntity user);
     IEnumerable<RoleEntity> GetAllRoles();
     BasicReturn AddUserToRole(long roleId, long userId);

@@ -38,33 +38,28 @@ namespace TaskControl.ServiceClients
     //}
 
 
-    public string GetProjectById(long projectId)
-    {
-      string address = string.Format("{0}{1}", endpoint, "projects/get");
-      endpoint = address;
-      Method = HttpVerb.GET;
-      string paramts = string.Format("?projectId={0}", projectId);
-      var json = MakeRequest(paramts);
+    //public string GetProjectById(long projectId)
+    //{
+    //  string address = string.Format("{0}{1}", endpoint, "projects/get");
+    //  endpoint = address;
+    //  Method = HttpVerb.GET;
+    //  string paramts = string.Format("?projectId={0}", projectId);
+    //  var json = MakeRequest(paramts);
 
-      return json;
-    }
+    //  return json;
+    //}
 
-    public List<ProjectEntity> GetProjectsWithOwner()
-    {
-      throw new NotImplementedException();
-    }
+    //public string UpdateProject(ProjectEntity project)
+    //{
+    //  string address = string.Format("{0}{1}", endpoint, "projects/update");
+    //  endpoint = address;
+    //  Method = HttpVerb.POST;
+    //  PostData = new JavaScriptSerializer().Serialize(project);
+    //  var json = MakeRequest();
 
-    public string UpdateProject(ProjectEntity project)
-    {
-      string address = string.Format("{0}{1}", endpoint, "projects/update");
-      endpoint = address;
-      Method = HttpVerb.POST;
-      PostData = new JavaScriptSerializer().Serialize(project);
-      var json = MakeRequest();
+    //  return json;
 
-      return json;
-
-    }
+    //}
 
     public BaseProjectReturn CreateProject(ProjectEntity project)
     {
@@ -76,29 +71,20 @@ namespace TaskControl.ServiceClients
       return ExecuteGet<GetProjectReturn>(string.Format("{0}/{1}", "projects", "all"));
     }
 
-    ProjectEntity IProjectService.GetProjectById(long Id)
+    public BaseProjectReturn GetProjectById(long Id)
+    {
+      return ExecuteGet<BaseProjectReturn>(string.Format("{0}/{1}?projectId={2}", "projects", "get", Id));
+    }
+
+    public BaseProjectReturn UpdateProject(ProjectEntity project)
+    {
+      return ExecutePost<BaseProjectReturn>(string.Format("{0}/{1}", "projects", "update"), project);
+    }
+
+    public GetProjectReturn GetProjectsWithOwner()
     {
       throw new NotImplementedException();
     }
-
-    GetProjectReturn IProjectService.GetProjectsWithOwner()
-    {
-      throw new NotImplementedException();
-    }
-
-    //ProjectEntity IProjectService.GetProjectById(long Id)
-    //{
-    //  ExecuteGet<ProjectEntity>()
-
-    //  return json;
-    //}
-
-    bool IProjectService.UpdateProject(ProjectEntity project)
-    {
-      throw new NotImplementedException();
-    }
-
-
   }
 
 }

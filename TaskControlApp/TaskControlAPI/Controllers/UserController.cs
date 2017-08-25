@@ -51,11 +51,10 @@ namespace TaskControlAPI.Controllers
 
       if (users != null)
       {
-        var userEntities = users as List<UserEntity> ?? users.ToList();
-        if (userEntities.Any())
+        if (users.Users.Any())
         {
-          _log.DebugFormat("GetAllUsers finished with : {0}", userEntities.ToString());
-          return Request.CreateResponse(HttpStatusCode.OK, userEntities);
+          _log.DebugFormat("GetAllUsers finished with : {0}", users.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
       }
@@ -103,14 +102,14 @@ namespace TaskControlAPI.Controllers
     public HttpResponseMessage CreateUser(UserEntity user)
     {
       _log.DebugFormat("CrateUser invoked with : {0}", user.ToString());
-      long userId = _userService.CreateUser(user);
-      if (userId == 0)
+      var userRet = _userService.CreateUser(user);
+      if (userRet == null)
       {
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not create user");
       }
       else
       {
-        return Request.CreateResponse(HttpStatusCode.OK, userId);
+        return Request.CreateResponse(HttpStatusCode.OK, userRet.Id);
       }
 
     }

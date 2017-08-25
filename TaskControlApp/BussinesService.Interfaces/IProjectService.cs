@@ -10,10 +10,10 @@ namespace BusinessServices.Interfaces
 {
   public interface IProjectService
   {
-    ProjectEntity GetProjectById(long Id);
+    BaseProjectReturn GetProjectById(long Id);
     GetProjectReturn GetAllProjects();
     BaseProjectReturn CreateProject(ProjectEntity project);
-    bool UpdateProject(ProjectEntity project);
+    BaseProjectReturn UpdateProject(ProjectEntity project);
     GetProjectReturn GetProjectsWithOwner();
 
   }

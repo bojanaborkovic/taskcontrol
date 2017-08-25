@@ -12,7 +12,19 @@ namespace BussinesService.Interfaces.Responses.Project
   public class BaseProjectReturn : BasicReturn
   {
     [DataMember]
-    public long ProjectId { get; set; }
+    public long Id { get; set; }
+
+    [DataMember]
+    public string Name { get; set; }
+
+    [DataMember]
+    public string Description { get; set; }
+
+    [DataMember]
+    public long OwnerId { get; set; }
+
+    [DataMember]
+    public long Owner { get; set; }
 
   }
 }

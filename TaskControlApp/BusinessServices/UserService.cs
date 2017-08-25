@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BusinessServices.Interfaces;
 using BusinessServices.Interfaces.Responses;
-
+using BussinesService.Interfaces.Responses.User;
 using DataModel;
 using DataModel.UnitOfWork;
 using log4net;
@@ -26,8 +26,10 @@ namespace BusinessServices
       _unitOfWork = new UnitOfWork();
     }
 
-    public long CreateUser(UserEntity user)
+    public BaseUserReturn CreateUser(UserEntity user)
     {
+      BaseUserReturn ret = new BaseUserReturn();
+
       var config = new MapperConfiguration(cfg =>
       {
         cfg.CreateMap<UserEntity, AspNetUser>();
@@ -38,12 +40,16 @@ namespace BusinessServices
       _unitOfWork.UserRepository.Insert(userToInsert);
       _unitOfWork.Save();
       long Id = userToInsert.Id;
-      return Id;
+      ret.Id = userToInsert.Id;
+      ret.UserName = userToInsert.UserName;
+
+      return ret;
     }
 
-    public IEnumerable<UserEntity> GetAllUsers()
+    public SearchUsersReturn GetAllUsers()
     {
       _log.DebugFormat("GetAllUsers invoked");
+      SearchUsersReturn ret = new SearchUsersReturn();
       try
       {
         var users = _unitOfWork.UserRepository.Get(orderBy: q => q.OrderBy(d => d.UserName));
@@ -57,20 +63,24 @@ namespace BusinessServices
           IMapper mapper = config.CreateMapper();
           var usersMapped = mapper.Map<List<AspNetUser>, List<UserEntity>>(users.ToList());
           _log.DebugFormat("GetAllProjects finished with : {0}", users.ToString());
-          return usersMapped;
+          ret.Users = usersMapped;
+          ret.RecordCount = usersMapped.Count;
         }
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error during fetching users... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+        ret.StatusCode = "FetchError";
       }
 
 
-      return null;
+      return ret;
     }
 
-    public UserEntity GetUserById(long UserId)
+    public BaseUserReturn GetUserById(long UserId)
     {
+      BaseUserReturn ret = new BaseUserReturn();
       var user = _unitOfWork.UserRepository.GetByID(UserId);
       if (user != null)
       {
@@ -80,14 +90,14 @@ namespace BusinessServices
         });
 
         IMapper mapper = config.CreateMapper();
-        var userModel = mapper.Map<AspNetUser, UserEntity>(user);
-        return userModel;
+        ret = mapper.Map<AspNetUser, BaseUserReturn>(user);
       }
-      return null;
+      return ret;
     }
 
-    public UserEntity GetUserByUsername(string username)
+    public BaseUserReturn GetUserByUsername(string username)
     {
+      BaseUserReturn ret = new BaseUserReturn();
       var user = _unitOfWork.UserRepository.Get().Where(x => x.UserName == username).FirstOrDefault();
       try
       {
@@ -99,15 +109,15 @@ namespace BusinessServices
           });
 
           IMapper mapper = config.CreateMapper();
-          var userModel = mapper.Map<AspNetUser, UserEntity>(user);
-          return userModel;
+          ret = mapper.Map<AspNetUser, BaseUserReturn>(user);
+          
         }
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error during get user : {0}  {1}", username, ex.Message);
       }
-      return null;
+      return ret;
     }
 
     public bool UpdateUser(UserEntity user)

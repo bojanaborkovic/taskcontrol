@@ -44,7 +44,7 @@ namespace BusinessServices
           _unitOfWork.ProjectRepository.Insert(mappedProject);
           _unitOfWork.Save();
           scope.Complete();
-          ret.ProjectId = mappedProject.Id;
+          ret.Id = mappedProject.Id;
 
         }
       }
@@ -57,22 +57,23 @@ namespace BusinessServices
       return ret;
     }
 
-    public ProjectEntity GetProjectById(long Id)
+    public BaseProjectReturn GetProjectById(long Id)
     {
+      BaseProjectReturn ret = new BaseProjectReturn();
       var project = _unitOfWork.ProjectRepository.GetByID(Id);
       if (project != null)
       {
         var config = new MapperConfiguration(cfg =>
         {
-          cfg.CreateMap<Project, ProjectEntity>();
+          cfg.CreateMap<Project, BaseProjectReturn>();
         });
         IMapper mapper = config.CreateMapper();
-        var mappedProject = mapper.Map<Project, ProjectEntity>(project);
+        var mappedProject = mapper.Map<Project, BaseProjectReturn>(project);
         return mappedProject;
+        
       }
       return null;
     }
-
 
     public GetProjectReturn GetAllProjects()
     {
@@ -107,9 +108,11 @@ namespace BusinessServices
       return null;
     }
 
-    public bool UpdateProject(ProjectEntity project)
+    public BaseProjectReturn UpdateProject(ProjectEntity project)
     {
       _log.DebugFormat("UpdateProject invoked");
+      BaseProjectReturn ret = new BaseProjectReturn();
+
       try
       {
 
@@ -124,15 +127,18 @@ namespace BusinessServices
         _unitOfWork.ProjectRepository.Update(projectToUpdate);
         _unitOfWork.Save();
         _log.DebugFormat("UpdateProject with Id:{0} finished", projectToUpdate.Id);
-        return true;
-
+        ret.Id = projectToUpdate.Id;
+        ret.Name = projectToUpdate.Name;
+        ret.OwnerId = (long)projectToUpdate.OwnerId;
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error during update project... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+        ret.StatusCode = "UpdateError";
       }
 
-      return false;
+      return ret;
 
     }
 

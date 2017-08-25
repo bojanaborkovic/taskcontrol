@@ -50,6 +50,7 @@
     <Compile Include="Responses\Project\BaseProjectReturn.cs" />
     <Compile Include="Responses\Project\GetProjectReturn.cs" />
     <Compile Include="Responses\RoleReturn.cs" />
+    <Compile Include="Responses\User\BaseUserReturn.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TaskControlDTOs\TaskControlDTOs.csproj">
