@@ -1,0 +1,26 @@
+{
+  "name": "TaskControlApp",
+  "description": "Bug and task management system",
+  "main": "",
+  "authors": [
+    "Bojana Borkovic"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "jquery-validation-unobtrusive": "^3.2.6",
+    "modernizr": "^3.5.0",
+    "respond": "respond-minmax#^1.4.2",
+    "bootstrap": "^3.3.7",
+    "jquery-validation": "^1.17.0"
+  }
+}
