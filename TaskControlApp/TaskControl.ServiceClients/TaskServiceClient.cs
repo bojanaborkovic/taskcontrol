@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessServices.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -6,10 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using TaskControlDTOs;
+using BussinesService.Interfaces.Responses.Task;
+using BusinessServices.Interfaces.Responses;
 
 namespace TaskControl.ServiceClients
 {
-  public class TaskServiceClient : BaseRestClient
+  public class TaskServiceClient : BaseRestClient, ITaskService
   {
     public TaskServiceClient(string repoName)
     {
@@ -19,62 +22,36 @@ namespace TaskControl.ServiceClients
       client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public string GetAllTasks()
+    public BaseTaskReturn GetTaskById(long TaskId)
     {
-      string action = "/all";
-      address = action;
-      Method = HttpVerb.GET;
-      var json = MakeRequest();
-      return json;
+      return Get<BaseTaskReturn>(new Uri(string.Format("{0}/{1}", BaseUri.ToString(), "getbyid")));
     }
 
-    public string GetAllTasksDetails()
+    public TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId)
     {
-      string action = "/details";
-      address = action;
-      Method = HttpVerb.GET;
-      var json = MakeRequest();
-      return json;
+      return Get<TaskEntityExtendedReturn>(new Uri(string.Format("{0}/{1}?taskId={3}", BaseUri.ToString(), "getbyidcustom", TaskId)));
     }
 
-    public string CreateTask(TaskEntity task)
+    public SearchTasksReturn GetAllTasks()
     {
-      string action = "/create";
-      address = action;
-      Method = HttpVerb.POST;
-      PostData = new JavaScriptSerializer().Serialize(task);
-      var json = MakeRequest();
-      return json;
-
+      return Get<SearchTasksReturn>(new Uri(string.Format("{0}/{1}", BaseUri.ToString(), "all")));
     }
 
-    public string GetTaskById(long taskId)
+    public BasicReturn CreateTask(TaskEntity task)
     {
-      string action = "/getbyid";
-      address = action;
-      Method = HttpVerb.GET;
-      var json = MakeRequest();
-      return json;
+      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "task", "create"), task);
     }
 
-    public string GetTaskByIdCustom(long taskId)
+    public TasksDetailsReturn GetAllTasksDetails()
     {
-      string action = "/getbyidcustom";
-      address = action;
-      string paramts = string.Format("?taskId={0}", taskId);
-      Method = HttpVerb.GET;
-      var json = MakeRequest(paramts);
-      return json;
+      return Get<TasksDetailsReturn>(new Uri(string.Format("{0}/{1}", BaseUri.ToString(), "details")));
     }
 
-    public object UpdateTask(TaskEntity task)
+    public BasicReturn UpdateTask(TaskEntity task)
     {
-      string action = "/update";
-      address = action;
-      Method = HttpVerb.POST;
-      PostData = new JavaScriptSerializer().Serialize(task);
-      var json = MakeRequest();
-      return json;
+      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "task", "update"), task);
     }
+
+  
   }
 }

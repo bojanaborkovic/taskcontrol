@@ -32,7 +32,7 @@ namespace TaskControl.Models
     public string ProjectName { get; set; }
 
     [DataType(DataType.Date)]
-    public DateTime? DueDate { get; set; }
+    public DateTime DueDate { get; set; }
 
   }
 }

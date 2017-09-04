@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using TaskControlDTOs;
 using Task = DataModel.Task;
 using DataModel;
+using BusinessServices.Interfaces.Responses;
+using BussinesService.Interfaces.Responses.Task;
 
 namespace BusinessServices
 {
@@ -25,41 +27,65 @@ namespace BusinessServices
     }
     #endregion
 
-
     #region ITaskService members
 
-    public long CreateTask(TaskEntity task)
+    public BasicReturn CreateTask(TaskEntity task)
     {
-      var config = new MapperConfiguration(cfg =>
-      {
-        cfg.CreateMap<TaskEntity, Task>();
-      });
-      IMapper mapper = config.CreateMapper();
-      var taskToInsert = mapper.Map<Task>(task);
+      BasicReturn ret = new BasicReturn();
 
-      _unitOfWork.TaskRepository.Insert(taskToInsert);
-      _unitOfWork.Save();
-      long Id = taskToInsert.Id;
-      return Id;
+      try
+      {
+        var config = new MapperConfiguration(cfg =>
+        {
+          cfg.CreateMap<TaskEntity, Task>();
+        });
+        IMapper mapper = config.CreateMapper();
+        var taskToInsert = mapper.Map<Task>(task);
+
+        _unitOfWork.TaskRepository.Insert(taskToInsert);
+        _unitOfWork.Save();
+        ret.StatusCode = "OK";
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error creating task : {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+        ret.StatusCode = "Error";
+      }
+      return ret;
     }
 
-    public void UpdateTask(TaskEntity task)
+    public BasicReturn UpdateTask(TaskEntity task)
     {
-      var config = new MapperConfiguration(cfg =>
-      {
-        cfg.CreateMap<TaskEntity, Task>();
-      });
-      IMapper mapper = config.CreateMapper();
-      var taskToUpdate = mapper.Map<Task>(task);
+      BasicReturn ret = new BasicReturn();
 
-      _unitOfWork.TaskRepository.Update(taskToUpdate);
-      _unitOfWork.Save();
+      try
+      {
+        var config = new MapperConfiguration(cfg =>
+        {
+          cfg.CreateMap<TaskEntity, Task>();
+        });
+        IMapper mapper = config.CreateMapper();
+        var taskToUpdate = mapper.Map<Task>(task);
+
+        _unitOfWork.TaskRepository.Update(taskToUpdate);
+        _unitOfWork.Save();
+        ret.StatusCode = "OK";
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error updating task : {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+      }
+
+      return ret;
 
     }
 
-    public List<TaskEntity> GetAllTasks()
+    public SearchTasksReturn GetAllTasks()
     {
       _log.DebugFormat("GetAllTasks invoked");
+      SearchTasksReturn ret = new SearchTasksReturn();
       try
       {
         var tasks = _unitOfWork.TaskRepository.Get(orderBy: q => q.OrderBy(d => d.DateCreated));
@@ -71,9 +97,11 @@ namespace BusinessServices
           });
 
           IMapper mapper = config.CreateMapper();
-          var usersMapped = mapper.Map<List<Task>, List<TaskEntity>>(tasks.ToList());
+          var taskskMapped = mapper.Map<List<Task>, List<TaskEntity>>(tasks.ToList());
           _log.DebugFormat("GetAllTasks finished with : {0}", tasks.ToString());
-          return usersMapped;
+          ret.Tasks = taskskMapped;
+          ret.RecordCount = taskskMapped.Count;
+          ret.StatusCode = "OK";
         }
       }
       catch (Exception ex)
@@ -82,54 +110,60 @@ namespace BusinessServices
       }
 
 
-      return null;
+      return ret;
     }
 
-    public TaskEntity GetTaskById(long TaskId)
+    public BaseTaskReturn GetTaskById(long TaskId)
     {
+      BaseTaskReturn ret = new BaseTaskReturn();
       var task = _unitOfWork.TaskRepository.GetByID(TaskId);
       if (task != null)
       {
         var taskModel = Mapper.Map<DataModel.Task, TaskEntity>(task);
-        return taskModel;
+        ret.Task = taskModel;
+        ret.StatusCode = "OK";
       }
-      return null;
+      return ret;
     }
 
-    public List<TaskEntityExtended> GetAllTasksDetails()
+    public TasksDetailsReturn GetAllTasksDetails()
     {
       _log.DebugFormat("GetAllTasksDetails invoked");
+      TasksDetailsReturn ret = new TasksDetailsReturn();
       try
       {
         var tasks = _unitOfWork.GetAllTasksDetails();
         List<TaskEntityExtended> tasksWithDetails = new List<TaskEntityExtended>();
         tasksWithDetails = MapTasks(tasks);
-        return tasksWithDetails;
+        ret.Tasks = tasksWithDetails;
+        ret.StatusCode = "OK";
 
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error fetching tasks... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
       }
-      return null;
+      return ret;
 
     }
 
-    public TaskEntityExtended GetTaskByIdCustom(long TaskId)
+    public TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId)
     {
       _log.DebugFormat("GetTaskByIdCustom invoked for task with Id : {0}", TaskId);
+      TaskEntityExtendedReturn ret = new TaskEntityExtendedReturn();
       try
       {
         var task = _unitOfWork.GetTaskById(TaskId);
         TaskEntityExtended taskEntity = MapToTaskEntity(task.FirstOrDefault());
-        return taskEntity;
+        ret = (TaskEntityExtendedReturn)taskEntity;
 
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error fetching task... {0}", ex.Message);
       }
-      return null;
+      return ret;
     }
 
     private TaskEntityExtended MapToTaskEntity(GetTaskResult getTaskResult)
@@ -139,8 +173,8 @@ namespace BusinessServices
       taskEntity.AsigneeId = getTaskResult.AsigneeId;
       taskEntity.Reporter = getTaskResult.Reporter;
       taskEntity.ReporterId = getTaskResult.ReporterId;
-      taskEntity.DateCreated = getTaskResult.DateCreated;
-      taskEntity.DueDate = getTaskResult.DueDate;
+      taskEntity.DateCreated = (DateTime)getTaskResult.DateCreated;
+      taskEntity.DueDate = (DateTime)getTaskResult.DueDate;
       taskEntity.Description = getTaskResult.Description;
       taskEntity.IssueType = _unitOfWork.IssueTypeRepositorsy.GetByID(getTaskResult.IssueType).Name;
       taskEntity.IssueTypeId = getTaskResult.IssueType;
@@ -160,7 +194,6 @@ namespace BusinessServices
 
     #endregion
 
-
     #region mappers
     private List<TaskEntityExtended> MapTasks(List<TaskDetailsResult> tasks)
     {
@@ -175,8 +208,8 @@ namespace BusinessServices
           Asignee = task.Asignee,
           Status = task.TaskStatus,
           Description = task.Description,
-          DateCreated = task.DateCreated,
-          DueDate = task.DueDate,
+          DateCreated = (DateTime)task.DateCreated,
+          DueDate = (DateTime)task.DueDate,
           Reporter = task.Reporter,
           Project = task.Project,
           Priority = task.Priority,

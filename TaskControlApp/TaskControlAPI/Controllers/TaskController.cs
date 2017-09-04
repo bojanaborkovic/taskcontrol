@@ -30,16 +30,11 @@ namespace TaskControlAPI.Controllers
 
       try
       {
-        var tasks = _taskService.GetAllTasks();
-        if (tasks != null)
+        var getTasks = _taskService.GetAllTasks();
+        if (getTasks != null && getTasks.Tasks.Count > 0)
         {
-          var taskEntities = tasks as List<TaskEntity> ?? tasks.ToList();
-          if (taskEntities.Any())
-          {
-            _log.DebugFormat("GetAllTasks finished with : {0}", taskEntities.ToString());
-            return Request.CreateResponse(HttpStatusCode.OK, taskEntities);
-          }
-
+          _log.DebugFormat("GetAllTasks finished with : {0}", getTasks.Tasks.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, getTasks);
         }
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Tasks not found");
       }
@@ -59,16 +54,11 @@ namespace TaskControlAPI.Controllers
 
       try
       {
-        var tasks = _taskService.GetAllTasksDetails();
-        if (tasks != null)
+        var taskskRet = _taskService.GetAllTasksDetails();
+        if (taskskRet != null && taskskRet.RecordCount > 0)
         {
-          var taskEntities = tasks as List<TaskEntityExtended> ?? tasks.ToList();
-          if (taskEntities.Any())
-          {
-            _log.DebugFormat("GetAllTasksDetails finished with : {0}", taskEntities.ToString());
-            return Request.CreateResponse(HttpStatusCode.OK, taskEntities);
-          }
-
+          _log.DebugFormat("GetAllTasksDetails finished with : {0}", taskskRet.Tasks.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, taskskRet);
         }
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Tasks not found");
       }
@@ -87,11 +77,11 @@ namespace TaskControlAPI.Controllers
 
       try
       {
-        long taskId = _taskService.CreateTask(task);
-        if (taskId != 0)
+        var taskRet = _taskService.CreateTask(task);
+        if (taskRet == null)
         {
-          _log.DebugFormat("CreateTask finished with : {0}", taskId.ToString());
-          return Request.CreateResponse(HttpStatusCode.OK, taskId);
+          _log.DebugFormat("CreateTask finished with : {0}", taskRet != null ? taskRet.StatusCode.ToString() : "OK");
+          return Request.CreateResponse(HttpStatusCode.OK);
 
         }
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error creating task");

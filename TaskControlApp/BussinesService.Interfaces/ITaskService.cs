@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BusinessServices.Interfaces.Responses;
+using BussinesService.Interfaces.Responses.Task;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +11,12 @@ namespace BusinessServices.Interfaces
 {
   public interface ITaskService
   {
-    TaskEntity GetTaskById(long TaskId);
-    TaskEntityExtended GetTaskByIdCustom(long TaskId);
-    List<TaskEntity> GetAllTasks();
-    long CreateTask(TaskEntity task);
-    List<TaskEntityExtended> GetAllTasksDetails();
-    void UpdateTask(TaskEntity task);
+    BaseTaskReturn GetTaskById(long TaskId);
+    TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId);
+    SearchTasksReturn GetAllTasks();
+    BasicReturn CreateTask(TaskEntity task);
+    TasksDetailsReturn GetAllTasksDetails();
+    BasicReturn UpdateTask(TaskEntity task);
 
   }
 }
