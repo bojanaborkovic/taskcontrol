@@ -3,7 +3,7 @@
 @{
   ViewBag.Title = "New";
 
-  var userNames = ViewBag.UserNames;
+  var userNames = ViewBag.Usernames;
 }
 
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
@@ -57,7 +57,8 @@
 </div>
 
 <script type="text/javascript">
-	$(document).ready(function () { // will trigger when the document is ready
+  $(document).ready(function () { // will trigger when the document is ready
+
 		$('.datepicker').datepicker(); //Initialise any date pickers
 
 		var availableUsers = @Html.Raw(userNames);

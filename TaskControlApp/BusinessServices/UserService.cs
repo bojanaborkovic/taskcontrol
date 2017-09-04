@@ -46,6 +46,28 @@ namespace BusinessServices
       return ret;
     }
 
+    public BasicReturn UpdateUser(UserEntity user)
+    {
+      BasicReturn ret = new BasicReturn();
+      try
+      {
+        var config = new MapperConfiguration(cfg =>
+        {
+          cfg.CreateMap<UserEntity, AspNetUser>();
+        });
+        IMapper mapper = config.CreateMapper();
+        var userToUpdate = mapper.Map<AspNetUser>(user);
+        _unitOfWork.UserRepository.Update(userToUpdate);
+        _unitOfWork.Save();
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during user update : {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+      }
+      return ret;
+    }
+
     public SearchUsersReturn GetAllUsers()
     {
       _log.DebugFormat("GetAllUsers invoked");
@@ -120,30 +142,12 @@ namespace BusinessServices
       return ret;
     }
 
-    public bool UpdateUser(UserEntity user)
-    {
-      try
-      {
-        var config = new MapperConfiguration(cfg =>
-        {
-          cfg.CreateMap<UserEntity, AspNetUser>();
-        });
-        IMapper mapper = config.CreateMapper();
-        var userToUpdate = mapper.Map<AspNetUser>(user);
-        _unitOfWork.UserRepository.Update(userToUpdate);
-        _unitOfWork.Save();
-        return true;
-      }
-      catch (Exception ex)
-      {
-        _log.ErrorFormat("Error during user update : {0}", ex.Message);
-      }
-      return false;
-    }
+    
 
-    public IEnumerable<RoleEntity> GetAllRoles()
+    public SearchRolesReturn GetAllRoles()
     {
       _log.DebugFormat("GetAllRoles invoked");
+      SearchRolesReturn ret = new SearchRolesReturn();
       try
       {
         var allRoles = _unitOfWork.RoleRepository.Get(orderBy: q => q.OrderBy(d => d.Id));
@@ -156,50 +160,56 @@ namespace BusinessServices
 
           IMapper mapper = config.CreateMapper();
           var rolesMapped = mapper.Map<List<AspNetRole>, List<RoleEntity>>(allRoles.ToList());
-          _log.DebugFormat("GetAllRoles finished with : {0}", allRoles.ToString());
-          return rolesMapped;
+          ret.Roles = rolesMapped;
+          ret.RecordCount = rolesMapped.Count;
+          ret.StatusCode = "Success";
+         
         }
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error during fetching roles... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+        ret.StatusCode = "Error";
       }
 
+      _log.DebugFormat("GetAllRoles finished with : {0}", ret.Roles.ToString());
 
-      return null;
+      return ret;
     }
 
-    public BasicReturn AddUserToRole(long roleId, long userId)
+    public BasicReturn AddUserToRole(UserInRoleEntity userInRole)
     {
       BasicReturn ret = new BasicReturn();
       _log.DebugFormat("AddUserToRole invoked");
       try
       {
-        var user = _unitOfWork.UserRepository.GetByID(userId);
+        var user = _unitOfWork.UserRepository.GetByID(userInRole.UserId);
         if (user == null)
         {
-          throw new Exception(string.Format("User with Id {0} does not exist!", userId));
+          throw new Exception(string.Format("User with Id {0} does not exist!", userInRole.UserId));
         }
 
-        var role = _unitOfWork.RoleRepository.GetByID(roleId);
+        var role = _unitOfWork.RoleRepository.GetByID(userInRole.RoleId);
         if (role == null)
         {
-          throw new Exception(string.Format("Role with Id {0} does not exist!", roleId));
+          throw new Exception(string.Format("Role with Id {0} does not exist!", userInRole.RoleId));
         }
 
-        var userInRoleEntity = new AspNetUserRole() { UserId = userId, RoleId = roleId };
+        var userInRoleEntity = new AspNetUserRole() { UserId = userInRole.UserId, RoleId = userInRole.RoleId };
 
-        var usersRole = _unitOfWork.UserInRoleRepository.GetByID(userId, roleId);
+        var usersRole = _unitOfWork.UserInRoleRepository.GetByID(userInRole.UserId, userInRole.RoleId);
 
         if (usersRole == null)
         {
           _unitOfWork.UserInRoleRepository.Insert(userInRoleEntity);
           _unitOfWork.Save();
+          ret.StatusCode = "Success";
         }
 
         else
         {
-          var message = string.Format("User {0} is already in role {1}", userId, roleId);
+          var message = string.Format("User {0} is already in role {1}", userInRole.UserId, userInRole.RoleId);
           _log.DebugFormat(message);
           ret.ErrorMessage = message;
           return ret;
@@ -210,27 +220,31 @@ namespace BusinessServices
       catch (Exception ex)
       {
         _log.ErrorFormat("Error during adding user to role... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
       }
 
       return ret;
     }
 
-    public List<UserEntity> SearchUsers()
+    public SearchUsersReturn SearchUsers()
     {
       _log.DebugFormat("SearchUsers invoked");
+      SearchUsersReturn ret = new SearchUsersReturn();
       try
       {
         var users = _unitOfWork.SearchUsers();
         List<UserEntity> listOfUsers = new List<UserEntity>();
         listOfUsers = MapUsersList(users);
-        return listOfUsers;
+        ret.Users = listOfUsers;
+        ret.RecordCount = listOfUsers.Count;
 
       }
       catch (Exception ex)
       {
         _log.ErrorFormat("Error search users... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
       }
-      return null;
+      return ret;
     }
 
     public RoleReturn AddNewRole(RoleEntity role)

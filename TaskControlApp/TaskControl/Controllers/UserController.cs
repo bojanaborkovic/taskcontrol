@@ -17,10 +17,10 @@ namespace TaskControl.Controllers
   public class UserController : Controller
   {
     private UnitOfWork unitOfWork = new UnitOfWork();
-    private UserServiceClient serviceClient = new UserServiceClient("users");
+    private UserServiceClient serviceClient = new UserServiceClient("users") { DoSerialize = true };
     private ApplicationUserManager _userManager;
 
-    public UserController()
+    public UserController() 
     {
 
     }
@@ -57,7 +57,7 @@ namespace TaskControl.Controllers
     [HttpGet]
     public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 5)
     {
-      var users = serviceClient.SearchUsers();
+      var usersRet = serviceClient.SearchUsers();
       ViewBag.CurrentFilter = searchString;
       pageNumber = pageNumber > 0 ? pageNumber : 1;
       pageSize = pageSize > 0 ? pageSize : 25;
@@ -68,14 +68,11 @@ namespace TaskControl.Controllers
 
       ViewBag.CurrentSort = sortOrder;
 
-      var ret = JsonConvert.DeserializeObject<List<UserEntity>>(users);
       List<UserEntity> sortedUsers = new List<UserEntity>();
-
-
 
       if (!string.IsNullOrEmpty(searchString))
       {
-        ret = ret.Where(x => x.UserName.Contains(searchString) || x.Email.Contains(searchString)).ToList();
+        usersRet.Users = usersRet.Users.Where(x => x.UserName.Contains(searchString) || x.Email.Contains(searchString)).ToList();
       }
 
       if (searchString != null)
@@ -91,22 +88,22 @@ namespace TaskControl.Controllers
       switch (sortOrder)
       {
         case "username_desc":
-          sortedUsers = ret.OrderByDescending(x => x.UserName).ToList();
+          sortedUsers = usersRet.Users.OrderByDescending(x => x.UserName).ToList();
           break;
         case "firstname_desc":
-          sortedUsers = ret.OrderByDescending(x => x.FirstName).ToList();
+          sortedUsers = usersRet.Users.OrderByDescending(x => x.FirstName).ToList();
           break;
         case "firstname":
-          sortedUsers = ret.OrderBy(x => x.FirstName).ToList();
+          sortedUsers = usersRet.Users.OrderBy(x => x.FirstName).ToList();
           break;
         case "Id_desc":
-          sortedUsers = ret.OrderByDescending(x => x.Id).ToList();
+          sortedUsers = usersRet.Users.OrderByDescending(x => x.Id).ToList();
           break;
         case "Id":
-          sortedUsers = ret.OrderBy(x => x.Id).ToList();
+          sortedUsers = usersRet.Users.OrderBy(x => x.Id).ToList();
           break;
         default:
-          sortedUsers = ret.OrderBy(x => x.UserName).ToList();
+          sortedUsers = usersRet.Users.OrderBy(x => x.UserName).ToList();
           break;
 
       }

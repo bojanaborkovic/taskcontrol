@@ -14,7 +14,7 @@ namespace TaskControl.Controllers
   public class TaskController : Controller
   {
     private TaskServiceClient taskServiceClient = new TaskServiceClient("tasks");
-    private UserServiceClient userServiceClient = new UserServiceClient("users");
+    private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
     private ProjectServiceClient projectServiceClient = new ProjectServiceClient();
 
     // GET: Tasks
@@ -34,9 +34,9 @@ namespace TaskControl.Controllers
       //var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
       var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
       ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
-      //var projectNames = projectServiceClient.GetAllProjects();
+      var projects = projectServiceClient.GetAllProjects();
       //var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(projectNames);
-      // ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Select(x => x.Name));
+      ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
       return View("New");
     }
 

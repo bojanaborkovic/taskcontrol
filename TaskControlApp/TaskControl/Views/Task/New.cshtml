@@ -117,7 +117,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Project, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Project, new { htmlAttributes = new { @class = "form-control autoproject" } })
+                @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control autoproject" } })
                 @Html.ValidationMessageFor(model => model.Project, "", new { @class = "text-danger" })
             </div>
         </div>

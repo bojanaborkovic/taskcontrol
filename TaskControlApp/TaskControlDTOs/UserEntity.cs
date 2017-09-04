@@ -38,4 +38,14 @@ namespace TaskControlDTOs
       return base.ToString();
     }
   }
+
+  [DataContract]
+  public class UserInRoleEntity 
+  {
+    [DataMember]
+    public long RoleId { get; set; }
+
+    [DataMember]
+    public long UserId { get; set; }
+  }
 }

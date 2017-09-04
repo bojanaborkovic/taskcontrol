@@ -1,5 +1,5 @@
 {
-  "name": "TaskControlApp",
+  "name": "taskcontrollapp",
   "description": "Bug and task management system",
   "main": "",
   "authors": [
@@ -21,6 +21,8 @@
     "modernizr": "^3.5.0",
     "respond": "respond-minmax#^1.4.2",
     "bootstrap": "^3.3.7",
-    "jquery-validation": "^1.17.0"
+    "jquery-validation": "^1.17.0",
+    "Modernizr": "http://modernizr.com/download/?-fontface-backgroundsize-borderimage-borderradius-boxshadow-flexbox-hsla-multiplebgs-opacity-rgba-textshadow-cssanimations-csscolumns-generatedcontent-cssgradients-cssreflections-csstransforms-csstransforms3d-csstransitions-applicationcache-canvas-canvastext-draganddrop-hashchange-history-audio-video-indexeddb-input-inputtypes-localstorage-postmessage-sessionstorage-websockets-websqldatabase-webworkers-geolocation-inlinesvg-smil-svg-svgclippaths-touch-webgl-shiv-mq-cssclasses-addtest-prefixed-teststyles-testprop-testallprops-hasevent-prefixes-domprefixes-load.zip",
+    "masonry": "^4.2.0"
   }
 }

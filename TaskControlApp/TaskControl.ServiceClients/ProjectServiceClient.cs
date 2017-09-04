@@ -25,42 +25,6 @@ namespace TaskControl.ServiceClients
     }
 
 
-    //public string CreateProject(ProjectEntity project)
-    //{
-    //  string address = string.Format("{0}{1}", endpoint, "projects/create");
-    //  endpoint = address;
-    //  Method = HttpVerb.POST;
-    //  PostData = new JavaScriptSerializer().Serialize(project);
-    //  var json = MakeRequest();
-
-    //  return json;
-
-    //}
-
-
-    //public string GetProjectById(long projectId)
-    //{
-    //  string address = string.Format("{0}{1}", endpoint, "projects/get");
-    //  endpoint = address;
-    //  Method = HttpVerb.GET;
-    //  string paramts = string.Format("?projectId={0}", projectId);
-    //  var json = MakeRequest(paramts);
-
-    //  return json;
-    //}
-
-    //public string UpdateProject(ProjectEntity project)
-    //{
-    //  string address = string.Format("{0}{1}", endpoint, "projects/update");
-    //  endpoint = address;
-    //  Method = HttpVerb.POST;
-    //  PostData = new JavaScriptSerializer().Serialize(project);
-    //  var json = MakeRequest();
-
-    //  return json;
-
-    //}
-
     public BaseProjectReturn CreateProject(ProjectEntity project)
     {
       return ExecutePost<BaseProjectReturn>(string.Format("{0}/{1}", "projects", "create"), project);
@@ -68,7 +32,7 @@ namespace TaskControl.ServiceClients
 
     public GetProjectReturn GetAllProjects()
     {
-      return ExecuteGet<GetProjectReturn>(string.Format("{0}/{1}", "projects", "all"));
+      return Get<GetProjectReturn>(new Uri(string.Format("{0}{1}{2}", BaseUri.ToString(), "projects/", "/all")));
     }
 
     public BaseProjectReturn GetProjectById(long Id)

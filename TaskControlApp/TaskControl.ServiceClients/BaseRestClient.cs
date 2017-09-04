@@ -207,7 +207,7 @@ namespace TaskControl.ServiceClients
               }
           }
 
-          _log.DebugFormat("Request finishd with status code : {0} and response value : {1}", response.StatusCode, responseValue);
+          _log.DebugFormat("Request finished with status code : {0} and response value : {1}", response.StatusCode, responseValue);
 
           return Deserialize<T>(responseValue);
 
@@ -245,7 +245,7 @@ namespace TaskControl.ServiceClients
 
     public T ExecuteGet<T>(string action)
     {
-      return Get<T>(new Uri(this.BaseUri, action));
+      return Get<T>(new Uri(string.Format(this.BaseUri.ToString(), action)));
     }
 
     public T ExecutePost<T>(string action, object input)

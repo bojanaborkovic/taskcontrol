@@ -16,24 +16,26 @@ namespace TaskControl.Controllers
   public class RolesController : Controller
   {
     private UnitOfWork unitOfWork = new UnitOfWork();
-    private UserServiceClient rolesServiceClient = new UserServiceClient("roles");
-    private UserServiceClient usersServiceClient = new UserServiceClient("users");
+    private UserServiceClient rolesServiceClient = new UserServiceClient("roles") { DoSerialize = true };
+    private UserServiceClient usersServiceClient = new UserServiceClient("users") { DoSerialize = true };
     // GET: Roles
     public ActionResult Index()
     {
       var response = rolesServiceClient.GetAllRoles();
-      var rolesRet = JsonConvert.DeserializeObject<List<RoleEntity>>(response);
-      var mappedRoles = MapToRolesViewModel(rolesRet);
-
+      var mappedRoles = MapToRolesViewModel(response.Roles);
 
       return View("Index", mappedRoles.ToPagedList(1, 5));
     }
 
     [HttpPost]
-    public ActionResult AddUserToRole(long userId, long roleId)
+    public ActionResult AddUserToRole(UserInRoleViewModel userInRole)
     {
-      var ret = rolesServiceClient.AddUserToRole(roleId, userId);
-      if (string.IsNullOrEmpty(ret))
+      UserInRoleEntity userInRoleEntity = new UserInRoleEntity();
+      userInRoleEntity.RoleId = userInRole.RoleId;
+      userInRoleEntity.UserId = userInRole.UserId;
+
+      var ret = rolesServiceClient.AddUserToRole(userInRoleEntity);
+      if (ret == null)
       {
         return RedirectToAction("Index");
       }
@@ -45,20 +47,17 @@ namespace TaskControl.Controllers
     public ActionResult AddUserToRole()
     {
       UserInRoleViewModel userInRole = new UserInRoleViewModel();
-      var response = rolesServiceClient.GetAllRoles();
-      var rolesRet = JsonConvert.DeserializeObject<List<RoleEntity>>(response);
+      var responseRoles = rolesServiceClient.GetAllRoles();
 
       var responseUsers = usersServiceClient.GetAllUsers();
       //var usersRet = JsonConvert.DeserializeObject<List<UserEntity>>(responseUsers);
 
-      var roles = rolesRet.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name });
+      var roles = responseRoles.Roles.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name });
       userInRole.UserRoles = roles;
       var users = responseUsers.Users.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.UserName });
       userInRole.Users = users;
       return PartialView("AddUserToRole", userInRole);
     }
-
-
 
     [HttpGet]
     public ActionResult NewRole()

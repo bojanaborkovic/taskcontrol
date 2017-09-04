@@ -21,7 +21,7 @@ namespace TaskControl.Controllers
 
     private UnitOfWork unitOfWork = new UnitOfWork();
     private ProjectServiceClient serviceClient = new ProjectServiceClient() { DoSerialize = true };
-    private UserServiceClient userServiceClient = new UserServiceClient("users");
+    private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
 
     public ProjectController()
     {

@@ -15,10 +15,10 @@ namespace BusinessServices.Interfaces
     BaseUserReturn GetUserByUsername(string username);
     SearchUsersReturn GetAllUsers();
     BaseUserReturn CreateUser(UserEntity user);
-    bool UpdateUser(UserEntity user);
-    IEnumerable<RoleEntity> GetAllRoles();
-    BasicReturn AddUserToRole(long roleId, long userId);
+    BasicReturn UpdateUser(UserEntity user);
+    SearchRolesReturn GetAllRoles();
+    BasicReturn AddUserToRole(UserInRoleEntity userInRole);
     RoleReturn AddNewRole(RoleEntity role);
-    List<UserEntity> SearchUsers();
+    SearchUsersReturn SearchUsers();
   }
 }
