@@ -37,7 +37,8 @@ namespace TaskControl.ServiceClients
 
     public BaseProjectReturn GetProjectById(long Id)
     {
-      return ExecuteGet<BaseProjectReturn>(string.Format("{0}/{1}?projectId={2}", "projects", "get", Id));
+      string url = string.Format("{0}{1}/{2}?projectId={3}", BaseUri.ToString(), "projects", "get", Id);
+      return Get<BaseProjectReturn>(new Uri(url));
     }
 
     public BaseProjectReturn UpdateProject(ProjectEntity project)

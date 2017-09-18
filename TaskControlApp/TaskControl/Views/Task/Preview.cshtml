@@ -1,0 +1,43 @@
+﻿@model TaskControl.Models.TaskViewModel
+
+@{
+  ViewBag.Title = "Preview";
+}
+
+
+
+<div class="container">
+  <div class="well">
+    <div class="media">
+      <a class="pull-left" href="#">
+        <img class="media-object" src="http://placekitten.com/150/150">
+      </a>
+      <div class="media-body">
+        <h4 class="media-heading">@Html.DisplayFor(model => model.Title)</h4>
+        <p class="text-right"><span class="glyphicon glyphicon-user">Reporter:@Html.DisplayFor(model => model.Asignee)</p>
+        <p>
+         @Html.DisplayFor(model=>model.Description)
+        </p>
+        <ul class="list-inline list-unstyled">
+          <li><span>Due date : <i class="glyphicon glyphicon-calendar"></i> @Html.DisplayFor(model => model.DueDate)</span></li>
+          <li>|</li>
+          <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
+          <li>|</li>
+          <li>
+            <span class="glyphicon glyphicon-user">Asignee:@Html.DisplayFor(model => model.Asignee)</span>
+          </li>
+          <li>|</li>
+          <li>
+             <span class="glyphicon glyphicon-tag">Issue type:@Html.DisplayFor(model => model.IssueType)
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+  </p>

@@ -37,12 +37,12 @@ namespace TaskControl.ServiceClients
 
     public BaseUserReturn GetUserById(long UserId)
     {
-      return ExecuteGet<BaseUserReturn>(string.Format("/{0}?userId={1}", "getbyid", UserId));
+      return Get<BaseUserReturn>(new Uri(string.Format("{0}/{1}?userId={2}", BaseUri.ToString(), "getbyid", UserId)));
     }
 
     public BaseUserReturn GetUserByUsername(string username)
     {
-      return ExecuteGet<BaseUserReturn>(string.Format("/{0}?username={1}", "get", username));
+      return Get<BaseUserReturn>(new Uri(string.Format("{0}/{1}?username={2}", BaseUri.ToString(), "get", username)));
     }
 
     public SearchUsersReturn GetAllUsers()

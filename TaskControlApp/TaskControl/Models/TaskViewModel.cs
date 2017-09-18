@@ -8,7 +8,7 @@ namespace TaskControl.Models
 {
   public class TaskViewModel
   {
-    public long TaskId { get; set; }
+    public long Id { get; set; }
 
     public string Title { get; set; }
 
@@ -17,6 +17,7 @@ namespace TaskControl.Models
 
     public string Asignee { get; set; }
 
+    [DataType(DataType.DateTime)]
     public DateTime? DateCreated { get; set; }
 
     public int IssueType { get; set; }
@@ -31,7 +32,7 @@ namespace TaskControl.Models
 
     public string ProjectName { get; set; }
 
-    [DataType(DataType.Date)]
+    [DataType(DataType.DateTime)]
     public DateTime DueDate { get; set; }
 
   }

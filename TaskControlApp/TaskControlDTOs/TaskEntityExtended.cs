@@ -11,7 +11,7 @@ namespace TaskControlDTOs
   public class TaskEntityExtended
   {
     [DataMember]
-    public long TaskId { get; set; }
+    public long Id { get; set; }
     [DataMember]
     public string Title { get; set; }
     [DataMember]

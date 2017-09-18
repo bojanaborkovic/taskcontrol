@@ -25,9 +25,9 @@
 					@Html.ActionLink(item.Title, "Edit", new { taskId = item.TaskId })
 
 				</h2>
+      
 				@*<button style="float:right; margin-left: 10em;">@Html.ActionLink("Edit", "EditTask", new { Id = item.TaskId })</button>*@
-				
-
+       
 				<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
 				<span><p class="glyphicon glyphicon-user"></p> @Html.DisplayFor(modelItem => item.Asignee)</span>
 				<p class="card-block"><b>Project:</b> @Html.DisplayFor(modelItem => item.Project)</p>
@@ -44,6 +44,9 @@
 				<br/>
 				<span><b>Due date :</b> @Html.DisplayFor(modelItem => item.DueDate)</span>
 			</div>
+      <button class="btn btn-xs btn-info" type="button" onclick="location.href='@Url.Action("Preview", "Task", new { taskId = item.TaskId })'">
+        Preview
+      </button>
 		</div>
 	</div>
 	

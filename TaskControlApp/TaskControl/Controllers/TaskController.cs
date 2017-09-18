@@ -7,19 +7,23 @@ using TaskControl.ServiceClients;
 using TaskControl.ViewDataPreparers;
 using TaskControlDTOs;
 using System;
+using Microsoft.AspNet.Identity;
 
 namespace TaskControl.Controllers
 {
   [Authorize]
   public class TaskController : Controller
   {
-    private TaskServiceClient taskServiceClient = new TaskServiceClient("tasks");
+    private TaskServiceClient taskServiceClient = new TaskServiceClient("tasks") { DoSerialize = true };
     private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
     private ProjectServiceClient projectServiceClient = new ProjectServiceClient();
 
     // GET: Tasks
     public ActionResult Index()
     {
+      string user = System.Web.HttpContext.Current.User.Identity.Name;
+
+
       var ret = taskServiceClient.GetAllTasksDetails();
       List<TaskSearchViewModel> viewModel = MapToViewModel(ret.Tasks);
 
@@ -79,6 +83,16 @@ namespace TaskControl.Controllers
       return View("Edit", taskModel);
     }
 
+    [HttpGet]
+    [IssueTypePreparer, StatusPreparer, PriorityPreparer]
+    public ActionResult Preview(long taskId)
+    {
+      var retTask = taskServiceClient.GetTaskByIdCustom(taskId);
+      TaskViewModel model = MapToViewModel(retTask);
+      return View("Preview", model);
+
+    }
+
     [HttpPost]
     public ActionResult Edit(TaskViewModel model)
     {
@@ -90,7 +104,7 @@ namespace TaskControl.Controllers
       }
       else
       {
-        return View("Edit", model.TaskId);
+        return View("Edit", model);
       }
     }
 
@@ -102,17 +116,20 @@ namespace TaskControl.Controllers
       var reporterRet = userServiceClient.GetUserByUsername(model.Reporter);
       //var reporter = JsonConvert.DeserializeObject<UserEntity>(reporterRet);
 
+     // var projectID = projectServiceClient.GetProjectByName(model.ProjectName);
+
       TaskEntity task = new TaskEntity();
-      task.Asignee = asigneeRet.Id;
+      task.Asignee = asigneeRet != null ? asigneeRet.Id : 0;
       task.DateCreated = DateTime.UtcNow;
       task.Description = model.Description;
       task.DueDate = model.DueDate;
-      task.Reporter = reporterRet.Id;
+      task.Reporter = reporterRet != null ? reporterRet.Id : 0;
       task.IssueType = model.IssueType;
       task.Priority = model.Priority;
       task.Status = model.Status;
       task.ProjectId = model.Project;
       task.Title = model.Title;
+      task.Id = model.Id;
       return task;
     }
 
@@ -135,7 +152,7 @@ namespace TaskControl.Controllers
           DueDate = item.DueDate,
           Reporter = item.Reporter,
           Priority = item.Priority,
-          TaskId = item.TaskId
+          TaskId = item.Id
         });
       }
       return viewmodel;
@@ -155,7 +172,7 @@ namespace TaskControl.Controllers
       taskModel.Priority = taskEntity.PriorityId;
       taskModel.IssueType = taskEntity.IssueTypeId;
       taskModel.Status = (int)taskEntity.StatusId;
-      taskModel.TaskId = taskEntity.TaskId;
+      taskModel.Id = taskEntity.Id;
 
       return taskModel;
     }

@@ -73,6 +73,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -190,6 +191,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -202,6 +204,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CreateUserViewModel.cs" />
+    <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Models\ProjectViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -236,12 +239,13 @@
     <Content Include="Content\dist\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\dist\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\dist\fonts\glyphicons-halflings-regular.woff2" />
-    <None Include="Properties\PublishProfiles\Castom.pubxml" />
+    <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\jquery-bundle.min.js" />
     <Content Include="Scripts\jqueryui-bundle.min.js" />
     <Content Include="Scripts\masonry-bundle.min.js" />
     <Content Include="Scripts\masonry.pkgd.min.js" />
     <Content Include="Scripts\modernizer-min.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -290,9 +294,10 @@
     <Content Include="Views\Task\New.cshtml" />
     <Content Include="Views\Task\Edit.cshtml" />
     <Content Include="Views\Project\New.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Task\Preview.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
     <Folder Include="Views\Roles\Partials\" />
     <Folder Include="Views\User\Partials\" />

@@ -101,7 +101,7 @@ namespace TaskControl.Controllers
       }
       else
       {
-        return View("Error", new ErrorModel() { Message = responseData.ErrorMessage });
+        return View("Error", new ErrorModel() { Message = responseData != null ? responseData.ErrorMessage : "Error during fetching project!" });
       }
 
       

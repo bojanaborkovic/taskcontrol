@@ -27,7 +27,18 @@ var config = {
   jqueryuibundle: 'Scripts/jqueryui-bundle.min.js',
 
   masonrysrc: ['bower_components/masonry/dist/masonry.pkgd.js'],
-  masonrybundle : 'Scripts/masonry-bundle.min.js',
+  masonrybundle: 'Scripts/masonry-bundle.min.js',
+
+  momentsrc: [
+    'bower_components/moment/min/moment.min.js'
+  ],
+  momentbundle: 'Scripts/moment-bundle.min.js',
+
+  fullcalendarsrc: [
+          'bower_components/fullcalendar/dist/fullcalendar.min.js' 
+  ],
+
+  fullcalendarbundle: 'Scripts/fullcalendar.min.js',
 
   //JavaScript files that will be combined into a Bootstrap bundle
   bootstrapsrc: [
@@ -43,7 +54,8 @@ var config = {
   //Bootstrap CSS and Fonts
   bootstrapcss: 'bower_components/bootstrap/dist/css/bootstrap.css',
   boostrapfonts: 'bower_components/bootstrap/dist/fonts/*.*',
-  appcss: 'Content/Site.css',
+  fullcalendarcss: 'bower_components/fullcalendar/dist/fullcalendar.css',
+  appcss: 'Content/site.css',
   fontsout: 'Content/dist/fonts/',
   cssout: 'Content/dist/css/'
 
@@ -51,31 +63,7 @@ var config = {
 
 }
 
-//delete the output file(s)
-//gulp.task('clean', function () {
-//  //del is an async function and not a gulp plugin (just standard nodejs)
-//  //It returns a promise, so make sure you return that from this task function
-//  //  so gulp knows when the delete is complete
-//  return del(['all.min.js']);
-//});
 
-// Synchronously delete the output script file(s)
-//gulp.task('clean-vendor-scripts', function (cb) {
-//  del([config.jquerybundle,
-//            config.bootstrapbundle,
-//            config.modernizrbundle], cb);
-//});
-
-// Combine and minify all files from the app folder
-// This tasks depends on the clean task which means gulp will ensure that the 
-// Clean task is completed before running the scripts task.
-//gulp.task('scripts', ['clean'], function () {
-
-//  return gulp.src(config.src)
-//    .pipe(uglify())
-//    .pipe(concat('all.min.js'))
-//    .pipe(gulp.dest('Scripts/'));
-//});
 
 //Create a jquery bundled file
 gulp.task('jquery-bundle', [ 'bower-restore'], function () {
@@ -107,6 +95,29 @@ gulp.task('masonry-bundle', ['bower-restore'], function () {
 });
 
 
+//Create a fullcalendar bundled file
+gulp.task('moment-bundle', ['bower-restore'], function () {
+  return gulp.src(config.momentsrc)
+      .pipe(uglify().on('error', function (e) {
+        console.log(e);
+      })).pipe(concat('moment.min.js'))
+      .pipe(gulp.dest('Scripts/'));
+  //.pipe(concat('jquery-bundle.min.js'))
+  //.pipe(gulp.dest('Scripts/'));
+});
+
+
+//Create a fullcalendar bundled file
+gulp.task('fullcalendar-bundle', ['bower-restore'], function () {
+  return gulp.src(config.fullcalendarsrc)
+      .pipe(uglify().on('error', function (e) {
+        console.log(e);
+      })).pipe(concat('fullcalendar.min.js'))
+      .pipe(gulp.dest('Scripts/'));
+  //.pipe(concat('jquery-bundle.min.js'))
+  //.pipe(gulp.dest('Scripts/'));
+});
+
 //Create a bootstrap bundled file
 gulp.task('bootstrap-bundle', ['bower-restore'], function () {
   return gulp.src(config.bootstrapsrc)
@@ -127,17 +138,10 @@ gulp.task('modernizer', ['bower-restore'], function () {
 });
 
 
-//gulp.task('scripts', ['clean'], function () {
-//  return gulp.src(config.src)
-//    .pipe(uglify().on('error', function (e) {
-//      console.log(e);
-//    })).pipe(concat('all.min.js'))
-//    .pipe(gulp.dest('Scripts/'));
-//});
 
 
 // Combine and the vendor files from bower into bundles (output to the Scripts folder)
-gulp.task('vendor-scripts', ['jquery-bundle', 'jqueryui-bundle', 'bootstrap-bundle', 'modernizer', 'masonry-bundle'], function () {
+gulp.task('vendor-scripts', ['jquery-bundle', 'jqueryui-bundle', 'bootstrap-bundle', 'modernizer', 'masonry-bundle', 'moment-bundle', 'fullcalendar-bundle'], function () {
 
 });
 
@@ -148,7 +152,7 @@ gulp.task('clean-styles', function (cb) {
 });
                                                                             
 gulp.task('css', ['bower-restore'], function () {
-  return gulp.src([config.bootstrapcss, config.appcss])
+  return gulp.src([config.bootstrapcss, config.appcss, config.fullcalendarcss])
    .pipe(concat('app.css'))
    .pipe(gulp.dest(config.cssout))
    .pipe(minifyCSS())                                                       

@@ -133,9 +133,11 @@ namespace BusinessServices
       try
       {
         var tasks = _unitOfWork.GetAllTasksDetails();
+        var taskSorted = tasks.OrderByDescending(x => x.DateCreated).ToList();
         List<TaskEntityExtended> tasksWithDetails = new List<TaskEntityExtended>();
-        tasksWithDetails = MapTasks(tasks);
+        tasksWithDetails = MapTasks(taskSorted);
         ret.Tasks = tasksWithDetails;
+        ret.RecordCount = tasksWithDetails.Count;
         ret.StatusCode = "OK";
 
       }
@@ -155,8 +157,8 @@ namespace BusinessServices
       try
       {
         var task = _unitOfWork.GetTaskById(TaskId);
-        TaskEntityExtended taskEntity = MapToTaskEntity(task.FirstOrDefault());
-        ret = (TaskEntityExtendedReturn)taskEntity;
+        TaskEntityExtendedReturn taskEntity = MapToTaskEntity(task.FirstOrDefault());
+        ret = taskEntity;
 
       }
       catch (Exception ex)
@@ -166,9 +168,9 @@ namespace BusinessServices
       return ret;
     }
 
-    private TaskEntityExtended MapToTaskEntity(GetTaskResult getTaskResult)
+    private TaskEntityExtendedReturn MapToTaskEntity(GetTaskResult getTaskResult)
     {
-      TaskEntityExtended taskEntity = new TaskEntityExtended();
+      TaskEntityExtendedReturn taskEntity = new TaskEntityExtendedReturn();
       taskEntity.Asignee = getTaskResult.Asignee;
       taskEntity.AsigneeId = getTaskResult.AsigneeId;
       taskEntity.Reporter = getTaskResult.Reporter;
@@ -182,7 +184,7 @@ namespace BusinessServices
       taskEntity.StatusId = getTaskResult.Status;
       taskEntity.Priority = _unitOfWork.PriorityRepository.GetByID((long)getTaskResult.Priority).Name;
       taskEntity.PriorityId = (int)getTaskResult.Priority;
-      taskEntity.TaskId = getTaskResult.TaskId;
+      taskEntity.Id = getTaskResult.TaskId;
       taskEntity.Title = getTaskResult.Title;
       taskEntity.ProjectId = getTaskResult.ProjectId;
       taskEntity.Project = _unitOfWork.ProjectRepository.GetByID(getTaskResult.ProjectId).Name;
@@ -203,7 +205,7 @@ namespace BusinessServices
       {
         tasksDetails.Add(new TaskEntityExtended()
         {
-          TaskId = task.TaskId,
+          Id = task.TaskId,
           Title = task.Title,
           Asignee = task.Asignee,
           Status = task.TaskStatus,

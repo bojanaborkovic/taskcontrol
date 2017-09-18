@@ -7,14 +7,19 @@
 
 
   <link rel="stylesheet" href="~/Content/dist/css/app.min.css">
-  <script src="~/Scripts/modernizer-min.js"></script>
-   
-  <script src="~/Scripts/jquery-bundle.min.js"></script>
-  <script src="~/Scripts/bootstrap-bundle.min.js"></script>
+  <link rel="stylesheet" href="~/Content/site.css">
 
+ 
+  
+  
+  <script src="~/Scripts/jquery-bundle.min.js"></script>
   <script src="~/Scripts/jqueryui-bundle.min.js"></script>
+  <script src="~/Scripts/moment.min.js"></script>
+  <script src="~/Scripts/bootstrap-bundle.min.js"></script>
+  <script src="~/Scripts/modernizer-min.js"></script>
 
   <script src="~/Scripts/masonry.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.js"></script>
 
 	
 
@@ -35,7 +40,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Project")</li>
+                    <li>@Html.ActionLink("Home", "Index", "Dashboard")</li>
 										<li>@Html.ActionLink("Projects", "Index", "Project")</li>
 										<li>@Html.ActionLink("Tasks", "Index", "Task")</li>
 										<li>@Html.ActionLink("Users", "Index", "User")</li>
@@ -57,11 +62,6 @@
         </footer>
     </div>
 
-  <script src="~/Scripts/jquery-bundle.min.js"></script>
-
-  <script src="~/Scripts/jqueryui-bundle.min.js"></script>
-
-  <script src="~/Scripts/bootstrap-bundle.min.js"></script>
 
     @RenderSection("scripts", required: false)
 </body>

@@ -9,6 +9,7 @@ using System.Web.Script.Serialization;
 using TaskControlDTOs;
 using BussinesService.Interfaces.Responses.Task;
 using BusinessServices.Interfaces.Responses;
+using System.Configuration;
 
 namespace TaskControl.ServiceClients
 {
@@ -17,7 +18,7 @@ namespace TaskControl.ServiceClients
     public TaskServiceClient(string repoName)
     {
       endpoint = string.Empty;
-      endpoint = string.Format("{0}{1}", System.Configuration.ConfigurationManager.AppSettings["TaskControlApiURL"], repoName);
+      BaseUri = new Uri(string.Format("{0}{1}", ConfigurationManager.AppSettings["TaskControlApiURL"], repoName));
       client.DefaultRequestHeaders.Accept.Clear();
       client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
@@ -29,7 +30,7 @@ namespace TaskControl.ServiceClients
 
     public TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId)
     {
-      return Get<TaskEntityExtendedReturn>(new Uri(string.Format("{0}/{1}?taskId={3}", BaseUri.ToString(), "getbyidcustom", TaskId)));
+      return Get<TaskEntityExtendedReturn>(new Uri(string.Format("{0}/{1}?taskId={2}", BaseUri.ToString(), "getbyidcustom", TaskId)));
     }
 
     public SearchTasksReturn GetAllTasks()
@@ -39,7 +40,7 @@ namespace TaskControl.ServiceClients
 
     public BasicReturn CreateTask(TaskEntity task)
     {
-      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "task", "create"), task);
+      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "create"), task);
     }
 
     public TasksDetailsReturn GetAllTasksDetails()
@@ -49,7 +50,7 @@ namespace TaskControl.ServiceClients
 
     public BasicReturn UpdateTask(TaskEntity task)
     {
-      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "task", "update"), task);
+      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "update"), task);
     }
 
   

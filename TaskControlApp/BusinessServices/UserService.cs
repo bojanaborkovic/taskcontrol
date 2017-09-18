@@ -112,7 +112,8 @@ namespace BusinessServices
         });
 
         IMapper mapper = config.CreateMapper();
-        ret = mapper.Map<AspNetUser, BaseUserReturn>(user);
+        var userMapped = mapper.Map<AspNetUser, UserEntity>(user);
+        ret = MapUser(userMapped);
       }
       return ret;
     }
@@ -131,8 +132,10 @@ namespace BusinessServices
           });
 
           IMapper mapper = config.CreateMapper();
-          ret = mapper.Map<AspNetUser, BaseUserReturn>(user);
-          
+          var usermapped = mapper.Map<AspNetUser, UserEntity>(user);
+
+          ret = MapUser(usermapped);
+
         }
       }
       catch (Exception ex)
@@ -142,7 +145,19 @@ namespace BusinessServices
       return ret;
     }
 
-    
+    private BaseUserReturn MapUser(UserEntity usermapped)
+    {
+      BaseUserReturn ret = new BaseUserReturn();
+      ret.Id = usermapped.Id;
+      ret.UserName = usermapped.UserName;
+      ret.FirstName = usermapped.FirstName;
+      ret.LastName = usermapped.LastName;
+      ret.RoleName = usermapped.RoleName;
+      ret.PhoneNumber = usermapped.PhoneNumber;
+      ret.Email = usermapped.Email;
+      ret.Password = usermapped.Password;
+      return ret;
+    }
 
     public SearchRolesReturn GetAllRoles()
     {
