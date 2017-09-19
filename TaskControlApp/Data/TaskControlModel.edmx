@@ -128,23 +128,25 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="ProjectId" Type="bigint" Nullable="false" />
           <Property Name="DueDate" Type="datetime" />
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreatedBy" Type="bigint" />
         </EntityType>
         <EntityType Name="TaskAsigneeHistory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="bigint" Nullable="false" />
-          <Property Name="AsigneeBefore" Type="bigint" Nullable="false" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AsigneeBefore" Type="bigint" />
           <Property Name="AsigneeAfter" Type="bigint" Nullable="false" />
           <Property Name="ChangeDate" Type="datetime" Nullable="false" />
           <Property Name="TaskId" Type="bigint" Nullable="false" />
+          <Property Name="ChangeBy" Type="bigint" />
         </EntityType>
         <EntityType Name="TaskStatusHistory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="bigint" Nullable="false" />
-          <Property Name="StatusBefore" Type="int" Nullable="false" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusBefore" Type="int" />
           <Property Name="StatusAfter" Type="int" Nullable="false" />
           <Property Name="ChangeDate" Type="datetime" />
           <Property Name="TaskId" Type="bigint" Nullable="false" />
@@ -510,24 +512,26 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <NavigationProperty Name="TaskAsigneeHistories" Relationship="Self.FK_TaskAsigneeHistory_Task" FromRole="Task" ToRole="TaskAsigneeHistory" />
           <NavigationProperty Name="TaskStatusHistories" Relationship="Self.FK_TaskStatusHistory_Task" FromRole="Task" ToRole="TaskStatusHistory" />
           <NavigationProperty Name="AspNetUser" Relationship="TaskControlModel.FK_Task_AspNetUsers" FromRole="Task" ToRole="AspNetUser" />
+          <Property Name="CreatedBy" Type="Int64" />
         </EntityType>
         <EntityType Name="TaskAsigneeHistory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" />
-          <Property Name="AsigneeBefore" Type="Int64" Nullable="false" />
+          <Property Name="AsigneeBefore" Type="Int64" />
           <Property Name="AsigneeAfter" Type="Int64" Nullable="false" />
           <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="TaskId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="Task" Relationship="Self.FK_TaskAsigneeHistory_Task" FromRole="TaskAsigneeHistory" ToRole="Task" />
+          <Property Name="ChangeBy" Type="Int64" />
         </EntityType>
         <EntityType Name="TaskStatusHistory">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" />
-          <Property Name="StatusBefore" Type="Int32" Nullable="false" />
+          <Property Name="StatusBefore" Type="Int32" />
           <Property Name="StatusAfter" Type="Int32" Nullable="false" />
           <Property Name="ChangeDate" Type="DateTime" Precision="3" />
           <Property Name="TaskId" Type="Int64" Nullable="false" />
@@ -937,6 +941,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <EntitySetMapping Name="Tasks">
             <EntityTypeMapping TypeName="TaskControlModel.Task">
               <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="IssueType" ColumnName="IssueType" />
@@ -954,6 +959,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <EntitySetMapping Name="TaskAsigneeHistories">
             <EntityTypeMapping TypeName="TaskControlModel.TaskAsigneeHistory">
               <MappingFragment StoreEntitySet="TaskAsigneeHistory">
+                <ScalarProperty Name="ChangeBy" ColumnName="ChangeBy" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="AsigneeBefore" ColumnName="AsigneeBefore" />
                 <ScalarProperty Name="AsigneeAfter" ColumnName="AsigneeAfter" />

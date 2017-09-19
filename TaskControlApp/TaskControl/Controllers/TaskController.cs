@@ -46,6 +46,10 @@ namespace TaskControl.Controllers
     [HttpPost]
     public ActionResult Create(TaskViewModel model)
     {
+      string user = System.Web.HttpContext.Current.User.Identity.Name;
+      var userRet = userServiceClient.GetUserByUsername(user);
+      model.CreatedBy = userRet != null ? userRet.Id : 0;
+
       if (ModelState.IsValid)
       {
 
@@ -94,8 +98,15 @@ namespace TaskControl.Controllers
     }
 
     [HttpPost]
+    [IssueTypePreparer, StatusPreparer, PriorityPreparer]
     public ActionResult Edit(TaskViewModel model)
     {
+      var projects = projectServiceClient.GetAllProjects();
+      var users = userServiceClient.GetAllUsers();
+
+      ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects);
+      ViewBag.UserNames = JsonConvert.SerializeObject(users.Users.Select(x => x.UserName).ToList());
+
       if (ModelState.IsValid)
       {
         var updateTask = MapToEntity(model);
@@ -121,6 +132,7 @@ namespace TaskControl.Controllers
       TaskEntity task = new TaskEntity();
       task.Asignee = asigneeRet != null ? asigneeRet.Id : 0;
       task.DateCreated = DateTime.UtcNow;
+      task.CreatedBy = model.CreatedBy;
       task.Description = model.Description;
       task.DueDate = model.DueDate;
       task.Reporter = reporterRet != null ? reporterRet.Id : 0;

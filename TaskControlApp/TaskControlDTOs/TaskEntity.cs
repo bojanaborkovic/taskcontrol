@@ -48,5 +48,8 @@ namespace TaskControlDTOs
 
     [DataMember]
     public int Priority { get; set; }
+
+    [DataMember]
+    public long? CreatedBy { get; set; }
   }
 }

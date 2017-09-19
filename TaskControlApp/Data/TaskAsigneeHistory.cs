@@ -15,10 +15,11 @@ namespace DataModel
     public partial class TaskAsigneeHistory
     {
         public long Id { get; set; }
-        public long AsigneeBefore { get; set; }
+        public Nullable<long> AsigneeBefore { get; set; }
         public long AsigneeAfter { get; set; }
         public System.DateTime ChangeDate { get; set; }
         public long TaskId { get; set; }
+        public Nullable<long> ChangeBy { get; set; }
     
         public virtual Task Task { get; set; }
     }

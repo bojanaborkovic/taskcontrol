@@ -35,5 +35,7 @@ namespace TaskControl.Models
     [DataType(DataType.DateTime)]
     public DateTime DueDate { get; set; }
 
+    public long? CreatedBy { get; set; }
+
   }
 }

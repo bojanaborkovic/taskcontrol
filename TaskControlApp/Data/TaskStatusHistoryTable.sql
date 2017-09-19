@@ -9,8 +9,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[TaskStatusHistory](
-	[Id] [bigint] NOT NULL,
-	[StatusBefore] [int] NOT NULL,
+	[Id] [bigint]  IDENTITY(1,1) NOT NULL,
+	[StatusBefore] [int]  NULL,
 	[StatusAfter] [int] NOT NULL,
 	[ChangeDate] [datetime] NULL,
 	[TaskId] [bigint] NOT NULL,

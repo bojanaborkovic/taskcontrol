@@ -9,11 +9,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[TaskAsigneeHistory](
-	[Id] [bigint] NOT NULL,
-	[AsigneeBefore] [bigint] NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[AsigneeBefore] [bigint]  NULL,
 	[AsigneeAfter] [bigint] NOT NULL,
 	[ChangeDate] [datetime] NOT NULL,
-	[TaskId] [bigint] NOT NULL,
+	[TaskId] [bigint]  NOT NULL,
  CONSTRAINT [PK_TaskAsigneeHistory] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

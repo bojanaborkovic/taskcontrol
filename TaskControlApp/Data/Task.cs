@@ -33,6 +33,7 @@ namespace DataModel
         public int Priority { get; set; }
         public long ProjectId { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
+        public Nullable<long> CreatedBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

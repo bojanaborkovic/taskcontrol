@@ -15,7 +15,7 @@ namespace DataModel
     public partial class TaskStatusHistory
     {
         public long Id { get; set; }
-        public int StatusBefore { get; set; }
+        public Nullable<int> StatusBefore { get; set; }
         public int StatusAfter { get; set; }
         public Nullable<System.DateTime> ChangeDate { get; set; }
         public long TaskId { get; set; }
