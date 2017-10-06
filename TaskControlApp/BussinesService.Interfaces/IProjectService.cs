@@ -15,6 +15,10 @@ namespace BusinessServices.Interfaces
     BaseProjectReturn CreateProject(ProjectEntity project);
     BaseProjectReturn UpdateProject(ProjectEntity project);
     GetProjectReturn GetProjectsWithOwner();
+    BaseProjectReturn GetProjectByName(string projectName);
+    ProjectStatisticsReturn GetProjectStatistics(long projectId);
+
+    GetProjectReturn GetProjectsByOwner(long ownerId);
 
   }
 }

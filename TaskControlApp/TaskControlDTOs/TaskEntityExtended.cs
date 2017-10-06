@@ -58,4 +58,45 @@ namespace TaskControlDTOs
     [DataMember]
     public int PriorityId { get; set; }
   }
+
+  [DataContract]
+  public class TaskAudit
+  {
+    [DataMember]
+    public long TaskId { get; set; }
+    [DataMember]
+    public long? AsigneeBefore { get; set; }
+    [DataMember]
+    public long? AsigneeAfter { get; set; }
+    [DataMember]
+    public long? AsigneeChangedBy { get; set; }
+
+    [DataMember]
+    public string AsigneeChangedOn
+    {
+      get { return this.AsigneeChangedOnDate.ToString("yyyy-MM-dd HH:mm:ss"); }
+      set { this.AsigneeChangedOnDate = DateTime.Parse(value); }
+    }
+
+    public DateTime AsigneeChangedOnDate { get; set; }
+
+    [DataMember]
+    public int? StatusBefore { get; set; }
+    [DataMember]
+    public int? StatusAfter { get; set; }
+    [DataMember]
+    public long? StatusChangedBy { get; set; }
+
+    [DataMember]
+    public string StatusChangedOn
+    {
+      get { return this.StatusChangedOnDate.ToString("yyyy-MM-dd HH:mm:ss"); }
+      set { this.StatusChangedOnDate = DateTime.Parse(value); }
+    }
+
+    public DateTime StatusChangedOnDate { get; set; }
+
+
+
+  }
 }

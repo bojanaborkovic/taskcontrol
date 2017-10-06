@@ -22,7 +22,7 @@ namespace TaskControlAPI.Controllers
       _projectService = new ProjectService();
     }
 
-
+    //
     // GET: projects/all
     [HttpGet]
     [ActionName("GetAllProjects")]
@@ -43,6 +43,25 @@ namespace TaskControlAPI.Controllers
       return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
     }
 
+    [HttpGet]
+    [ActionName("GetProjectStatistics")]
+    public HttpResponseMessage GetProjectStatistics([FromUri] long projectId)
+    {
+      _log.DebugFormat("GetProjectStatistics invoked...");
+      //var projects = _projectService.GetAllProjects();
+      var retProject = _projectService.GetProjectStatistics(projectId);
+      if (retProject != null)
+      {
+        if (retProject.Tasks.Any())
+        {
+          _log.DebugFormat("GetProjectStatistics finished with : {0}", retProject.Tasks.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, retProject);
+        }
+
+      }
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Tasks not found");
+    }
+
     // GET: projects/get/5
     [HttpGet]
     [ActionName("GetProjectById")]
@@ -57,6 +76,40 @@ namespace TaskControlAPI.Controllers
       }
 
       return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
+    }
+
+    [HttpGet]
+    [ActionName("GetProjectsByOwner")]
+    public HttpResponseMessage GetProjectsByOwner([FromUri] long ownerId)
+    {
+      _log.DebugFormat("Get projects by owner, ownerId:  {0}", ownerId);
+      var retProjects = _projectService.GetProjectsByOwner(ownerId);
+      if (retProjects != null)
+      {
+        if (retProjects.Projects.Any())
+        {
+          _log.DebugFormat("GetProjectsByOwner finished with : {0}", retProjects.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, retProjects);
+        }
+
+      }
+
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Projects not found");
+    }
+
+    [HttpGet]
+    [ActionName("GetProjectByName")]
+    public HttpResponseMessage GetProjectByName([FromUri] string projectName)
+    {
+      _log.DebugFormat("GetProjectByName {0}", projectName);
+      var project = _projectService.GetProjectByName(projectName);
+      if (project != null)
+      {
+        _log.DebugFormat("Get project with finished with : {0}", project.ToString());
+        return Request.CreateResponse(HttpStatusCode.OK, project);
+      }
+
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Project not found");
     }
 
 
@@ -82,9 +135,9 @@ namespace TaskControlAPI.Controllers
     public HttpResponseMessage CreateProject(ProjectEntity project)
     {
       BaseProjectReturn createProjectRet = _projectService.CreateProject(project);
-      if (createProjectRet != null && string.IsNullOrEmpty(createProjectRet.ErrorMessage))
+      if (createProjectRet != null && !string.IsNullOrEmpty(createProjectRet.ErrorMessage))
       {
-        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not update project");
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not create project");
       }
       else
       {

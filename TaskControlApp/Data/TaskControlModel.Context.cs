@@ -65,5 +65,44 @@ namespace DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTaskResult>("GetTaskById", taskIdParameter);
         }
+    
+        public virtual ObjectResult<GetProjectStatistics_Result> GetProjectStatistics(Nullable<long> projectId)
+        {
+            var projectIdParameter = projectId.HasValue ?
+                new ObjectParameter("projectId", projectId) :
+                new ObjectParameter("projectId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProjectStatistics_Result>("GetProjectStatistics", projectIdParameter);
+        }
+    
+        public virtual int GetTasksAudit(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate, Nullable<int> pageNumber, Nullable<int> pageSize, string orderBy)
+        {
+            var fromDateParameter = fromDate.HasValue ?
+                new ObjectParameter("FromDate", fromDate) :
+                new ObjectParameter("FromDate", typeof(System.DateTime));
+    
+            var toDateParameter = toDate.HasValue ?
+                new ObjectParameter("ToDate", toDate) :
+                new ObjectParameter("ToDate", typeof(System.DateTime));
+    
+            var pageNumberParameter = pageNumber.HasValue ?
+                new ObjectParameter("pageNumber", pageNumber) :
+                new ObjectParameter("pageNumber", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("pageSize", pageSize) :
+                new ObjectParameter("pageSize", typeof(int));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("orderBy", orderBy) :
+                new ObjectParameter("orderBy", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetTasksAudit", fromDateParameter, toDateParameter, pageNumberParameter, pageSizeParameter, orderByParameter);
+        }
+    
+        public virtual ObjectResult<GetTasksAssigneStatusHistory_Result> GetTasksAssigneStatusHistory()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTasksAssigneStatusHistory_Result>("GetTasksAssigneStatusHistory");
+        }
     }
 }

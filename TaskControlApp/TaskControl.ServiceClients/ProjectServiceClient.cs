@@ -41,6 +41,18 @@ namespace TaskControl.ServiceClients
       return Get<BaseProjectReturn>(new Uri(url));
     }
 
+    public GetProjectReturn GetProjectsByOwner(long ownerId)
+    {
+      string url = string.Format("{0}{1}/{2}?ownerId={3}", BaseUri.ToString(), "projects", "getByOwnerId", ownerId);
+      return Get<GetProjectReturn>(new Uri(url));
+    }
+
+    public BaseProjectReturn GetProjectByName(string projectName)
+    {
+      string url = string.Format("{0}{1}/{2}?projectName={3}", BaseUri.ToString(), "projects", "getbyname", projectName);
+      return Get<BaseProjectReturn>(new Uri(url));
+    }
+
     public BaseProjectReturn UpdateProject(ProjectEntity project)
     {
       return ExecutePost<BaseProjectReturn>(string.Format("{0}/{1}", "projects", "update"), project);
@@ -49,6 +61,12 @@ namespace TaskControl.ServiceClients
     public GetProjectReturn GetProjectsWithOwner()
     {
       throw new NotImplementedException();
+    }
+    
+    public ProjectStatisticsReturn GetProjectStatistics(long projectId)
+    {
+      string url = string.Format("{0}{1}/{2}?projectId={3}", BaseUri.ToString(), "projects", "getstatistics", projectId);
+      return Get<ProjectStatisticsReturn>(new Uri(url));
     }
   }
 

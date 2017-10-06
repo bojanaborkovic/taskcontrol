@@ -78,7 +78,7 @@ namespace TaskControlAPI.Controllers
       try
       {
         var taskRet = _taskService.CreateTask(task);
-        if (taskRet == null)
+        if (string.IsNullOrEmpty(taskRet.ErrorMessage) && taskRet.StatusCode == "OK")
         {
           _log.DebugFormat("CreateTask finished with : {0}", taskRet != null ? taskRet.StatusCode.ToString() : "OK");
           return Request.CreateResponse(HttpStatusCode.OK);
@@ -124,6 +124,31 @@ namespace TaskControlAPI.Controllers
         if (task != null)
         {
           _log.DebugFormat("GetTaskById finished with : {0}", task.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, task);
+
+        }
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error getting task");
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching task... {0}", ex.Message);
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+      }
+    }
+
+    [HttpGet]
+    [ActionName("GetTasksForUser")]
+    public HttpResponseMessage GetTasksForUser(long userId)
+    {
+      _log.DebugFormat("GetTasksForUser invoked with UserId: {0} ...", userId.ToString());
+
+      try
+      {
+        //long taskId = _taskService.CreateTask(task);
+        var task = _taskService.GetTasksForUser(userId);
+        if (task != null)
+        {
+          _log.DebugFormat("GetTasksForUser finished with : {0}", task.ToString());
           return Request.CreateResponse(HttpStatusCode.OK, task);
 
         }

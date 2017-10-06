@@ -82,7 +82,7 @@
 				<div class="col-md-10">
 					@*@Html.EditorFor(model => model.Asignee, new { htmlAttributes = new { @class = "form-control" } })*@
 
-					@Html.EditorFor(m => m.Asignee, new { htmlAttributes = new { @class = "form-control autoasignee", @placeholder = "Enter username" } })
+          @Html.EditorFor(m => m.Asignee, new { htmlAttributes = new { @class = "form-control autoasignee", @placeholder = "Enter username" } })
 
 					@Html.ValidationMessageFor(model => model.Asignee, "", new { @class = "text-danger" })
 				</div>

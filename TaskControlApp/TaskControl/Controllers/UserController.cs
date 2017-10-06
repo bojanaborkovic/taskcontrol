@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using PagedList;
+using BussinesService.Interfaces.Responses.User;
 
 namespace TaskControl.Controllers
 {
@@ -113,12 +114,29 @@ namespace TaskControl.Controllers
       return View("Index", mappedUsers.ToPagedList(pageNumber, pageSize));
     }
 
+
+    [HttpGet]
+    public ActionResult Details(long userId)
+    {
+      var userRet = serviceClient.GetUserById(userId);
+      if(userRet != null)
+      {
+        UserViewModel userModel = MapUserModel(userRet);
+        return View("Details", userModel);
+      }
+      else
+      {
+        return RedirectToAction("Index");
+      }
+    }
+
     public ActionResult CreateUser()
     {
       return View("CreateUser");
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<ActionResult> CreateUser(CreateUserViewModel user)
     {
 
@@ -173,6 +191,18 @@ namespace TaskControl.Controllers
       entity.Password = user.Password;
       entity.Id = user.UserId;
       return entity;
+    }
+
+    private UserViewModel MapUserModel(BaseUserReturn userEntity)
+    {
+      UserViewModel userModel = new UserViewModel();
+      userModel.Email = userEntity.Email;
+      userModel.FirstName = userEntity.FirstName;
+      userModel.LastName = userEntity.LastName;
+      userModel.PhoneNumber = userEntity.PhoneNumber;
+      userModel.UserName = userEntity.UserName;
+      userModel.UserId = userEntity.Id;
+      return userModel;
     }
 
     private List<UserViewModel> MapToUsersViewModel(List<UserEntity> users)

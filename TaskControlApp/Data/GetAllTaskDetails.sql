@@ -34,8 +34,8 @@ BEGIN
 			  on task.Reporter = reporter.Id
 			  INNER JOIN [dbo].Priority priority
 			  on task.Priority = priority.Id
-			  INNER JOIN [dbo].Comment comment
-			  on comment.TaskId = task.Id
+			  --INNER JOIN [dbo].Comment comment
+			  --on comment.TaskId = task.Id
 			  INNER JOIN [dbo].IssueType issueType
 			  on task.IssueType = issueType.Id
 			  INNER JOIN [dbo].AspNetUsers assignee

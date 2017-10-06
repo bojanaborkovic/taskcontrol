@@ -19,7 +19,7 @@
 	@*<div class="grid-sizer"></div>*@
 
 	<div class="grid-item">
-		<button style="float:right; margin-left: 10em;">@Html.ActionLink("Edit", "EditProject", new { projectId = item.Id })</button>	
+		@*<button style="float:right; margin-left: 10em;">@Html.ActionLink("Edit", "EditProject", new { projectId = item.Id })</button>*@	
 		<div class="card">	
 			<div class="card-block">
 
@@ -32,17 +32,20 @@
 					
 					<br />
 					<br />
-					<div class="progress">
-						<div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-					</div>
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@Html.DisplayFor(modelItem => item.TotalProgress)"
+               aria-valuemin="0" aria-valuemax="100" style="width:@Html.DisplayFor(modelItem => item.TotalProgress)%">
+           Complete 
+          </div>
+        </div>
 				<div class="alert alert-success" role="alert">
-					<strong>7 tasks</strong> Completed
+					<strong>@Html.DisplayFor(modelItem => item.CompletedCount) tasks</strong> Completed
 				</div>
 				<div class="alert alert-warning" role="alert">
-					<strong>8 tasks</strong> In progress
+					<strong>@Html.DisplayFor(modelItem => item.InProgressCount) tasks</strong> In progress
 				</div>
 				<div class="alert alert-danger" role="alert">
-					<strong>10  tasks</strong> To do
+					<strong>@Html.DisplayFor(modelItem => item.ToDoCount)  tasks</strong> To do
 				</div>
 			</div>
 		</div>

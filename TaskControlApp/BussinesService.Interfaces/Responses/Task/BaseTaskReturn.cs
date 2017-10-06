@@ -34,6 +34,9 @@ namespace BussinesService.Interfaces.Responses.Task
     public List<TaskEntityExtended> Tasks { get; set; }
 
     [DataMember]
+    public List<TaskAudit> TasksAudit { get; set; }
+
+    [DataMember]
     public int RecordCount { get; set; }
   }
 

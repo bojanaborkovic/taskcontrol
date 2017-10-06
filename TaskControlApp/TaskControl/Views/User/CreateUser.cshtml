@@ -14,7 +14,9 @@
 
 	@using (Html.BeginForm("CreateUser", "User", FormMethod.Post))
 	{
+
 	<form>
+    @Html.AntiForgeryToken()
 		<div class="form-group">
 			<label for="UserName">Username</label>
 			<div class="col-10">

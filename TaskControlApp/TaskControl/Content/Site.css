@@ -104,6 +104,9 @@ img
 .timeline-centered {
     position: relative;
     margin-bottom: 30px;
+    overflow: auto;
+    height: 800px;
+    width: 600px;
 }
 
     .timeline-centered:before, .timeline-centered:after {

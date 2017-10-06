@@ -4,10 +4,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		Bojana Borkovic
--- Create date: 9/15/2017
--- Description:	Audit of author who changed Task Asignee
+-- Create date: 9/19/2017
+-- Description:	Audit of status change
 -- =============================================
-CREATE TRIGGER [dbo].[AuditTaskAsigneeTrigger] 
+CREATE TRIGGER [dbo].[AuditTaskStatusTrigger] 
    ON [dbo].[Task] 
    AFTER INSERT, UPDATE
 AS 
@@ -25,14 +25,14 @@ BEGIN
 			IF (SELECT COUNT(*) FROM deleted) > 0
 			BEGIN
  
-			INSERT INTO [dbo].[TaskAsigneeHistory]
-			([AsigneeBefore],
-			 [AsigneeAfter],
+			INSERT INTO [dbo].[TaskStatusHistory]
+			([StatusBefore],
+			 [StatusAfter],
 			 [ChangeDate],
 			 [TaskId],
 			 [ChangeBy])
 
-			SELECT d.Asignee AS [AsigneeBefore], i.Asignee AS [AsigneeAfter], @time AS [ChangeDate], i.Id as [TaskId], i.CreatedBy as [ChangeBy]
+			SELECT d.Status AS [StatusBefore], i.Status AS [StatusAfter], @time AS [ChangeDate], i.Id as [TaskId], i.CreatedBy as [ChangeBy]
 			FROM inserted i
 			FULL OUTER JOIN deleted d ON i.Id = d.Id
 
@@ -45,14 +45,14 @@ BEGIN
 		BEGIN
 			IF (SELECT COUNT(*) FROM deleted) = 0
 			BEGIN
-			INSERT INTO [dbo].[TaskAsigneeHistory]
-			([AsigneeBefore],
-			 [AsigneeAfter],
+			INSERT INTO [dbo].[TaskStatusHistory]
+			([StatusBefore],
+			 [StatusAfter],
 			 [ChangeDate],
 			 [TaskId],
 			 [ChangeBy])
 
-			 SELECT NULL, i.Asignee AS [AsigneeAfter], @time AS [ChangeDate], i.Id as [TaskId], i.CreatedBy as [ChangeBy]
+			 SELECT NULL, i.Status AS [StatusAfter], @time AS [ChangeDate], i.Id as [TaskId], i.CreatedBy as [ChangeBy]
 			FROM inserted i
 			END
 		END

@@ -135,6 +135,11 @@ namespace BusinessServices
         var tasks = _unitOfWork.GetAllTasksDetails();
         var taskSorted = tasks.OrderByDescending(x => x.DateCreated).ToList();
         List<TaskEntityExtended> tasksWithDetails = new List<TaskEntityExtended>();
+
+        var tasksAudit = _unitOfWork.GetTasksAudit();
+
+        ret.TasksAudit = MapTasksAudit(tasksAudit);
+
         tasksWithDetails = MapTasks(taskSorted);
         ret.Tasks = tasksWithDetails;
         ret.RecordCount = tasksWithDetails.Count;
@@ -148,6 +153,29 @@ namespace BusinessServices
       }
       return ret;
 
+    }
+
+    private List<TaskAudit> MapTasksAudit(List<GetTasksAssigneStatusHistory_Result> tasksAudit)
+    {
+      List<TaskAudit> audit = new List<TaskAudit>();
+
+      foreach(var item in tasksAudit)
+      {
+        audit.Add(new TaskAudit()
+        {
+          TaskId = item.TaskId,
+          AsigneeBefore = item.AsigneeBefore,
+          AsigneeAfter = item.AsigneeAfter,
+          AsigneeChangedOnDate = item.AssigneChangedOn,
+          AsigneeChangedBy = item.AssigneChangedBy,
+          StatusBefore = item.StatusBefore,
+          StatusAfter = item.StatusAfter,
+          StatusChangedOnDate = (DateTime)item.StatusChangedOn,
+          StatusChangedBy = item.StatusChangeBy
+        });
+      }
+
+      return audit;
     }
 
     public TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId)
@@ -164,6 +192,37 @@ namespace BusinessServices
       catch (Exception ex)
       {
         _log.ErrorFormat("Error fetching task... {0}", ex.Message);
+      }
+      return ret;
+    }
+
+    public SearchTasksReturn GetTasksForUser(long userId)
+    {
+      _log.DebugFormat("GetTasksForUser invoked");
+      SearchTasksReturn ret = new SearchTasksReturn();
+      try
+      {
+        var tasks = _unitOfWork.TaskRepository.GetAll().Where(x => x.Asignee == userId).ToList();
+        tasks = tasks.OrderByDescending(x => x.DateCreated).ToList();
+        if (tasks.Any())
+        {
+          var config = new MapperConfiguration(cfg =>
+          {
+            cfg.CreateMap<Task, TaskEntity>();
+          });
+
+          IMapper mapper = config.CreateMapper();
+          var taskskMapped = mapper.Map<List<Task>, List<TaskEntity>>(tasks.ToList());
+          _log.DebugFormat("GetTasksForUser finished with : {0}", tasks.ToString());
+          ret.Tasks = taskskMapped;
+          ret.RecordCount = taskskMapped.Count;
+          ret.StatusCode = "OK";
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error fetching tasks... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
       }
       return ret;
     }
@@ -222,6 +281,8 @@ namespace BusinessServices
 
       return tasksDetails;
     }
+
+
     #endregion
 
   }

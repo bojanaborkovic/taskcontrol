@@ -8,6 +8,7 @@ using TaskControl.ViewDataPreparers;
 using TaskControlDTOs;
 using System;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace TaskControl.Controllers
 {
@@ -21,39 +22,112 @@ namespace TaskControl.Controllers
     // GET: Tasks
     public ActionResult Index()
     {
-      string user = System.Web.HttpContext.Current.User.Identity.Name;
-
-
       var ret = taskServiceClient.GetAllTasksDetails();
-      List<TaskSearchViewModel> viewModel = MapToViewModel(ret.Tasks);
+      List<TaskSearchViewModel> viewModel = new List<TaskSearchViewModel>();
+      if (ret != null && ret.RecordCount > 0)
+      {
+        viewModel = MapToViewModel(ret.Tasks);
+      }
 
-      return View(viewModel);
+      return View("Index", viewModel.ToPagedList(1, 10));
+    }
+
+    [HttpGet]
+    public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 10)
+    {
+      //var usersRet = serviceClient.SearchUsers();
+      var tasksRet = taskServiceClient.GetAllTasksDetails();
+      ViewBag.CurrentFilter = searchString;
+      pageNumber = pageNumber > 0 ? pageNumber : 1;
+      pageSize = pageSize > 0 ? pageSize : 10;
+
+      ViewBag.AsigneeSortParam = sortOrder == "asignee" ? "asignee_desc" : "asignee";
+      ViewBag.DueDateSortParam = sortOrder == "duedate" ? "duedate_desc" : "duedate";
+      ViewBag.StatusSortParam = sortOrder == "status" ? "status_desc" : "status";
+      ViewBag.IdSortParam = sortOrder == "Id" ? "Id_desc" : "Id";
+
+      ViewBag.CurrentSort = sortOrder;
+
+      List<TaskEntityExtended> sortedTasks = new List<TaskEntityExtended>();
+
+      if (!string.IsNullOrEmpty(searchString))
+      {
+        tasksRet.Tasks = tasksRet.Tasks.Where(x => x.Title.Contains(searchString) || x.Description.Contains(searchString)).ToList();
+      }
+
+      if (searchString != null)
+      {
+        pageNumber = 1;
+      }
+      else
+      {
+        searchString = currentFilter;
+      }
+
+
+      switch (sortOrder)
+      {
+        case "asignee_desc":
+          sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.Asignee).ToList();
+          break;
+        case "asignee":
+          sortedTasks = tasksRet.Tasks.OrderBy(x => x.Asignee).ToList();
+          break;
+        case "duedate_desc":
+          sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.DueDate).ToList();
+          break;
+        case "duedate":
+          sortedTasks = tasksRet.Tasks.OrderBy(x => x.DueDate).ToList();
+          break;
+        case "status_desc":
+          List<TaskEntityExtended> list = tasksRet.Tasks.ToList();
+          var result = tasksRet.Tasks.GroupBy(u => u.Status).Select(grp => new { Status = grp.Key, list = grp.ToList() }).ToList();
+          var groupedList = result.SelectMany(x => x.list).ToList();
+          sortedTasks = groupedList;
+          break;
+        case "Id":
+          sortedTasks = tasksRet.Tasks.OrderBy(x => x.Id).ToList();
+          break;
+        default:
+          sortedTasks = tasksRet.Tasks.OrderBy(x => x.DateCreated).ToList();
+          break;
+
+      }
+
+      var mappedTasks = MapToViewModel(sortedTasks);
+
+      return View("Index", mappedTasks.ToPagedList(pageNumber, pageSize));
     }
 
     [IssueTypePreparer, StatusPreparer, PriorityPreparer]
     public ActionResult Create()
     {
       var usernames = userServiceClient.GetAllUsers();
-      //var users = JsonConvert.DeserializeObject<List<UserEntity>>(usernames);
-      var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
-      ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+      if (usernames != null && usernames.RecordCount > 0)
+      {
+        var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
+        ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+      }
       var projects = projectServiceClient.GetAllProjects();
-      //var projects = JsonConvert.DeserializeObject<List<ProjectEntity>>(projectNames);
-      ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
+
+      if (projects != null && projects.RecordCount > 0)
+      {
+        ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
+      }
       return View("New");
     }
 
     [HttpPost]
+    [IssueTypePreparer, StatusPreparer, PriorityPreparer]
     public ActionResult Create(TaskViewModel model)
     {
       string user = System.Web.HttpContext.Current.User.Identity.Name;
       var userRet = userServiceClient.GetUserByUsername(user);
       model.CreatedBy = userRet != null ? userRet.Id : 0;
+      TaskEntity taskMapped = MapToEntity(model);
 
       if (ModelState.IsValid)
       {
-
-        TaskEntity taskMapped = MapToEntity(model);
         var ret = taskServiceClient.CreateTask(taskMapped);
 
         if (ret != null && !string.IsNullOrEmpty(ret.ErrorMessage))
@@ -80,6 +154,7 @@ namespace TaskControl.Controllers
 
       var projects = projectServiceClient.GetAllProjects();
       var users = userServiceClient.GetAllUsers();
+      
 
       ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects);
       ViewBag.UserNames = JsonConvert.SerializeObject(users.Users.Select(x => x.UserName).ToList());
@@ -104,6 +179,9 @@ namespace TaskControl.Controllers
       var projects = projectServiceClient.GetAllProjects();
       var users = userServiceClient.GetAllUsers();
 
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+      model.CreatedBy = user != null ? user.Id : 0;
       ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects);
       ViewBag.UserNames = JsonConvert.SerializeObject(users.Users.Select(x => x.UserName).ToList());
 
@@ -127,7 +205,7 @@ namespace TaskControl.Controllers
       var reporterRet = userServiceClient.GetUserByUsername(model.Reporter);
       //var reporter = JsonConvert.DeserializeObject<UserEntity>(reporterRet);
 
-     // var projectID = projectServiceClient.GetProjectByName(model.ProjectName);
+      var project = projectServiceClient.GetProjectByName(model.ProjectName);
 
       TaskEntity task = new TaskEntity();
       task.Asignee = asigneeRet != null ? asigneeRet.Id : 0;
@@ -139,7 +217,7 @@ namespace TaskControl.Controllers
       task.IssueType = model.IssueType;
       task.Priority = model.Priority;
       task.Status = model.Status;
-      task.ProjectId = model.Project;
+      task.ProjectId = project.Id;
       task.Title = model.Title;
       task.Id = model.Id;
       return task;

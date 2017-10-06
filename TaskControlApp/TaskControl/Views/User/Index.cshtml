@@ -70,7 +70,7 @@
     <tbody>
       <tr>
         <td>
-          @Html.DisplayFor(modelItem => item.UserId)
+          <b>@Html.ActionLink(item.UserName, "Details", new { userId = item.UserId })</b>
         </td>
         <td>
           @Html.DisplayFor(modelItem => item.UserName)

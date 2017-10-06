@@ -26,7 +26,7 @@ namespace TaskControlAPI
           defaults: new { id = RouteParameter.Optional }
       );
 
-      #region project routes
+      #region project routes 
       config.Routes.MapHttpRoute(
             name: "GetAllProjects",
             routeTemplate: "projects/all",
@@ -34,10 +34,28 @@ namespace TaskControlAPI
             );
 
       config.Routes.MapHttpRoute(
+            name: "GetProjectsByOwner",
+            routeTemplate: "projects/getByOwnerId",
+            defaults: new { controller = "Project", action = "GetProjectsByOwner" }
+            );
+
+      config.Routes.MapHttpRoute(
+            name: "GetProjectStatistics",
+            routeTemplate: "projects/getstatistics",
+            defaults: new { controller = "Project", action = "GetProjectStatistics" }
+            );
+
+      config.Routes.MapHttpRoute(
           name: "GetProjectById",
           routeTemplate: "projects/get",
           defaults: new { controller = "Project", action = "GetProjectById" }
       );
+
+      config.Routes.MapHttpRoute(
+         name: "GetProjectByName",
+         routeTemplate: "projects/getbyname",
+         defaults: new { controller = "Project", action = "GetProjectByName" }
+     );
 
       config.Routes.MapHttpRoute(
           name: "CreateProject",
@@ -179,6 +197,12 @@ namespace TaskControlAPI
             name: "GetTaskByIdCustom",
             routeTemplate: "tasks/getbyidcustom",
             defaults: new { controller = "Task", action = "GetTaskByIdCustom" }
+            );
+
+      config.Routes.MapHttpRoute(
+            name: "GetTasksForUser",
+            routeTemplate: "tasks/gettasksforuser",
+            defaults: new { controller = "Task", action = "GetTasksForUser" }
             );
       #endregion
 

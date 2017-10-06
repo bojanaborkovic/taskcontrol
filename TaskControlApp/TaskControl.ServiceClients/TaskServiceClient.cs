@@ -25,7 +25,7 @@ namespace TaskControl.ServiceClients
 
     public BaseTaskReturn GetTaskById(long TaskId)
     {
-      return Get<BaseTaskReturn>(new Uri(string.Format("{0}/{1}", BaseUri.ToString(), "getbyid")));
+      return Get<BaseTaskReturn>(new Uri(string.Format("{0}/{1}?taskId={2}", BaseUri.ToString(), "getbyid", TaskId)));
     }
 
     public TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId)
@@ -53,6 +53,11 @@ namespace TaskControl.ServiceClients
       return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "update"), task);
     }
 
-  
+    public SearchTasksReturn GetTasksForUser(long userId)
+    {
+      string url = string.Format("{0}/{1}?userId={2}", BaseUri.ToString(), "gettasksforuser", userId);
+      return Get<SearchTasksReturn>(new Uri(url));
+
+    }
   }
 }

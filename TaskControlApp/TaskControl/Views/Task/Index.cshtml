@@ -1,67 +1,110 @@
-﻿@model IEnumerable<TaskControl.Models.TaskSearchViewModel>
+﻿@using TaskControl.Models
+@using PagedList.Mvc;
+
+@model PagedList.IPagedList<TaskSearchViewModel>
 
 @{
-    ViewBag.Title = "Tasks";
+  ViewBag.Title = "Tasks";
+  string currentFilter = ViewBag.CurrentFilter;
+  string currentSort = ViewBag.CurrentSort;
+  if (string.IsNullOrEmpty(currentSort))
+  {
+    currentSort = "Id_desc";
+  }
 }
 
-<h2>Tasks</h2>
+<h2 class="text-primary">Tasks</h2>
+<br />
+<button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Task")'">
+  Create new task
+</button>
+<br />
+<br />
+<div class="input-group">
+  @using (Html.BeginForm("Search", "Task", FormMethod.Get))
+  {
+    <form>
+      <div class="form-group">
 
-<p>
-	<button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Task")'">
-		Create new task
-	</button>
-</p>
+        @Html.Label("Find by name:", htmlAttributes: new { @class = "control-label" })
+        <div class="col-md-10">
+          @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+          <br />
 
-<div class="grid">
-	@foreach (var item in Model)
-	{
-	<div class="grid-item">
-		
-		<div class="card">
-			
-			<div class="card-block">
-				<span style="float:right;  margin-left: 10em; margin-top: 1em;" class="label label-primary">Status: @Html.DisplayFor(modelItem => item.Status)</span>
-				<h2 class="card-title">
-					@Html.ActionLink(item.Title, "Edit", new { taskId = item.TaskId })
+        </div>
+        <div class="col-md-offset-10">
+          <input type="submit" value="Search" class="btn btn-primary btn-lg" id="searchUsers" />
+        </div>
+      </div>
 
-				</h2>
-      
-				@*<button style="float:right; margin-left: 10em;">@Html.ActionLink("Edit", "EditTask", new { Id = item.TaskId })</button>*@
-       
-				<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
-				<span><p class="glyphicon glyphicon-user"></p> @Html.DisplayFor(modelItem => item.Asignee)</span>
-				<p class="card-block"><b>Project:</b> @Html.DisplayFor(modelItem => item.Project)</p>
 
-				<br />
-				<br />
-				<span><b>Date Created:</b>@Html.DisplayFor(modelItem => item.DateCreated)</span>
-				<br/>
-				<span><b>Issue type: </b>@Html.DisplayFor(modelItem => item.IssueType)</span>
-				<br/>
-				<span><b>Reporter :	</b>@Html.DisplayFor(modelItem => item.Reporter)</span>
-				<br />
-				<span><b>Priority:</b> @Html.DisplayFor(modelItem => item.Priority)</span>
-				<br/>
-				<span><b>Due date :</b> @Html.DisplayFor(modelItem => item.DueDate)</span>
-			</div>
-      <button class="btn btn-xs btn-info" type="button" onclick="location.href='@Url.Action("Preview", "Task", new { taskId = item.TaskId })'">
-        Preview
-      </button>
-		</div>
-	</div>
-	
-	}
-	</div>
+    </form>
 
-	<script type="text/javascript">
-		$('.grid').masonry({
-			// options
-			// use outer width of grid-sizer for columnWidth
-			percentPosition: true,
-			transitionDuration: 5,
-			gutter: 15,
-			transitionDuration: '0.8s',
-			stagger: 100
-      
-		});
-	</script>
+  }
+</div>
+<br />
+<br />
+<table class="table table-striped col-md-6">
+  <thead>
+    <tr>
+      <th>
+        @Html.ActionLink("#", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.IdSortParam))
+        @Html.SortIdentifier(currentSort, "Id")
+      </th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>IssueType</th>
+      <th>Priority</th>
+      <th>@Html.ActionLink("Status", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.StatusSortParam))
+        @Html.SortIdentifier(currentSort, "status")</th>
+      <th>@Html.ActionLink("Asignee", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.AsigneeSortParam))
+      @Html.SortIdentifier(currentSort, "asignee")</th>
+      <th>@Html.ActionLink("DueDate", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.DueDateSortParam))
+      @Html.SortIdentifier(currentSort, "duedate")</th>
+    </tr>
+  </thead>
+  @foreach (var item in Model)
+  {
+    <tbody>
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.TaskId)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.IssueType)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Priority)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Asignee)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.DueDate)
+        </td>
+        <td>
+          <b>@Html.ActionLink("Edit", "Edit", new { taskId = item.TaskId })</b>
+        </td>
+      </tr>
+    </tbody>
+  }
+</table>
+
+<div class="pager">
+  @Html.PagedListPager(Model, pageNumber => Url.Action("Search", new
+{
+  pageNumber,
+  sortOrder = ViewBag.currentSort,
+  currentFilter = ViewBag.CurrentFilter
+}))
+  Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+</div>

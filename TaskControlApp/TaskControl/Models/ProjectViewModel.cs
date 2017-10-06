@@ -16,5 +16,20 @@ namespace TaskControl.Models
 
     [DataType(DataType.MultilineText)]
     public string Description { get; set; }
+
+    public int InProgressCount { get; set; }
+
+    public int CompletedCount { get; set; }
+
+    public int ToDoCount { get; set; }
+
+    public decimal TotalProgress { get; set; }
+  }
+
+  public enum Status
+  {
+    ToDo = 1,
+    InProgress = 2,
+    Done = 4
   }
 }

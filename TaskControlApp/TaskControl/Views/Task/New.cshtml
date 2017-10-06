@@ -147,17 +147,19 @@
 	$(document).ready(function () { // will trigger when the document is ready
 		$('.datepicker').datepicker(); //Initialise any date pickers
 
-		var availableUsers = @Html.Raw(userNames);
-    var availbleProjects = @Html.Raw(projectNames);
-
+		var availableUsers = @Html.Raw(userNames);	  
+    
+	  var availableProjects = @Html.Raw(projectNames);
 
 		$(".autoasignee").autocomplete({
-		  source: availableUsers
-		});
+        source: availableUsers
+
+    });
 
 		$(".autoproject").autocomplete({
-		  source: availbleProjects
-		});
+        source: availableProjects
+
+    });
 
     });
 </script>

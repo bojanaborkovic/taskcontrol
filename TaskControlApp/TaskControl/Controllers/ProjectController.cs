@@ -34,13 +34,15 @@ namespace TaskControl.Controllers
     {
       GetProjectReturn responseData = serviceClient.GetAllProjects();
 
+      
+
       if (responseData != null && responseData.Projects.Count > 0)
       {
         return View("Index", MapToProjectsViewModel(responseData.Projects));
       }
       else
       {
-        return View("Index", new ProjectViewModel());
+        return View("Index", new List<ProjectViewModel>());
       }
 
 
@@ -140,7 +142,39 @@ namespace TaskControl.Controllers
       List<ProjectViewModel> viewMOdel = new List<ProjectViewModel>();
       foreach (var project in projects)
       {
-        viewMOdel.Add(new ProjectViewModel() { Id = project.Id, Name = project.Name, Owner = project.Owner, Description = project.Description });
+        var statistics = serviceClient.GetProjectStatistics(project.Id);
+        int toDoCount = 0;
+        int completedCount = 0;
+        int inProgressCount = 0;
+        if (statistics != null && statistics.Tasks.Count > 0)
+        {
+           toDoCount = statistics.Tasks.Where(x => x.Status == (int)Status.ToDo).ToList().Count;
+           completedCount = statistics.Tasks.Where(x => x.Status == (int)Status.Done).ToList().Count;
+           inProgressCount = statistics.Tasks.Where(x => x.Status == (int)Status.InProgress).ToList().Count;
+        }
+
+
+        var projectViewModel = new ProjectViewModel()
+        {
+          Id = project.Id,
+          Name = project.Name,
+          Owner = project.Owner,
+          Description = project.Description,
+          ToDoCount = toDoCount,
+          CompletedCount = completedCount,
+          InProgressCount = inProgressCount
+        };
+
+        if(toDoCount == 0 && completedCount == 0 && inProgressCount == 0)
+        {
+          projectViewModel.TotalProgress = 0M;
+        }
+        else
+        {
+          projectViewModel.TotalProgress = (decimal)((decimal)(completedCount) / (decimal)(toDoCount + inProgressCount + completedCount)) * 100;
+        }
+
+        viewMOdel.Add(projectViewModel);
       }
 
       return viewMOdel;

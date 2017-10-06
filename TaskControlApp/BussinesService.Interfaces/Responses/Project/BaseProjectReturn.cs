@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using TaskControlDTOs;
 
 namespace BussinesService.Interfaces.Responses.Project
 {
@@ -26,5 +27,15 @@ namespace BussinesService.Interfaces.Responses.Project
     [DataMember]
     public long Owner { get; set; }
 
+  }
+
+  [DataContract]
+  public class ProjectStatisticsReturn : BasicReturn
+  {
+    [DataMember]
+    public List<TaskEntity> Tasks { get; set; }
+
+    [DataMember] 
+    public int RecordCount { get; set; }
   }
 }

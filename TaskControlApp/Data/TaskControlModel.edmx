@@ -150,6 +150,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="StatusAfter" Type="int" Nullable="false" />
           <Property Name="ChangeDate" Type="datetime" />
           <Property Name="TaskId" Type="bigint" Nullable="false" />
+          <Property Name="ChangeBy" Type="bigint" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
@@ -303,8 +304,19 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
         </Association>
         <Function Name="GetAllProjectsWithOwner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllTasksDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetProjectStatistics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="projectId" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="GetTaskById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="taskId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="GetTasksAssigneStatusHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetTasksAudit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FromDate" Type="datetime2" Mode="In" />
+          <Parameter Name="ToDate" Type="datetime2" Mode="In" />
+          <Parameter Name="pageNumber" Type="int" Mode="In" />
+          <Parameter Name="pageSize" Type="int" Mode="In" />
+          <Parameter Name="orderBy" Type="varchar" Mode="In" />
         </Function>
         <Function Name="SearchUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="TaskControlModelStoreContainer">
@@ -536,6 +548,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Name="ChangeDate" Type="DateTime" Precision="3" />
           <Property Name="TaskId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="Task" Relationship="Self.FK_TaskStatusHistory_Task" FromRole="TaskStatusHistory" ToRole="Task" />
+          <Property Name="ChangeBy" Type="Int64" />
         </EntityType>
         <EntityType Name="Note">
           <Key>
@@ -772,6 +785,17 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <FunctionImport Name="GetTaskById" ReturnType="Collection(TaskControlModel.GetTaskResult)">
           <Parameter Name="taskId" Mode="In" Type="Int64" />
           </FunctionImport>
+          <FunctionImport Name="GetProjectStatistics" ReturnType="Collection(TaskControlModel.GetProjectStatistics_Result)">
+          <Parameter Name="projectId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="GetTasksAudit">
+            <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+            <Parameter Name="pageNumber" Mode="In" Type="Int32" />
+            <Parameter Name="pageSize" Mode="In" Type="Int32" />
+            <Parameter Name="orderBy" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetTasksAssigneStatusHistory" ReturnType="Collection(TaskControlModel.GetTasksAssigneStatusHistory_Result)" />
 
         
         </EntityContainer>
@@ -829,6 +853,31 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <Property Type="Int64" Name="ReporterId" Nullable="false" />
           <Property Type="Int64" Name="AsigneeId" Nullable="false" />
           <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="GetProjectStatistics_Result">
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="250" />
+          <Property Type="Int32" Name="IssueType" Nullable="false" />
+          <Property Type="Int64" Name="Asignee" Nullable="true" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Status" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="Reporter" Nullable="true" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Int64" Name="ProjectId" Nullable="false" />
+          <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="Id" Nullable="false" />
+          <Property Type="Int64" Name="CreatedBy" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetTasksAssigneStatusHistory_Result">
+          <Property Type="Int64" Name="TaskId" Nullable="false" />
+          <Property Type="Int64" Name="AsigneeBefore" Nullable="true" />
+          <Property Type="Int64" Name="AsigneeAfter" Nullable="false" />
+          <Property Type="Int64" Name="AssigneChangedBy" Nullable="true" />
+          <Property Type="DateTime" Name="AssigneChangedOn" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="StatusBefore" Nullable="true" />
+          <Property Type="Int32" Name="StatusAfter" Nullable="false" />
+          <Property Type="Int64" Name="StatusChangeBy" Nullable="true" />
+          <Property Type="DateTime" Name="StatusChangedOn" Nullable="true" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -971,6 +1020,7 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
           <EntitySetMapping Name="TaskStatusHistories">
             <EntityTypeMapping TypeName="TaskControlModel.TaskStatusHistory">
               <MappingFragment StoreEntitySet="TaskStatusHistory">
+                <ScalarProperty Name="ChangeBy" ColumnName="ChangeBy" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="StatusBefore" ColumnName="StatusBefore" />
                 <ScalarProperty Name="StatusAfter" ColumnName="StatusAfter" />
@@ -1046,6 +1096,40 @@ warning 6002: The table/view 'TaskControl.dbo.Note' does not have a primary key 
                 <ScalarProperty Name="ReporterId" ColumnName="ReporterId" />
                 <ScalarProperty Name="AsigneeId" ColumnName="AsigneeId" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProjectStatistics" FunctionName="TaskControlModel.Store.GetProjectStatistics">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.GetProjectStatistics_Result">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IssueType" ColumnName="IssueType" />
+                <ScalarProperty Name="Asignee" ColumnName="Asignee" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Reporter" ColumnName="Reporter" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetTasksAudit" FunctionName="TaskControlModel.Store.GetTasksAudit" />
+          <FunctionImportMapping FunctionImportName="GetTasksAssigneStatusHistory" FunctionName="TaskControlModel.Store.GetTasksAssigneStatusHistory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.GetTasksAssigneStatusHistory_Result">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="AsigneeBefore" ColumnName="AsigneeBefore" />
+                <ScalarProperty Name="AsigneeAfter" ColumnName="AsigneeAfter" />
+                <ScalarProperty Name="AssigneChangedBy" ColumnName="AssigneChangedBy" />
+                <ScalarProperty Name="AssigneChangedOn" ColumnName="AssigneChangedOn" />
+                <ScalarProperty Name="StatusBefore" ColumnName="StatusBefore" />
+                <ScalarProperty Name="StatusAfter" ColumnName="StatusAfter" />
+                <ScalarProperty Name="StatusChangeBy" ColumnName="StatusChangeBy" />
+                <ScalarProperty Name="StatusChangedOn" ColumnName="StatusChangedOn" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

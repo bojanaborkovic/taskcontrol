@@ -305,6 +305,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\Dashboard\Calendar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">

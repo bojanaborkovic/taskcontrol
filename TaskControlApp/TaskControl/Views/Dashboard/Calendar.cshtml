@@ -1,0 +1,98 @@
+﻿@model TaskControl.Models.DashboardViewModel
+
+@{
+  ViewBag.Title = "Calendar";
+  var taskList = ViewBag.TaskList;
+  string getMyTasksUrl = Url.Action("GetTaskForUser", "Dashboard");
+  string getAllTasksUrl = Url.Action("GetAllTasks", "Dashboard");
+  string userId = ViewBag.UserId;
+}
+
+
+<div class="row">
+
+    <h2>Calendar</h2>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" id="myTasks">My tasks</button>
+      <button class="btn btn-secondary btn-success" id="allTasks">All tasks</button>
+    </div>
+
+  <div class="btn-group" role="group" aria-label="..." style="float:right">
+    @foreach (var item in Model.OwnersProjects)
+    {
+      <button type="button" class="btn btn-default" id="@item.Id">@item.Name</button>
+    }
+   
+  </div>
+    <div id="mainCalendar">
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    //var event = { id: 1, title: 'SuperCoolProject', start: new Date() };
+    //var newEvent = {id : 2, title: 'Future project', start: '2017-09-20'}
+    $('#mainCalendar').fullCalendar({
+      defaultDate: '2017-09-05',
+      editable: true,
+      eventLimit: true, // allow "more" link when too many events
+      //eventSources: [
+      //  '/feed1.php',
+      //  '/feed2.php'
+      //]
+    });
+    var listOfTasks = @Html.Raw(taskList);
+
+    $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+
+
+
+
+    /* ajax calls for 'MyTasks' and 'All tasks'*/
+    $("#myTasks").click(function(e) {
+      e.preventDefault();
+      $.ajax({
+        type: "GET",
+        url: '@getMyTasksUrl',
+        data :{
+          userId:  '@userId'
+        },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(result) {
+          $('#mainCalendar').fullCalendar('removeEvents');
+          var listOfTasks = result;
+
+          $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+        },
+        error: function(result) {
+          //alert('error');
+        }
+      });
+    });
+
+    $("#allTasks").click(function(e) {
+      e.preventDefault();
+      $.ajax({
+        type: "GET",
+        url: '@getAllTasksUrl',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(result) {
+          $('#mainCalendar').fullCalendar('removeEvents');
+          var listOfTasks = result;
+
+          $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+        },
+        error: function(result) {
+         // alert('error');
+        }
+      });
+    });
+
+  });
+</script>

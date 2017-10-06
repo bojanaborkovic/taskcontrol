@@ -10,17 +10,17 @@
 namespace DataModel
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class TaskStatusHistory
+    public partial class GetTasksAssigneStatusHistory_Result
     {
-        public long Id { get; set; }
+        public long TaskId { get; set; }
+        public Nullable<long> AsigneeBefore { get; set; }
+        public long AsigneeAfter { get; set; }
+        public Nullable<long> AssigneChangedBy { get; set; }
+        public System.DateTime AssigneChangedOn { get; set; }
         public Nullable<int> StatusBefore { get; set; }
         public int StatusAfter { get; set; }
-        public Nullable<System.DateTime> ChangeDate { get; set; }
-        public long TaskId { get; set; }
-        public Nullable<long> ChangeBy { get; set; }
-    
-        public virtual Task Task { get; set; }
+        public Nullable<long> StatusChangeBy { get; set; }
+        public Nullable<System.DateTime> StatusChangedOn { get; set; }
     }
 }

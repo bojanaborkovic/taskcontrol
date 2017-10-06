@@ -195,6 +195,26 @@ namespace DataModel.UnitOfWork
       }
     }
 
+    public List<GetProjectStatistics_Result> GetProjectStatistics(long projectId)
+    {
+      using (var context = new TaskControlEntities())
+      {
+        var task = context.GetProjectStatistics(projectId).ToList();
+
+        return task;
+      }
+    }
+
+    public List<GetTasksAssigneStatusHistory_Result> GetTasksAudit()
+    {
+      using (var context = new TaskControlEntities())
+      {
+        var tasks = context.GetTasksAssigneStatusHistory().ToList();
+
+        return tasks;
+      }
+    }
+
     #endregion
 
     #region IDisposable implementation

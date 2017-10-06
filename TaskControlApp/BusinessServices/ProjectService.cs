@@ -108,6 +108,36 @@ namespace BusinessServices
       return null;
     }
 
+    public ProjectStatisticsReturn GetProjectStatistics(long projectId)
+    {
+      _log.DebugFormat("GetAllProjects invoked");
+      ProjectStatisticsReturn ret = new ProjectStatisticsReturn();
+      try
+      {
+        var projectStatistics = _unitOfWork.GetProjectStatistics(projectId);
+        if (projectStatistics.Any())
+        {
+          var config = new MapperConfiguration(cfg =>
+          {
+            cfg.CreateMap<GetProjectStatistics_Result, TaskEntity>();
+          });
+
+          IMapper mapper = config.CreateMapper();
+          var tasksMapped = mapper.Map<List<GetProjectStatistics_Result>, List<TaskEntity>>(projectStatistics.ToList());
+          _log.DebugFormat("GetAllProjects finished with : {0}", projectStatistics.ToString());
+          ret.Tasks = tasksMapped;
+          ret.RecordCount = tasksMapped.Count;
+          return ret;
+
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching projects... {0}", ex.Message);
+      }
+      return null;
+    }
+
     public BaseProjectReturn UpdateProject(ProjectEntity project)
     {
       _log.DebugFormat("UpdateProject invoked");
@@ -140,6 +170,39 @@ namespace BusinessServices
 
       return ret;
 
+    }
+
+    public GetProjectReturn GetProjectsByOwner(long ownerId)
+    {
+      _log.DebugFormat("GetProjectsByOwner invoked for owner: {0}", ownerId);
+      GetProjectReturn ret = new GetProjectReturn();
+
+      try
+      {
+        var projects = _unitOfWork.ProjectRepository.Get(p => p.OwnerId == ownerId).ToList();
+        if (projects.Any())
+        {
+          var config = new MapperConfiguration(cfg =>
+          {
+            cfg.CreateMap<Project, ProjectEntity>();
+          });
+
+          IMapper mapper = config.CreateMapper();
+          var projectsMapped = mapper.Map<List<Project>, List<ProjectEntity>>(projects.ToList());
+          _log.DebugFormat("GetProjectsByOwner finished with : {0}", projects.ToString());
+          ret.Projects = projectsMapped;
+          ret.RecordCount = projectsMapped.Count;
+          return ret;
+
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching projects... {0}", ex.Message);
+      }
+
+
+      return null;
     }
 
     public GetProjectReturn GetProjectsWithOwner()
@@ -175,5 +238,34 @@ namespace BusinessServices
 
       return projectsMapped;
     }
+
+    public BaseProjectReturn GetProjectByName(string projectName)
+    {
+      _log.DebugFormat("GetProjectByName invoked");
+      BaseProjectReturn ret = new BaseProjectReturn();
+
+      try
+      {
+        var project = _unitOfWork.ProjectRepository.Get().Where(x => x.Name == projectName).FirstOrDefault();
+        ret = MapProject(project);
+        return ret;
+
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error search users... {0}", ex.Message);
+      }
+      return null;
+    }
+
+    private BaseProjectReturn MapProject(Project project)
+    {
+      BaseProjectReturn ret = new BaseProjectReturn();
+      ret.Id = project.Id;
+      ret.Name = project.Name;
+      ret.Owner =  project.OwnerId != null ? (long)project.OwnerId : 0;
+      return ret;
+    }
+
   }
 }
