@@ -155,29 +155,6 @@ namespace BusinessServices
 
     }
 
-    private List<TaskAudit> MapTasksAudit(List<GetTasksAssigneStatusHistory_Result> tasksAudit)
-    {
-      List<TaskAudit> audit = new List<TaskAudit>();
-
-      foreach(var item in tasksAudit)
-      {
-        audit.Add(new TaskAudit()
-        {
-          TaskId = item.TaskId,
-          AsigneeBefore = item.AsigneeBefore,
-          AsigneeAfter = item.AsigneeAfter,
-          AsigneeChangedOnDate = item.AssigneChangedOn,
-          AsigneeChangedBy = item.AssigneChangedBy,
-          StatusBefore = item.StatusBefore,
-          StatusAfter = item.StatusAfter,
-          StatusChangedOnDate = (DateTime)item.StatusChangedOn,
-          StatusChangedBy = item.StatusChangeBy
-        });
-      }
-
-      return audit;
-    }
-
     public TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId)
     {
       _log.DebugFormat("GetTaskByIdCustom invoked for task with Id : {0}", TaskId);
@@ -227,31 +204,36 @@ namespace BusinessServices
       return ret;
     }
 
-    private TaskEntityExtendedReturn MapToTaskEntity(GetTaskResult getTaskResult)
+    public SearchTasksReturn GetTasksOnProject(long projectId)
     {
-      TaskEntityExtendedReturn taskEntity = new TaskEntityExtendedReturn();
-      taskEntity.Asignee = getTaskResult.Asignee;
-      taskEntity.AsigneeId = getTaskResult.AsigneeId;
-      taskEntity.Reporter = getTaskResult.Reporter;
-      taskEntity.ReporterId = getTaskResult.ReporterId;
-      taskEntity.DateCreated = (DateTime)getTaskResult.DateCreated;
-      taskEntity.DueDate = (DateTime)getTaskResult.DueDate;
-      taskEntity.Description = getTaskResult.Description;
-      taskEntity.IssueType = _unitOfWork.IssueTypeRepositorsy.GetByID(getTaskResult.IssueType).Name;
-      taskEntity.IssueTypeId = getTaskResult.IssueType;
-      taskEntity.Status = _unitOfWork.StatusRepository.GetByID(getTaskResult.Status).Name;
-      taskEntity.StatusId = getTaskResult.Status;
-      taskEntity.Priority = _unitOfWork.PriorityRepository.GetByID((long)getTaskResult.Priority).Name;
-      taskEntity.PriorityId = (int)getTaskResult.Priority;
-      taskEntity.Id = getTaskResult.TaskId;
-      taskEntity.Title = getTaskResult.Title;
-      taskEntity.ProjectId = getTaskResult.ProjectId;
-      taskEntity.Project = _unitOfWork.ProjectRepository.GetByID(getTaskResult.ProjectId).Name;
+      _log.DebugFormat("GetTasksOnProject invoked");
+      SearchTasksReturn ret = new SearchTasksReturn();
+      try
+      {
+        var tasks = _unitOfWork.TaskRepository.Get(x => x.ProjectId == projectId).ToList();
+        if (tasks.Any())
+        {
+          var config = new MapperConfiguration(cfg =>
+          {
+            cfg.CreateMap<Task, TaskEntity>();
+          });
 
-      return taskEntity;
+          IMapper mapper = config.CreateMapper();
+          var taskskMapped = mapper.Map<List<Task>, List<TaskEntity>>(tasks.ToList());
+          _log.DebugFormat("GetTasksOnProject finished with : {0}", tasks.ToString());
+          ret.Tasks = taskskMapped;
+          ret.RecordCount = taskskMapped.Count;
+          ret.StatusCode = "OK";
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching tasks... {0}", ex.Message);
+      }
+
+
+      return ret;
     }
-
-
 
     #endregion
 
@@ -281,8 +263,51 @@ namespace BusinessServices
 
       return tasksDetails;
     }
+    private List<TaskAudit> MapTasksAudit(List<GetTasksAssigneStatusHistory_Result> tasksAudit)
+    {
+      List<TaskAudit> audit = new List<TaskAudit>();
 
+      foreach (var item in tasksAudit)
+      {
+        audit.Add(new TaskAudit()
+        {
+          TaskId = item.TaskId,
+          AsigneeBefore = item.AsigneeBefore,
+          AsigneeAfter = item.AsigneeAfter,
+          AsigneeChangedOnDate = item.AssigneChangedOn,
+          AsigneeChangedBy = item.AssigneChangedBy,
+          StatusBefore = item.StatusBefore,
+          StatusAfter = item.StatusAfter,
+          StatusChangedOnDate = (DateTime)item.StatusChangedOn,
+          StatusChangedBy = item.StatusChangeBy
+        });
+      }
 
+      return audit;
+    }
+    private TaskEntityExtendedReturn MapToTaskEntity(GetTaskResult getTaskResult)
+    {
+      TaskEntityExtendedReturn taskEntity = new TaskEntityExtendedReturn();
+      taskEntity.Asignee = getTaskResult.Asignee;
+      taskEntity.AsigneeId = getTaskResult.AsigneeId;
+      taskEntity.Reporter = getTaskResult.Reporter;
+      taskEntity.ReporterId = getTaskResult.ReporterId;
+      taskEntity.DateCreated = (DateTime)getTaskResult.DateCreated;
+      taskEntity.DueDate = (DateTime)getTaskResult.DueDate;
+      taskEntity.Description = getTaskResult.Description;
+      taskEntity.IssueType = _unitOfWork.IssueTypeRepositorsy.GetByID(getTaskResult.IssueType).Name;
+      taskEntity.IssueTypeId = getTaskResult.IssueType;
+      taskEntity.Status = _unitOfWork.StatusRepository.GetByID(getTaskResult.Status).Name;
+      taskEntity.StatusId = getTaskResult.Status;
+      taskEntity.Priority = _unitOfWork.PriorityRepository.GetByID((long)getTaskResult.Priority).Name;
+      taskEntity.PriorityId = (int)getTaskResult.Priority;
+      taskEntity.Id = getTaskResult.TaskId;
+      taskEntity.Title = getTaskResult.Title;
+      taskEntity.ProjectId = getTaskResult.ProjectId;
+      taskEntity.Project = _unitOfWork.ProjectRepository.GetByID(getTaskResult.ProjectId).Name;
+
+      return taskEntity;
+    }
     #endregion
 
   }

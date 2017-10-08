@@ -57,7 +57,12 @@ namespace TaskControl.ServiceClients
     {
       string url = string.Format("{0}/{1}?userId={2}", BaseUri.ToString(), "gettasksforuser", userId);
       return Get<SearchTasksReturn>(new Uri(url));
+    }
 
+    public SearchTasksReturn GetTasksOnProject(long projectId)
+    {
+      string url = string.Format("{0}/{1}?projectId={2}", BaseUri.ToString(), "gettasksonproject", projectId);
+      return Get<SearchTasksReturn>(new Uri(url));
     }
   }
 }

@@ -18,15 +18,15 @@
         <p>
          @Html.DisplayFor(model=>model.Description)
         </p>
-        <ul class="list-inline list-unstyled">
+        <ul class="list-unstyled">
           <li><span>Due date : <i class="glyphicon glyphicon-calendar"></i> @Html.DisplayFor(model => model.DueDate)</span></li>
-          <li>|</li>
+          <li><hr /></li>
           <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
-          <li>|</li>
+          <li><hr/></li>
           <li>
             <span class="glyphicon glyphicon-user">Asignee:@Html.DisplayFor(model => model.Asignee)</span>
           </li>
-          <li>|</li>
+          <li><hr/></li>
           <li>
              <span class="glyphicon glyphicon-tag">Issue type:@Html.DisplayFor(model => model.IssueType)
           </li>

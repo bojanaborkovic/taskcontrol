@@ -2,7 +2,9 @@
 
 @model  RoleViewModel
 @{
-	ViewBag.Title = "New role";
+  ViewBag.Title = "New role";
+  string newRoleUrl = Url.Action("NewRole", "Roles");
+  string rolesIndex = Url.Action("Index", "Roles");
 }
 
 
@@ -17,6 +19,8 @@
 			{
 				HttpMethod = "POST",
 				OnSuccess = "newRoleSuccess()",
+        
+       // OnComplete = "MakeAjaxCall()"
 				// OnFailure = "addUserToRoleFailure()"
 
 			}))
@@ -39,7 +43,30 @@
 				</div>
 			</div>
 
-			<button type="submit" class="btn btn-primary">Save changes</button>
+      <div class="form-group">
+        <div class="col-10">
+          <div class="panel panel-default">
+            <div class="panel-heading">Projects access</div>
+
+            <!-- List group -->
+            <ul class="list-group">
+              @foreach (var project in Model.ProjectsAccess)
+              {
+                <li class="list-group-item">
+                 @project.Name
+                  <div class="material-switch pull-right">
+                    <input id="@project.Id"  type="checkbox" class="projectCheckbox" />
+                    <label for="@project.Id" class="label-primary"></label>
+                  </div>
+                </li>
+              }
+
+            </ul>
+          </div>
+        </div>
+      </div>
+
+			<button type="submit" class="btn btn-primary" id="submit">Save changes</button>
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
 
@@ -70,6 +97,67 @@
 <script type="text/javascript">
 	function newRoleSuccess()
   {
-    $('#OKModal').modal('show');
-  }
+	  $('#OKModal').modal('show');
+	}
+	var projectIds = [];
+
+
+	$("#submit").click(function (e) {
+	  e.preventDefault();
+	  debugger;
+	
+	  var modelObj = {};
+	  modelObj.RoleName = $('#rolename').val();
+	  modelObj.Description = $('#description').val();
+	  modelObj.Id = 0;
+	  modelObj.DateCrated = null;
+	  modelObj.ProjectList = projectIds;
+
+	  var postObj = JSON.stringify(modelObj); // convert object to json
+	  var postList = JSON.stringify(projectIds);
+
+	  $.ajax({
+	    type: 'POST',
+	    data: JSON.stringify(modelObj),
+	    url: '@newRoleUrl',
+	    dataType: "json",
+	    contentType: "application/json; charset=utf-8",
+	    cache: false,
+	    success: function (result) {
+	      if (result.success) {
+	        $("#newRoleModal").modal('hide');
+	        window.location.href = '@rolesIndex';
+	    }
+	      if (result == false) {
+	      alert("There was an error submitting the form. Fill in all of the form fields with no errors.");
+	    }
+	  },
+	  error: function (response) {
+	   // alert("There was an error submitting the form. Fill in all of the form fields with no errors.");
+	  }
+	  });
+	});
+
+
+	$(document).ready(function () {
+	  //var projectIds = [];
+	 
+	  $(".projectCheckbox").change(function (e) {
+	  
+	      debugger;
+
+	      var id = e.currentTarget.id;
+	      if($('#' + id).is(":checked"))
+	      {
+	        projectIds.push(id);
+	      }
+	      else
+	      {
+	        projectIds.pop(id);
+	      }
+	    
+	  });
+
+
+	});
 </script>

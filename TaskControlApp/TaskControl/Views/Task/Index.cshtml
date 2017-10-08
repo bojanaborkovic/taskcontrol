@@ -94,6 +94,9 @@
         <td>
           <b>@Html.ActionLink("Edit", "Edit", new { taskId = item.TaskId })</b>
         </td>
+        <td>
+          <b>@Html.ActionLink("Details", "Preview", new { taskId = item.TaskId })</b>
+        </td>
       </tr>
     </tbody>
   }

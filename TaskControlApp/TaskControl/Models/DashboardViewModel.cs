@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace TaskControl.Models
 {
@@ -15,6 +16,8 @@ namespace TaskControl.Models
     public List<DashboardTaskViewModel> TaskViewModel { get; set; }
 
     public List<TaskAuditViewModel> TaskAuditViewModel { get; set; }
+
+    public DashboardTaskViewModel TaskDetails { get; set; }
   }
 
 
@@ -30,6 +33,7 @@ namespace TaskControl.Models
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
 
+    [ScriptIgnore]
     public string Color { get; set; }
   }
 

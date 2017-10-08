@@ -25,12 +25,19 @@ namespace TaskControl.Controllers
     [StatusPreparer]
     public ActionResult Index()
     {
-      string userName = System.Web.HttpContext.Current.User.Identity.Name;
-      ViewBag.UserId = userServiceClient.GetUserByUsername(userName).Id.ToString();
-      var ret = taskServiceClient.GetAllTasksDetails();
-
       DashboardViewModel model = new DashboardViewModel();
 
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      long userId = userServiceClient.GetUserByUsername(userName).Id;
+      ViewBag.UserId = userId.ToString();
+      var ret = taskServiceClient.GetAllTasksDetails();
+
+      var tasksForUser = taskServiceClient.GetTasksForUser(userId);
+      if(tasksForUser != null && tasksForUser.RecordCount > 0)
+      {
+        model.TaskViewModel = MapTasksToDashboard(tasksForUser);
+      }
+     
       model.TaskAuditViewModel = new List<TaskAuditViewModel>();
       if (ret != null)
       {
@@ -61,6 +68,7 @@ namespace TaskControl.Controllers
     }
 
     [HttpGet]
+    [StatusPreparer]
     public ActionResult GetTaskForUser(long userId)
     {
       var ret = taskServiceClient.GetTasksForUser(userId);
@@ -71,15 +79,47 @@ namespace TaskControl.Controllers
       });
 
       return Content(serializedRecords, "application/json");
-
-      //return Json(new
-      //{
-      //  Records = serializedRecords,
-      //  Error = ret.ErrorMessage,
-      //  Count = ret.RecordCount
-      //}, JsonRequestBehavior.AllowGet);
     }
 
+    [HttpGet]
+    [StatusPreparer]
+    public ActionResult GetTasksOnProject(long projectId)
+    {
+      var ret = taskServiceClient.GetTasksOnProject(projectId);
+      var records = MapTasksToDashboard(ret);
+
+      var serializedRecords = JsonConvert.SerializeObject(records, new JsonSerializerSettings
+      {
+        ContractResolver = new CamelCasePropertyNamesContractResolver()
+      });
+
+      return Content(serializedRecords, "application/json");
+    }
+
+
+    [HttpGet]
+    public ActionResult GetTaskInfoById(long taskId)
+    {
+      var ret = taskServiceClient.GetTaskByIdCustom(taskId);
+      var records = MapTaskToDashboard(ret);
+
+      var serializedRecords = JsonConvert.SerializeObject(records);
+
+      return Content(serializedRecords, "application/json");
+    }
+
+    private DashboardTaskViewModel MapTaskToDashboard(TaskEntityExtendedReturn ret)
+    {
+      DashboardTaskViewModel task = new DashboardTaskViewModel();
+      task.Id = ret.Id;
+      task.Title = ret.Title;
+      task.Status = ret.Status;
+      task.Start = ret.DateCreated;
+      task.End = ret.DueDate;
+      task.Asignee = ret.Asignee;
+
+      return task;
+    }
 
     [HttpGet]
     public ActionResult Calendar()
@@ -212,6 +252,7 @@ namespace TaskControl.Controllers
     private List<DashboardTaskViewModel> MapTasksToDashboard(SearchTasksReturn ret)
     {
       List<DashboardTaskViewModel> tasksDashboard = new List<DashboardTaskViewModel>();
+      var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
 
       foreach (var task in ret.Tasks)
       {
@@ -221,6 +262,7 @@ namespace TaskControl.Controllers
           Title = task.Title,
           Start = task.DateCreated,
           End = task.DueDate,
+          Status = statuses.Where(x => x.Id == task.Status).First().Name,
           Color = "#337ab7"
 
         });

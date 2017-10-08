@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using TaskControl.Models;
 using TaskControl.ServiceClients;
 using TaskControlDTOs;
+using BussinesService.Interfaces.Responses.Project;
 
 namespace TaskControl.Controllers
 {
@@ -18,13 +19,14 @@ namespace TaskControl.Controllers
     private UnitOfWork unitOfWork = new UnitOfWork();
     private UserServiceClient rolesServiceClient = new UserServiceClient("roles") { DoSerialize = true };
     private UserServiceClient usersServiceClient = new UserServiceClient("users") { DoSerialize = true };
+    private ProjectServiceClient projectServiceClient = new ProjectServiceClient() { DoSerialize = true };
     // GET: Roles
     public ActionResult Index()
     {
       var response = rolesServiceClient.GetAllRoles();
       var mappedRoles = MapToRolesViewModel(response.Roles);
 
-      return View("Index", mappedRoles.ToPagedList(1, 5));
+      return View("Index", mappedRoles.ToPagedList(1, 10));
     }
 
     [HttpPost]
@@ -63,21 +65,44 @@ namespace TaskControl.Controllers
     public ActionResult NewRole()
     {
       RoleViewModel newRole = new RoleViewModel();
+      var projects = projectServiceClient.GetAllProjects();
+      if(projects != null && projects.RecordCount > 0)
+      {
+        newRole.ProjectsAccess = MapProjectsToView(projects);
+      }
       return PartialView("NewRole", newRole);
     }
 
+    private List<ProjectViewModel> MapProjectsToView(GetProjectReturn projects)
+    {
+      List<ProjectViewModel> projectsMapped = new List<ProjectViewModel>();
+
+      foreach(var project in projects.Projects)
+      {
+        projectsMapped.Add(new ProjectViewModel()
+        {
+          Id = project.Id,
+          Name = project.Name,
+          Owner = project.Owner,
+          OwnerId = project.OwnerId
+
+        });
+      }
+      return projectsMapped;
+    }
+
     [HttpPost]
-    public ActionResult NewRole(RoleViewModel model)
+    public JsonResult NewRole(RoleViewModel model)
     {
       if (ModelState.IsValid)
       {
         model.DateCreated = DateTime.UtcNow;
         var ret = rolesServiceClient.AddNewRole(MapRoleModelToEntity(model));
-        return RedirectToAction("Index");
+        return Json(new { success = true});
       }
       else
       {
-        return PartialView("NewRole", model);
+        return Json(new { success = false });
       }
     }
 
@@ -86,7 +111,7 @@ namespace TaskControl.Controllers
       RoleEntity role = new RoleEntity();
       role.Name = model.RoleName;
       role.Description = model.Description;
-      role.DateCreated = model.DateCreated;
+      role.DateCreated = model.DateCreated != null ? (DateTime)model.DateCreated : DateTime.UtcNow;
       return role;
     }
 

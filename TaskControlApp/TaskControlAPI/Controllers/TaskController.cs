@@ -69,6 +69,29 @@ namespace TaskControlAPI.Controllers
       }
     }
 
+    [HttpGet]
+    [ActionName("GetTasksOnProject")]
+    public HttpResponseMessage GetTasksOnProject(long projectId)
+    {
+      _log.DebugFormat("GetTasksOnProject invoked with projectId : {0}", projectId);
+
+      try
+      {
+        var taskskRet = _taskService.GetTasksOnProject(projectId);
+        if (taskskRet != null && taskskRet.RecordCount > 0)
+        {
+          _log.DebugFormat("GetTasksOnProject finished with : {0}", taskskRet.Tasks.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, taskskRet);
+        }
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Tasks not found");
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching tasks... {0}", ex.Message);
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+      }
+    }
+
     [HttpPost]
     [ActionName("CreateTask")]
     public HttpResponseMessage CreateTask(TaskEntity task)

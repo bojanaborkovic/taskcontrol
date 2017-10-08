@@ -161,10 +161,16 @@ namespace TaskControlAPI
 
       #region task routes
       config.Routes.MapHttpRoute(
-            name: "GetAllTasks",
-            routeTemplate: "tasks/all",
-            defaults: new { controller = "Task", action = "GetAllTasks" }
+            name: "GetTasksOnProject",
+            routeTemplate: "tasks/gettasksonproject",
+            defaults: new { controller = "Task", action = "GetTasksOnProject" }
             );
+
+      config.Routes.MapHttpRoute(
+           name: "GetAllTasks",
+           routeTemplate: "tasks/all",
+           defaults: new { controller = "Task", action = "GetAllTasks" }
+           );
 
       config.Routes.MapHttpRoute(
             name: "CreateTask",
@@ -204,6 +210,7 @@ namespace TaskControlAPI
             routeTemplate: "tasks/gettasksforuser",
             defaults: new { controller = "Task", action = "GetTasksForUser" }
             );
+
       #endregion
 
     }

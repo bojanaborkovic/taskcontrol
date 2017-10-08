@@ -5,6 +5,7 @@
   var taskList = ViewBag.TaskList;
   string getMyTasksUrl = Url.Action("GetTaskForUser", "Dashboard");
   string getAllTasksUrl = Url.Action("GetAllTasks", "Dashboard");
+  string getTaskInfoById = Url.Action("GetTaskInfoById", "Dashboard");
   string userId = ViewBag.UserId;
 }
 
@@ -17,23 +18,44 @@
         <div>
           <h3>ToDo</h3><h3>In Progress</h3><h3>Done</h3>
         </div>
+      
         <ul id="todo">
-          <li id="item1" draggable="true">Design welcome email</li>
-          <li id="item2" draggable="true">Implement basic authentication</li>
+          @foreach (var task in Model.TaskViewModel)
+          {
+            if (task.Status == "ToDo")
+            {
+              <li id="@task.Id" draggable="true" class="taskItem">@task.Title</li>
+            }
+          }    
         </ul>
-        <!--
-    -->
+          
         <ul id="inprogress">
-          <li id="item3" draggable="true"> Implement welcome page</li>
+          @foreach (var task in Model.TaskViewModel)
+          {
+            if (task.Status == "InProgress")
+            {
+            <li id="@task.Id" draggable="true" class="taskItem"> @task.Title</li>
+            }
+          }
         </ul>
-        <!--
-    -->
+
         <ul id="done">
-          <li id="item4" draggable="true">Add user mgmt</li>
+          @foreach (var task in Model.TaskViewModel)
+          {
+            if (task.Status == "Done")
+            {
+            <li id="@task.Id" draggable="true" class="taskItem">@task.Title</li>
+            }
+          }
+
         </ul>
+        <div id="taskInfoBox" style="display:none;" class="timeline-label"> </div> 
       </div>
       <!-- plannin board ends-->
-    </div>
+      </div>  
+        
+    
+
     <div class="col-sm-4">
       <!-- timeline starts here-->
       <div class="timeline-centered" style="margin-top: 100px">
@@ -68,93 +90,134 @@
 
 
   <script type="text/javascript">
-  $(document).ready(function () {
-    //var event = { id: 1, title: 'SuperCoolProject', start: new Date() };
-    //var newEvent = {id : 2, title: 'Future project', start: '2017-09-20'}
-    $('#mainCalendar').fullCalendar({
-      defaultDate: '2017-09-05',
-      editable: true,
-      eventLimit: true, // allow "more" link when too many events
-      //eventSources: [
-      //  '/feed1.php',
-      //  '/feed2.php'
-      //]
-    });
-    var listOfTasks = @Html.Raw(taskList);
-
-    $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
-
-
-    /* drag and drop functionality (plannig board) */
-    $('#board li').bind('dragstart', function(event) {
-      event.originalEvent.dataTransfer.setData("text/plain",  event.target.getAttribute('id'));
-    });
-
-    $('#board ul').bind('dragover', function(event) {
-      event.preventDefault();
-    });
-
-    $('#board ul').bind('dragenter', function(event) {
-      $(this).addClass("over");
-    });
-
-    $('#board ul').bind('dragleave drop', function(event) {
-      $(this).removeClass("over");
-    });
-
-    $('#board li').bind('drop', function(event) {
-      return false;
-    });
-
-    $('#board ul').bind('drop', function(event) {
-      var listitem = event.originalEvent.dataTransfer.getData("text/plain");
-      event.target.appendChild(document.getElementById(listitem));
-      event.preventDefault();
-    });
-
-    /* ajax calls for 'MyTasks' and 'All tasks'*/
-    $("#myTasks").click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: "GET",
-        url: '@getMyTasksUrl',
-        data :{
-          userId:  '@userId'
-        },
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(result) {
-          $('#mainCalendar').fullCalendar('removeEvents');
-          var listOfTasks = result;
-
-          $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
-        },
-        error: function(result) {
-          //alert('error');
-        }
+    $(document).ready(function () {
+      //var event = { id: 1, title: 'SuperCoolProject', start: new Date() };
+      //var newEvent = {id : 2, title: 'Future project', start: '2017-09-20'}
+      $('#mainCalendar').fullCalendar({
+        defaultDate: '2017-09-05',
+        editable: true,
+        eventLimit: true, // allow "more" link when too many events
+        //eventSources: [
+        //  '/feed1.php',
+        //  '/feed2.php'
+        //]
       });
-    });
+      var listOfTasks = @Html.Raw(taskList);
 
-    $("#allTasks").click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: "GET",
-        url: '@getAllTasksUrl',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(result) {
-          $('#mainCalendar').fullCalendar('removeEvents');
-          var listOfTasks = result;
+      $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
 
-          $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
-        },
-        error: function(result) {
-         // alert('error');
-        }
+
+      /* drag and drop functionality (plannig board) */
+      $('#board li').bind('dragstart', function(event) {
+        event.originalEvent.dataTransfer.setData("text/plain",  event.target.getAttribute('id'));
       });
-    });
 
-  });
+      $('#board ul').bind('dragover', function(event) {
+        event.preventDefault();
+      });
+
+      $('#board ul').bind('dragenter', function(event) {
+        $(this).addClass("over");
+      });
+
+      $('#board ul').bind('dragleave drop', function(event) {
+        $(this).removeClass("over");
+      });
+
+      $('#board li').bind('drop', function(event) {
+        return false;
+      });
+
+      $('#board ul').bind('drop', function(event) {
+        var listitem = event.originalEvent.dataTransfer.getData("text/plain"); // id of the task
+        //ChangeTaskStatus(listitem);
+        event.target.appendChild(document.getElementById(listitem));
+        event.preventDefault();
+      });
+
+      $(".taskItem").click(function(e){
+        e.preventDefault();
+        var taskId = e.currentTarget.id;
+        ChangeTaskStatus(taskId);
+      });
+
+
+      function ChangeTaskStatus(taskId)
+      {
+        // exucute ajax call to get info about the task
+        $.ajax({
+          type: "GET",
+          url: '@getTaskInfoById',
+          data :{
+            taskId:  taskId
+          },
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(result) {
+            document.getElementById('taskInfoBox').innerHTML = PrepareInfo(result);
+            document.getElementById('taskInfoBox').style.display = "block";
+          },
+          error: function(result) {
+            //alert('error');
+          }
+        });
+      }
+
+      function PrepareInfo(result)
+      {
+        var htmlText = '';
+        for(var key in result) { 
+          if (result.hasOwnProperty(key)) {
+            htmlText += '<p>'+ key +': ' + result[key] + '</p>';
+          }
+        }
+
+        return htmlText;
+      }
+
+      /* ajax calls for 'MyTasks' and 'All tasks'*/
+      $("#myTasks").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: "GET",
+          url: '@getMyTasksUrl',
+          data :{
+            userId:  '@userId'
+          },
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(result) {
+            $('#mainCalendar').fullCalendar('removeEvents');
+            var listOfTasks = result;
+
+            $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+          },
+          error: function(result) {
+            //alert('error');
+          }
+        });
+      });
+
+      $("#allTasks").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: "GET",
+          url: '@getAllTasksUrl',
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(result) {
+            $('#mainCalendar').fullCalendar('removeEvents');
+            var listOfTasks = result;
+
+            $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+          },
+          error: function(result) {
+            // alert('error');
+          }
+        });
+      });
+
+    });
   </script>
 
 

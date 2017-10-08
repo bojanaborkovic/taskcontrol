@@ -5,6 +5,7 @@
   var taskList = ViewBag.TaskList;
   string getMyTasksUrl = Url.Action("GetTaskForUser", "Dashboard");
   string getAllTasksUrl = Url.Action("GetAllTasks", "Dashboard");
+  string getTasksOnProjectUrl = Url.Action("GetTasksOnProject", "Dashboard");
   string userId = ViewBag.UserId;
 }
 
@@ -21,7 +22,7 @@
   <div class="btn-group" role="group" aria-label="..." style="float:right">
     @foreach (var item in Model.OwnersProjects)
     {
-      <button type="button" class="btn btn-default" id="@item.Id">@item.Name</button>
+      <button type="button" class="btn btn-default projectButton" id="@item.Id">@item.Name</button>
     }
    
   </div>
@@ -49,7 +50,27 @@
 
     $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
 
+    $(".projectButton").click(function(e) {
+      e.preventDefault();
+      $.ajax({
+        type: "GET",
+        url: '@getTasksOnProjectUrl',
+        data :{
+          projectId:  e.currentTarget.id
+        },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(result) {
+          $('#mainCalendar').fullCalendar('removeEvents');
+          var listOfTasks = result;
 
+          $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+        },
+        error: function(result) {
+          //alert('error');
+        }
+      });
+    });
 
 
     /* ajax calls for 'MyTasks' and 'All tasks'*/
@@ -89,7 +110,7 @@
           $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
         },
         error: function(result) {
-         // alert('error');
+          // alert('error');
         }
       });
     });

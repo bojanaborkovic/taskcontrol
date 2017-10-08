@@ -17,8 +17,8 @@ namespace BusinessServices.Interfaces
     BasicReturn CreateTask(TaskEntity task);
     TasksDetailsReturn GetAllTasksDetails();
     BasicReturn UpdateTask(TaskEntity task);
-
     SearchTasksReturn GetTasksForUser(long userId);
+    SearchTasksReturn GetTasksOnProject(long projectId);
 
   }
 }
