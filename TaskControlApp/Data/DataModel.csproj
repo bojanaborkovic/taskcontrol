@@ -98,6 +98,9 @@
       <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleClaimsOnProject.cs">
+      <DependentUpon>TaskControlModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SearchUsersResult.cs">
       <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
@@ -162,6 +165,7 @@
       <DependentUpon>TaskControlModel.edmx</DependentUpon>
       <LastGenOutput>TaskControlModel.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="TaskControlModel.edmx.sql" />
     <Content Include="TaskControlModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TaskControlModel.edmx</DependentUpon>

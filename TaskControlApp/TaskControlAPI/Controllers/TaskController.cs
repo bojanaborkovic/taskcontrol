@@ -134,6 +134,24 @@ namespace TaskControlAPI.Controllers
       }
     }
 
+    [HttpPost]
+    [ActionName("UpdateTaskStatus")]
+    public HttpResponseMessage UpdateTaskStatus(UpdateTaskStatus task)
+    {
+      _log.DebugFormat("UpdateTaskStatus invoked with : {0} ...", task.ToString());
+
+      try
+      {
+        _taskService.UpdateTaskStatus(task);
+        return Request.CreateResponse(HttpStatusCode.OK, task.TaskId);
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during updating task... {0}", ex.Message);
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+      }
+    }
+
     [HttpGet]
     [ActionName("GetTaskById")]
     public HttpResponseMessage GetTaskById(long taskId)

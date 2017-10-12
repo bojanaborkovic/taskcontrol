@@ -211,6 +211,13 @@ namespace TaskControlAPI
             defaults: new { controller = "Task", action = "GetTasksForUser" }
             );
 
+
+      config.Routes.MapHttpRoute(
+            name: "UpdateTaskStatus",
+            routeTemplate: "tasks/updatetaskstatus",
+            defaults: new { controller = "Task", action = "UpdateTaskStatus" }
+            );
+
       #endregion
 
     }

@@ -25,5 +25,8 @@ namespace TaskControlDTOs
       get { return this.DateCreated.ToString("yyyy-MM-dd HH:mm:ss"); }
       set { this.DateCreated = DateTime.Parse(value); }
     }
+
+    [DataMember]
+    public List<long> ProjectAccess { get; set; }
   }
 }

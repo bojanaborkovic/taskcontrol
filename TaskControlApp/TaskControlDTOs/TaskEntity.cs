@@ -52,4 +52,13 @@ namespace TaskControlDTOs
     [DataMember]
     public long? CreatedBy { get; set; }
   }
+
+  public class UpdateTaskStatus
+  {
+    [DataMember]
+    public int StatusId { get; set; }
+    
+    [DataMember]
+    public long TaskId { get; set; }
+  }
 }

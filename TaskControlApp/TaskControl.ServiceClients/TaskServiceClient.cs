@@ -64,5 +64,10 @@ namespace TaskControl.ServiceClients
       string url = string.Format("{0}/{1}?projectId={2}", BaseUri.ToString(), "gettasksonproject", projectId);
       return Get<SearchTasksReturn>(new Uri(url));
     }
+
+    public BasicReturn UpdateTaskStatus(UpdateTaskStatus task)
+    { 
+      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "updatetaskstatus"), task);
+    }
   }
 }

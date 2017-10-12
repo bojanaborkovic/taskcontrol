@@ -73,4 +73,10 @@ namespace TaskControl.Models
 
   }
 
+  public class UpdateTaskStatusModel
+  {
+    public string TaskId { get; set; }
+
+    public string StatusName { get; set; }
+  }
 }

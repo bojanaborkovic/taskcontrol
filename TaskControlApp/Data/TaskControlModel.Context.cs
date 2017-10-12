@@ -41,6 +41,7 @@ namespace DataModel
         public virtual DbSet<TaskAsigneeHistory> TaskAsigneeHistories { get; set; }
         public virtual DbSet<TaskStatusHistory> TaskStatusHistories { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
+        public virtual DbSet<RoleClaimsOnProject> RoleClaimsOnProjects { get; set; }
     
         public virtual ObjectResult<SearchUsersResult> SearchUsers()
         {

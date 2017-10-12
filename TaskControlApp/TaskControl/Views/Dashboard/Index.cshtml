@@ -6,6 +6,7 @@
   string getMyTasksUrl = Url.Action("GetTaskForUser", "Dashboard");
   string getAllTasksUrl = Url.Action("GetAllTasks", "Dashboard");
   string getTaskInfoById = Url.Action("GetTaskInfoById", "Dashboard");
+  string updateTaskStatusUrl = Url.Action("UpdateTaskStatus", "Dashboard");
   string userId = ViewBag.UserId;
 }
 
@@ -19,7 +20,7 @@
           <h3>ToDo</h3><h3>In Progress</h3><h3>Done</h3>
         </div>
       
-        <ul id="todo">
+        <ul id="ToDo">
           @foreach (var task in Model.TaskViewModel)
           {
             if (task.Status == "ToDo")
@@ -29,7 +30,7 @@
           }    
         </ul>
           
-        <ul id="inprogress">
+        <ul id="InProgress">
           @foreach (var task in Model.TaskViewModel)
           {
             if (task.Status == "InProgress")
@@ -39,7 +40,7 @@
           }
         </ul>
 
-        <ul id="done">
+        <ul id="Done">
           @foreach (var task in Model.TaskViewModel)
           {
             if (task.Status == "Done")
@@ -113,14 +114,17 @@
       });
 
       $('#board ul').bind('dragover', function(event) {
+        // debugger;
         event.preventDefault();
       });
 
       $('#board ul').bind('dragenter', function(event) {
+        // debugger;
         $(this).addClass("over");
       });
 
       $('#board ul').bind('dragleave drop', function(event) {
+        // debugger;
         $(this).removeClass("over");
       });
 
@@ -129,8 +133,10 @@
       });
 
       $('#board ul').bind('drop', function(event) {
+        debugger;
         var listitem = event.originalEvent.dataTransfer.getData("text/plain"); // id of the task
-        //ChangeTaskStatus(listitem);
+        var newStatus = event.currentTarget.id;
+        ChangeTaskStatus(newStatus, listitem);
         event.target.appendChild(document.getElementById(listitem));
         event.preventDefault();
       });
@@ -138,11 +144,11 @@
       $(".taskItem").click(function(e){
         e.preventDefault();
         var taskId = e.currentTarget.id;
-        ChangeTaskStatus(taskId);
+        GetTaskInfo(taskId);
       });
 
 
-      function ChangeTaskStatus(taskId)
+      function GetTaskInfo(taskId)
       {
         // exucute ajax call to get info about the task
         $.ajax({
@@ -163,10 +169,33 @@
         });
       }
 
+      function ChangeTaskStatus(newStatus, taskId)
+      {
+        debugger;
+        var modelObj = {};
+        modelObj.StatusName = newStatus;
+        modelObj.TaskId = taskId;
+
+        // exucute ajax call to update task status
+        $.ajax({
+          type: "POST",
+          url: '@updateTaskStatusUrl',
+          data: JSON.stringify(modelObj),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(result) {
+            
+          },
+          error: function(result) {
+            //alert('error');
+          }
+        });
+      }
+
       function PrepareInfo(result)
       {
         var htmlText = '';
-        for(var key in result) { 
+        for(var key in result) {
           if (result.hasOwnProperty(key)) {
             htmlText += '<p>'+ key +': ' + result[key] + '</p>';
           }

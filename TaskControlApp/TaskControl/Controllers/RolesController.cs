@@ -112,6 +112,18 @@ namespace TaskControl.Controllers
       role.Name = model.RoleName;
       role.Description = model.Description;
       role.DateCreated = model.DateCreated != null ? (DateTime)model.DateCreated : DateTime.UtcNow;
+      role.ProjectAccess = new List<long>();
+
+      foreach (string s in model.ProjectList)
+      {
+        long val;
+
+        if (long.TryParse(s, out val))
+        {
+          role.ProjectAccess.Add(val);
+        }
+      }
+
       return role;
     }
 

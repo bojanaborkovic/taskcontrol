@@ -20,7 +20,12 @@ namespace TaskControl.ViewDataPreparers
     public IList<StatusEntity> GetDataItems()
     {
       var ret = utilityServiceClient.GetAllStatuses();
-      List<StatusEntity> statuses = JsonConvert.DeserializeObject<List<StatusEntity>>(ret);
+      List<StatusEntity> statuses = new List<StatusEntity>();
+      if (ret != null)
+      {
+        statuses = JsonConvert.DeserializeObject<List<StatusEntity>>(ret);
+      }
+     
       return statuses;
     }
 

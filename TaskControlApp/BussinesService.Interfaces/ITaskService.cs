@@ -20,5 +20,7 @@ namespace BusinessServices.Interfaces
     SearchTasksReturn GetTasksForUser(long userId);
     SearchTasksReturn GetTasksOnProject(long projectId);
 
+    BasicReturn UpdateTaskStatus(UpdateTaskStatus update);
+
   }
 }

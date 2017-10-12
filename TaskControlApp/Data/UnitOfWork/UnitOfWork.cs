@@ -21,6 +21,7 @@ namespace DataModel.UnitOfWork
     private GenericRepository<IssueType> _issueTypeRepository;
     private GenericRepository<Status> _statusRepository;
     private GenericRepository<Priority> _priorityRepository;
+    private GenericRepository<RoleClaimsOnProject> _roleClaimsOnProjectRepository;
     internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
     private bool disposed = false;
     #endregion
@@ -71,6 +72,18 @@ namespace DataModel.UnitOfWork
           this._roleRepository = new GenericRepository<AspNetRole>(context);
         }
         return _roleRepository;
+      }
+    }
+
+    public GenericRepository<RoleClaimsOnProject> RoleClaimsRepository
+    {
+      get
+      {
+        if (this._roleClaimsOnProjectRepository == null)
+        {
+          this._roleClaimsOnProjectRepository = new GenericRepository<RoleClaimsOnProject>(context);
+        }
+        return _roleClaimsOnProjectRepository;
       }
     }
 

@@ -277,6 +277,20 @@ namespace BusinessServices
 
         _unitOfWork.RoleRepository.Insert(roleToInsert);
         _unitOfWork.Save();
+
+        if(role.ProjectAccess != null && role.ProjectAccess.Count()>0)
+        {
+          foreach(var project in role.ProjectAccess)
+          {
+            RoleClaimsOnProject roleClaim = new DataModel.RoleClaimsOnProject();
+            roleClaim.ProjectId = project;
+            roleClaim.RoleId = roleToInsert.Id;
+            roleClaim.HaveAcess = true;
+            _unitOfWork.RoleClaimsRepository.Insert(roleClaim);
+            _unitOfWork.Save();
+          }         
+        }
+
         ret.RoleId = roleToInsert.Id;
         return ret;
       }

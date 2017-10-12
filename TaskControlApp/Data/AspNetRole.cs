@@ -14,9 +14,18 @@ namespace DataModel
     
     public partial class AspNetRole
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public AspNetRole()
+        {
+            this.RoleClaimsOnProjects = new HashSet<RoleClaimsOnProject>();
+        }
+    
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Nullable<System.DateTime> DateCreated { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RoleClaimsOnProject> RoleClaimsOnProjects { get; set; }
     }
 }

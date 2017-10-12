@@ -28,20 +28,32 @@ namespace TaskControl.Controllers
       DashboardViewModel model = new DashboardViewModel();
 
       string userName = System.Web.HttpContext.Current.User.Identity.Name;
-      long userId = userServiceClient.GetUserByUsername(userName).Id;
-      ViewBag.UserId = userId.ToString();
-      var ret = taskServiceClient.GetAllTasksDetails();
-
-      var tasksForUser = taskServiceClient.GetTasksForUser(userId);
-      if(tasksForUser != null && tasksForUser.RecordCount > 0)
+      var user = userServiceClient.GetUserByUsername(userName);
+      
+      if(user != null)
       {
-        model.TaskViewModel = MapTasksToDashboard(tasksForUser);
+        ViewBag.UserId = user.Id.ToString();
       }
-     
-      model.TaskAuditViewModel = new List<TaskAuditViewModel>();
-      if (ret != null)
+      
+      var retTaskDetails = taskServiceClient.GetAllTasksDetails();
+
+      if(user != null)
       {
-        model.TaskAuditViewModel = MapTasksAudit(ret.TasksAudit);
+        var tasksForUser = taskServiceClient.GetTasksForUser(user.Id);
+        if (tasksForUser != null && tasksForUser.RecordCount > 0)
+        {
+          model.TaskViewModel = MapTasksToDashboard(tasksForUser);
+        }
+      }
+      
+     
+      if(retTaskDetails != null && retTaskDetails.RecordCount > 0)
+      {
+        model.TaskAuditViewModel = new List<TaskAuditViewModel>();
+        if (retTaskDetails != null)
+        {
+          model.TaskAuditViewModel = MapTasksAudit(retTaskDetails.TasksAudit);
+        }
       }
 
       ViewBag.TaskList = JsonConvert.SerializeObject(model.TaskViewModel, new JsonSerializerSettings
@@ -106,6 +118,18 @@ namespace TaskControl.Controllers
       var serializedRecords = JsonConvert.SerializeObject(records);
 
       return Content(serializedRecords, "application/json");
+    }
+
+    [HttpPost]
+    [StatusPreparer]
+    public JsonResult UpdateTaskStatus(UpdateTaskStatusModel update)
+    {
+      var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
+      var statusToUpdate = statuses.Where(x => x.Name == update.StatusName).FirstOrDefault();
+      long TaskID = long.Parse(update.TaskId);
+
+      taskServiceClient.UpdateTaskStatus(new UpdateTaskStatus() { TaskId = TaskID, StatusId = statusToUpdate.Id });
+      return Json(new { success = true });
     }
 
     private DashboardTaskViewModel MapTaskToDashboard(TaskEntityExtendedReturn ret)

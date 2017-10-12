@@ -82,6 +82,28 @@ namespace BusinessServices
 
     }
 
+    public BasicReturn UpdateTaskStatus(UpdateTaskStatus update)
+    {
+      BasicReturn ret = new BasicReturn();
+
+      try
+      {
+        var taskToUpdate = _unitOfWork.TaskRepository.Get(x => x.Id == update.TaskId).FirstOrDefault();
+        taskToUpdate.Status = update.StatusId;
+
+        _unitOfWork.TaskRepository.Update(taskToUpdate);
+        _unitOfWork.Save();
+        ret.StatusCode = "OK";
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error updating task : {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+      }
+
+      return ret;
+    }
+
     public SearchTasksReturn GetAllTasks()
     {
       _log.DebugFormat("GetAllTasks invoked");
@@ -308,6 +330,7 @@ namespace BusinessServices
 
       return taskEntity;
     }
+
     #endregion
 
   }

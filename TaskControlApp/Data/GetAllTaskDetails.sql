@@ -25,7 +25,7 @@ BEGIN
 			  taskStatus.Name as 'TaskStatus',
 			  reporter.UserName as 'Reporter',
 			  project.Name as 'Project'
-			  FROM [dbo].Task task
+			  FROM [dbo].Tasks task
 			  INNER JOIN [dbo].Project project
 			  on task.ProjectId = project.Id
 			  INNER JOIN [dbo].Status taskStatus

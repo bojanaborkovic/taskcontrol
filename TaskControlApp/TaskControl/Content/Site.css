@@ -107,6 +107,7 @@ img
     overflow: auto;
     height: 800px;
     width: 600px;
+    margin-left: 150px;
 }
 
     .timeline-centered:before, .timeline-centered:after {
@@ -408,4 +409,8 @@ img
 .material-switch > input[type="checkbox"]:checked + label::after {
     background: inherit;
     left: 20px;
+}
+
+div#board {
+    width: 800px;
 }
