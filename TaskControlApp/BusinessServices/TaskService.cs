@@ -158,10 +158,6 @@ namespace BusinessServices
         var taskSorted = tasks.OrderByDescending(x => x.DateCreated).ToList();
         List<TaskEntityExtended> tasksWithDetails = new List<TaskEntityExtended>();
 
-        var tasksAudit = _unitOfWork.GetTasksAudit();
-
-        ret.TasksAudit = MapTasksAudit(tasksAudit);
-
         tasksWithDetails = MapTasks(taskSorted);
         ret.Tasks = tasksWithDetails;
         ret.RecordCount = tasksWithDetails.Count;
@@ -257,6 +253,152 @@ namespace BusinessServices
       return ret;
     }
 
+    public TaskAuditReturn GetTaskHistory(long? taskId)
+    {
+      _log.DebugFormat("GetTaskHistory invoked");
+      TaskAuditReturn ret = new TaskAuditReturn();
+      try
+      {
+        if(taskId == null)
+        {
+          // get all changes on all tasks
+          var statusHistory = _unitOfWork.TaskStatusHistoryRepository.GetAll();
+
+          var asigneeHistory = _unitOfWork.TaskAsigneeHistoryRepository.GetAll();
+
+          ret = MergeHistoryLists(asigneeHistory, statusHistory);
+        }
+        else // get changes for specific task (both status and asignee changes)
+        {
+          var statusHistory = _unitOfWork.TaskStatusHistoryRepository.Get(x => x.TaskId == taskId).ToList();
+
+          var asigneeHistory = _unitOfWork.TaskAsigneeHistoryRepository.Get(x => x.TaskId == taskId).ToList();
+
+          ret = MergeHistoryLists(asigneeHistory, statusHistory);
+        }
+        if (ret.TasksAudit.Any())
+        {
+         
+          _log.DebugFormat("GetTaskHistory finished with : {0}", ret.TasksAudit.ToString());
+          ret.RecordCount = ret.RecordCount;
+          ret.StatusCode = "OK";
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching tasks... {0}", ex.Message);
+      }
+
+
+      return ret;
+    }
+
+    private TaskAuditReturn MergeHistoryLists(IEnumerable<TaskAsigneeHistory> asigneeHistory, IEnumerable<TaskStatusHistory> statusHistory)
+    {
+      TaskAuditReturn ret = new TaskAuditReturn();
+      ret.TasksAudit = new List<TaskAudit>();
+
+      if (statusHistory != null && statusHistory.Count() > 0)
+      {       
+        foreach(var historyItem in statusHistory)
+        {
+          if (historyItem.StatusAfter != historyItem.StatusBefore)
+          {
+            ret.TasksAudit.Add(new TaskAudit()
+            {
+              TaskId = historyItem.TaskId,
+              TaskTitle = GetTaskName(historyItem.TaskId),
+              ChangeType = TaskChangeType.StatusChange,
+              ChangedById = historyItem.ChangeBy,
+              ChangedByUsername = GetUsernamebyId(historyItem.ChangeBy),
+              ChangedFromId = historyItem.StatusBefore,
+              ChangedFrom = GetStatusNameById(historyItem.StatusBefore),
+              ChangedOnString = historyItem.ChangeDate != null ? historyItem.ChangeDate.ToString() : string.Empty,
+              ChangedToId = historyItem.StatusAfter,
+              ChangedTo = GetStatusNameById(historyItem.StatusAfter)
+            });
+          }
+        }
+      }
+
+      if(asigneeHistory != null && asigneeHistory.Count() > 0)
+      {
+        foreach(var historyItem in asigneeHistory)
+        {
+          if (historyItem.AsigneeAfter != historyItem.AsigneeBefore)
+          {
+            ret.TasksAudit.Add(new TaskAudit()
+            {
+
+              TaskId = historyItem.TaskId,
+              TaskTitle = GetTaskName(historyItem.TaskId),
+              ChangeType = TaskChangeType.AsigneeChange,
+              ChangedById = historyItem.ChangeBy,
+              ChangedByUsername = GetUsernamebyId(historyItem.ChangeBy),
+              ChangedFromId = historyItem.AsigneeBefore,
+              ChangedFrom = GetUsernamebyId(historyItem.AsigneeBefore),
+              ChangedOnString = historyItem.ChangeDate != null ? historyItem.ChangeDate.ToString() : string.Empty,
+              ChangedToId = historyItem.AsigneeAfter,
+              ChangedTo = GetUsernamebyId(historyItem.AsigneeAfter)
+
+            });
+          }
+        }
+      }
+
+      ret.RecordCount = ret.TasksAudit.Count;
+      ret.TasksAudit.Shuffle();
+
+      ret.TasksAudit = ret.TasksAudit.OrderByDescending(x => x.ChangedOnString).ToList();
+
+      return ret; 
+      
+    }
+
+    private string GetTaskName(long taskId)
+    {
+      string taskName = string.Empty;
+      var task = _unitOfWork.TaskRepository.Get(x => x.Id == taskId).FirstOrDefault();
+      if(task != null)
+      {
+        taskName = task.Title;
+      }
+
+      return taskName;
+    }
+
+    private string GetStatusNameById(int? statusBefore)
+    {
+      string statusName = "N/A";
+      if(statusBefore != null)
+      {
+        var status = _unitOfWork.StatusRepository.Get(x => x.Id == statusBefore).First();
+        if(status != null)
+        {
+          statusName = status.Name;
+        }
+      }
+
+      return statusName;
+
+    }
+
+    private string GetUsernamebyId(long? changeBy)
+    {
+      string username = "N/A";
+      if(changeBy != null)
+      {
+        var user = _unitOfWork.UserRepository.Get(x => x.Id == changeBy).First();
+        if(user != null)
+        {
+          username = user.UserName;
+        }
+      }
+
+      return username;
+    }
+
+   
     #endregion
 
     #region mappers
@@ -285,28 +427,28 @@ namespace BusinessServices
 
       return tasksDetails;
     }
-    private List<TaskAudit> MapTasksAudit(List<GetTasksAssigneStatusHistory_Result> tasksAudit)
-    {
-      List<TaskAudit> audit = new List<TaskAudit>();
+    //private List<TaskAudit> MapTasksAudit(List<GetTasksAssigneStatusHistory_Result> tasksAudit)
+    //{
+    //  List<TaskAudit> audit = new List<TaskAudit>();
 
-      foreach (var item in tasksAudit)
-      {
-        audit.Add(new TaskAudit()
-        {
-          TaskId = item.TaskId,
-          AsigneeBefore = item.AsigneeBefore,
-          AsigneeAfter = item.AsigneeAfter,
-          AsigneeChangedOnDate = item.AssigneChangedOn,
-          AsigneeChangedBy = item.AssigneChangedBy,
-          StatusBefore = item.StatusBefore,
-          StatusAfter = item.StatusAfter,
-          StatusChangedOnDate = (DateTime)item.StatusChangedOn,
-          StatusChangedBy = item.StatusChangeBy
-        });
-      }
+    //  foreach (var item in tasksAudit)
+    //  {
+    //    audit.Add(new TaskAudit()
+    //    {
+    //      TaskId = item.TaskId,//}
+    //      AsigneeBefore = item.AsigneeBefore,
+    //      AsigneeAfter = item.AsigneeAfter,
+    //      AsigneeChangedOnDate = item.AssigneChangedOn,
+    //      AsigneeChangedBy = item.AssigneChangedBy,
+    //      StatusBefore = item.StatusBefore,
+    //      StatusAfter = item.StatusAfter,
+    //      StatusChangedOnDate = (DateTime)item.StatusChangedOn,
+    //      StatusChangedBy = item.StatusChangeBy
+    //    });
+    //  }
 
-      return audit;
-    }
+    //  return audit;
+    
     private TaskEntityExtendedReturn MapToTaskEntity(GetTaskResult getTaskResult)
     {
       TaskEntityExtendedReturn taskEntity = new TaskEntityExtendedReturn();

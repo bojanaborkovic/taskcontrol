@@ -41,6 +41,17 @@ namespace BussinesService.Interfaces.Responses.Task
   }
 
   [DataContract]
+  public class TaskAuditReturn : BasicReturn
+  {
+
+    [DataMember]
+    public List<TaskAudit> TasksAudit { get; set; }
+
+    [DataMember]
+    public int RecordCount { get; set; }
+  }
+
+  [DataContract]
   public class TaskEntityExtendedReturn : TaskEntityExtended
   {
     [DataMember]

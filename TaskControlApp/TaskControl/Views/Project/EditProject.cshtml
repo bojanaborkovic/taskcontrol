@@ -3,11 +3,17 @@
 @{
   ViewBag.Title = "Edit Project";
   var usernames = ViewBag.Usernames;
-  
+
+//  string urlNewProjectComment = Url.Action("AddNewNote", "Project");
+
 }
 
+@*<script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>*@
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"/>
 
+@*<div id='newProjectCommentModal' class="modal fade" role="dialog" tabindex="-1" data-url='@urlNewProjectComment'>
+
+</div>*@
 
 
 <h2>Edit Project</h2>
@@ -45,12 +51,18 @@
       </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+          <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+          </div>
         </div>
-    </div>
+      </div>
 }
+
+@*<div class="form-group">
+  <div class="col-md-10">
+    <button id='addNewNote' class="btn btn-secondary btn-success">Add New Comment</button>
+  </div>
+</div>*@
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -63,7 +75,17 @@
 
     $(".autocomplete").autocomplete({
       source: availableTags
-      });
+    });
+
+    //$('#addNewNote').click(function () {
+    //  var url = $('#newProjectCommentModal').data('url');
+
+    //  $.get(url, function (data) {
+    //    $('#newProjectCommentModal').html(data);
+
+    //    $('#newProjectCommentModal').modal('show');
+    //  });
+    //});
   });
 
 </script>

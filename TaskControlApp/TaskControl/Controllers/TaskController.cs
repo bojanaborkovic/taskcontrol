@@ -102,18 +102,7 @@ namespace TaskControl.Controllers
     [IssueTypePreparer, StatusPreparer, PriorityPreparer]
     public ActionResult Create()
     {
-      var usernames = userServiceClient.GetAllUsers();
-      if (usernames != null && usernames.RecordCount > 0)
-      {
-        var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
-        ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
-      }
-      var projects = projectServiceClient.GetAllProjects();
-
-      if (projects != null && projects.RecordCount > 0)
-      {
-        ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
-      }
+      PrepareViewModel();
       return View("New");
     }
 
@@ -121,17 +110,18 @@ namespace TaskControl.Controllers
     [IssueTypePreparer, StatusPreparer, PriorityPreparer]
     public ActionResult Create(TaskViewModel model)
     {
-      string user = System.Web.HttpContext.Current.User.Identity.Name;
-      var userRet = userServiceClient.GetUserByUsername(user);
-      model.CreatedBy = userRet != null ? userRet.Id : 0;
-      TaskEntity taskMapped = MapToEntity(model);
-
       if (ModelState.IsValid)
       {
+        string user = System.Web.HttpContext.Current.User.Identity.Name;
+        var userRet = userServiceClient.GetUserByUsername(user);
+        model.CreatedBy = userRet != null ? userRet.Id : 0;
+        TaskEntity taskMapped = MapToEntity(model);
+
         var ret = taskServiceClient.CreateTask(taskMapped);
 
         if (ret != null && !string.IsNullOrEmpty(ret.ErrorMessage))
         {
+          PrepareViewModel();
           return View("New", model);
         }
         else
@@ -141,6 +131,7 @@ namespace TaskControl.Controllers
       }
       else
       {
+        PrepareViewModel();
         return View("New", model);
       }
 
@@ -197,6 +188,22 @@ namespace TaskControl.Controllers
       }
     }
 
+    private void PrepareViewModel()
+    {
+      var usernames = userServiceClient.GetAllUsers();
+      if (usernames != null && usernames.RecordCount > 0)
+      {
+        var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
+        ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+      }
+      var projects = projectServiceClient.GetAllProjects();
+
+      if (projects != null && projects.RecordCount > 0)
+      {
+        ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
+      }
+    }
+
     private TaskEntity MapToEntity(TaskViewModel model)
     {
       var asigneeRet = userServiceClient.GetUserByUsername(model.Asignee);
@@ -250,6 +257,10 @@ namespace TaskControl.Controllers
 
     private TaskViewModel MapToViewModel(TaskEntityExtended taskEntity)
     {
+      var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
+      var issueTypes = ViewData[IssueTypePreparer.ViewDataKey] as List<IssueTypeEntity>;
+      var priorities = ViewData[PriorityPreparer.ViewDataKey] as List<PriorityEntity>;
+
       TaskViewModel taskModel = new TaskViewModel();
       taskModel.Asignee = taskEntity.Asignee;
       taskModel.DateCreated = DateTime.UtcNow;
@@ -259,9 +270,10 @@ namespace TaskControl.Controllers
       taskModel.Project = taskEntity.ProjectId;
       taskModel.ProjectName = taskEntity.Project;
       taskModel.Title = taskEntity.Title;
-      taskModel.Priority = taskEntity.PriorityId;
-      taskModel.IssueType = taskEntity.IssueTypeId;
+      taskModel.PriorityName = priorities.Where(x => x.Id == taskEntity.PriorityId).First().Name;
+      taskModel.IssueTypeName = issueTypes.Where(x => x.Id == taskEntity.IssueTypeId).First().Name;
       taskModel.Status = (int)taskEntity.StatusId;
+      taskModel.StatusName = statuses.Where(x => x.Id == taskEntity.StatusId).First().Name;
       taskModel.Id = taskEntity.Id;
 
       return taskModel;

@@ -1,5 +1,6 @@
 ﻿using BusinessServices;
 using BusinessServices.Interfaces;
+using BussinesService.Interfaces.Responses.Task;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -219,6 +220,35 @@ namespace TaskControlAPI.Controllers
 
         }
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error getting task");
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching task... {0}", ex.Message);
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+      }
+    }
+
+    [HttpGet]
+    [ActionName("GetTaskHistory")]
+    public HttpResponseMessage GetTaskHistory([FromUri]long? taskId)
+    {
+      _log.DebugFormat("GetTaskHistory invoked with : {0} ...", taskId.ToString());
+
+      try
+      {
+
+        TaskAuditReturn taskHistory = new TaskAuditReturn();
+        taskHistory = _taskService.GetTaskHistory(taskId);
+        if (taskHistory != null && taskHistory.RecordCount >0)
+        {
+          _log.DebugFormat("GetTaskHistory finished with : {0}", taskHistory.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, taskHistory);
+
+        }
+        else
+        {
+          return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error getting task");
+        }
       }
       catch (Exception ex)
       {

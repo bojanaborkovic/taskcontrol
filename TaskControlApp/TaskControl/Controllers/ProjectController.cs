@@ -1,6 +1,7 @@
 ﻿using BussinesService.Interfaces.Responses.Project;
 using DataModel.UnitOfWork;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +34,6 @@ namespace TaskControl.Controllers
     public ActionResult Index()
     {
       GetProjectReturn responseData = serviceClient.GetAllProjects();
-
-      
 
       if (responseData != null && responseData.Projects.Count > 0)
       {
@@ -109,6 +108,75 @@ namespace TaskControl.Controllers
       
     }
 
+    [HttpGet]
+    public ActionResult ViewProject(long projectId)
+    {
+      var responseData = serviceClient.GetProjectById(projectId);
+      if (responseData != null && string.IsNullOrEmpty(responseData.ErrorMessage))
+      {
+        ProjectViewModel project = new ProjectViewModel();
+        project.Name = responseData.Name;
+        project.Description = responseData.Description;
+        project.Id = projectId;
+        var ownerRet = userServiceClient.GetUserById(responseData.OwnerId);
+        project.Owner = ownerRet.UserName;
+
+        var statistics = serviceClient.GetProjectStatistics(projectId);
+        int toDoCount = 0;
+        int completedCount = 0;
+        int inProgressCount = 0;
+        if (statistics != null && statistics.Tasks.Count > 0)
+        {
+          toDoCount = statistics.Tasks.Where(x => x.Status == (int)Status.ToDo).ToList().Count;
+          completedCount = statistics.Tasks.Where(x => x.Status == (int)Status.Done).ToList().Count;
+          inProgressCount = statistics.Tasks.Where(x => x.Status == (int)Status.InProgress).ToList().Count;
+        }
+        project.ToDoCount = toDoCount;
+        project.CompletedCount = completedCount;
+        project.InProgressCount = inProgressCount;
+
+        if (toDoCount == 0 && completedCount == 0 && inProgressCount == 0)
+        {
+          project.TotalProgress = 0M;
+        }
+        else
+        {
+          project.TotalProgress = (decimal)((decimal)(completedCount) / (decimal)(toDoCount + inProgressCount + completedCount)) * 100;
+        }
+
+
+        ProjectNotesReturn notesRet = serviceClient.GetProjectNotes(projectId);
+        if(notesRet != null && notesRet.RecordCount > 0)
+        {
+          project.Notes = MapProjectNotes(notesRet.Notes);
+        }
+
+        return View("View", project);
+      }
+      else
+      {
+        return View("Error", new ErrorModel() { Message = responseData != null ? responseData.ErrorMessage : "Error during fetching project!" });
+      }
+    }
+
+    private List<ProjectNoteViewModel> MapProjectNotes(List<Note> notes)
+    {
+      List<ProjectNoteViewModel> projectNotes = new List<ProjectNoteViewModel>();
+
+      foreach(var item in notes)
+      {
+        projectNotes.Add(new ProjectNoteViewModel()
+        {
+          AuthorId = item.AuthorId,
+          AuthorName = item.AuthorName,
+          CommentDate = item.DateCreated,
+          Note = item.Content
+        });
+      }
+
+      return projectNotes;
+    }
+
     [HttpPost]
     public ActionResult EditProject(ProjectViewModel projectViewModel)
     {
@@ -122,6 +190,45 @@ namespace TaskControl.Controllers
         return RedirectToAction("Index");
       }
 
+    }
+
+    [HttpGet]
+    public ActionResult AddNewNote()
+    {
+      ProjectNoteViewModel projectNote = new ProjectNoteViewModel();
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+      if(user != null)
+      {
+        projectNote.AuthorId = user.Id;
+        projectNote.AuthorName = user.UserName;
+      }
+      return PartialView("AddNewNote", projectNote);
+    }
+
+    [HttpPost]
+    public JsonResult AddNewNote(AddNewNote model)
+    {
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+      if (user != null && model != null)
+      {
+        Note noteToAdd = new Note();
+        noteToAdd.AuthorId = user.Id;
+        noteToAdd.AuthorName = user.UserName;
+        noteToAdd.Content = model.Note;
+        noteToAdd.DateCreated = DateTime.UtcNow;
+        noteToAdd.ProjectId = long.Parse(model.ProjectId);
+        var ret = serviceClient.AddNewNote(noteToAdd);
+      }
+      long projectId = long.Parse(model.ProjectId);
+      var records = serviceClient.GetProjectNotes(projectId);
+      var serializedRecords = JsonConvert.SerializeObject(records, new JsonSerializerSettings
+      {
+        ContractResolver = new CamelCasePropertyNamesContractResolver()
+      });
+
+      return Json(new { success = true });
     }
 
     #region mappers

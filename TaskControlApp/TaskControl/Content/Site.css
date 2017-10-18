@@ -106,7 +106,7 @@ img
     margin-bottom: 30px;
     overflow: auto;
     height: 800px;
-    width: 600px;
+    width: 700px;
     margin-left: 150px;
 }
 
@@ -314,6 +314,7 @@ img
                 -webkit-border-radius: 3px;
                 -moz-border-radius: 3px;
                 border-radius: 3px;
+                margin-right:20px;
             }
 
                 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label:after {
@@ -414,3 +415,99 @@ img
 div#board {
     width: 800px;
 }
+
+
+/* change border radius for the tab , apply corners on top*/
+
+#exTab3 .nav-pills > li > a {
+  border-radius: 4px 4px 0 0 ;
+}
+
+#exTab3 .tab-content {
+  color : #333;
+  background-color: #f5f5f5;
+  padding : 5px 15px;
+}
+
+
+.glyphicon {
+    line-height: 2 !important;
+}
+
+
+/* comment box */
+
+.detailBox {
+   /* width:320px;*/
+    border:1px solid #bbb;
+    margin:50px;
+}
+.titleBox {
+    background-color:#fdfdfd;
+    padding:10px;
+}
+.titleBox label{
+  color:#444;
+  margin:0;
+  display:inline-block;
+}
+
+.commentBox {
+    padding:10px;
+    border-top:1px dotted #bbb;
+}
+.commentBox .form-group:first-child, .actionBox .form-group:first-child {
+    width:80%;
+}
+.commentBox .form-group:nth-child(2), .actionBox .form-group:nth-child(2) {
+    width:18%;
+}
+.actionBox .form-group * {
+    width:100%;
+}
+.taskDescription {
+    margin-top:10px 0;
+}
+.commentList {
+    padding:0;
+    list-style:none;
+    max-height:200px;
+    overflow:auto;
+}
+.commentList li {
+    margin:0;
+    margin-top:10px;
+}
+.commentList li > div {
+    display:table-cell;
+}
+.commenterImage {
+    width:auto;
+    margin-right:5px;
+    height:100%;
+    float:left;
+}
+.commenterImage img {
+    width:100%;
+    border-radius:50%;
+}
+.commentText p {
+    margin:0;
+   line-height: 200%;
+}
+.commentItem {
+    border-bottom: 1px solid #cccccc;
+}
+
+.sub-text {
+    color:#aaa;
+    font-family:verdana;
+    font-size:11px;
+}
+.actionBox {
+    border-top:1px dotted #bbb;
+    padding:10px;
+}
+
+
+

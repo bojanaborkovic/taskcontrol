@@ -307,6 +307,8 @@
     <None Include="Project_Readme.html" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\Dashboard\Calendar.cshtml" />
+    <Content Include="Views\Project\AddNewNote.cshtml" />
+    <Content Include="Views\Project\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">

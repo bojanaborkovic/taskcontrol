@@ -17,22 +17,28 @@ namespace TaskControl.Models
 
     public string Asignee { get; set; }
 
-    [DataType(DataType.DateTime)]
+    [DataType(DataType.Date)]
     public DateTime? DateCreated { get; set; }
 
     public int IssueType { get; set; }
 
+    public string IssueTypeName { get; set; }
+
     public int Status { get; set; }
+
+    public string StatusName { get; set; }
 
     public string Reporter { get; set; }
 
     public int Priority { get; set; }
 
+    public string PriorityName { get; set; }
+
     public long Project { get; set; }
 
     public string ProjectName { get; set; }
 
-    [DataType(DataType.DateTime)]
+    [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yy}", ApplyFormatInEditMode = true)]
     public DateTime DueDate { get; set; }
 
     public long? CreatedBy { get; set; }

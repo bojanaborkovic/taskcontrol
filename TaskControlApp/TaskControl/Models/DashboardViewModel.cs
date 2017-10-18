@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using TaskControlDTOs;
 
 namespace TaskControl.Models
 {
@@ -15,7 +17,7 @@ namespace TaskControl.Models
 
     public List<DashboardTaskViewModel> TaskViewModel { get; set; }
 
-    public List<TaskAuditViewModel> TaskAuditViewModel { get; set; }
+    public List<TaskAudit> TaskAuditViewModel { get; set; }
 
     public DashboardTaskViewModel TaskDetails { get; set; }
   }
@@ -33,7 +35,7 @@ namespace TaskControl.Models
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
 
-    [ScriptIgnore]
+    [JsonIgnore]
     public string Color { get; set; }
   }
 

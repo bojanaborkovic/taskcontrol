@@ -227,6 +227,107 @@ namespace BusinessServices
       return null;
     }
 
+    public ProjectNotesReturn GetProjectNotes(long projectId)
+    {
+      _log.DebugFormat("GetProjectNotes invoked for project : {0}", projectId);
+      ProjectNotesReturn ret = new ProjectNotesReturn();
+
+      try
+      {
+        var projectNotes = _unitOfWork.NoteRepository.GetAll().Where(x => x.ProjectId == projectId).ToList();
+        List<BussinesService.Interfaces.Responses.Project.Note> listOfNotes = new List<BussinesService.Interfaces.Responses.Project.Note>();
+        listOfNotes = MapProjectNotes(projectNotes);
+        ret.Notes = listOfNotes;
+        ret.RecordCount = listOfNotes.Count;
+        return ret;
+
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error getting project notes... {0}", ex.Message);
+      }
+
+      return ret;
+    }
+
+    public ProjectNotesReturn AddNewNote(BussinesService.Interfaces.Responses.Project.Note note)
+    {
+      ProjectNotesReturn ret = new ProjectNotesReturn();
+      try
+      {
+         
+          _log.DebugFormat("Creating note : {0}", note.ToString());
+          DataModel.Note mappedNote = new DataModel.Note();
+          mappedNote.DateCreated = note.DateCreated;
+          mappedNote.ProjectId = note.ProjectId;
+          mappedNote.Text = note.Content;
+          mappedNote.Author = note.AuthorId;
+          _unitOfWork.NoteRepository.Insert(mappedNote);
+          _unitOfWork.Save();
+ 
+          var projectNotes = _unitOfWork.NoteRepository.GetAll().Where(x => x.ProjectId == note.ProjectId).ToList();
+          ret.Notes = MapProjectNotes(projectNotes);
+          ret.RecordCount = projectNotes.Count;
+
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error creating new  note... {0}", ex.Message);
+        ret.StatusCode = "Error";
+        ret.ErrorMessage = ex.Message;
+      }
+      return ret;
+    }
+
+    private List<BussinesService.Interfaces.Responses.Project.Note> MapProjectNotes(List<DataModel.Note> projectNotes)
+    {
+      List<BussinesService.Interfaces.Responses.Project.Note> notes = new List<BussinesService.Interfaces.Responses.Project.Note>();
+      if(projectNotes != null && projectNotes.Count > 0)
+      {
+        foreach(var note in projectNotes)
+        {
+          notes.Add(new BussinesService.Interfaces.Responses.Project.Note()
+          {
+            AuthorId = (long)note.Author,
+            Content = note.Text,
+            DateCreated = (DateTime)note.DateCreated,
+            NoteId = note.Id,
+            ProjectId = note.ProjectId,
+            ProjectName = GetProjectNameById(note.ProjectId),
+            AuthorName = GetAuthorById(note.Author)
+          });
+        }
+      }
+
+      return notes;
+    }
+
+    private string GetAuthorById(long? author)
+    {
+      string authorName = string.Empty;
+      if(author != null)
+      {
+        var user = _unitOfWork.UserRepository.Get(x => x.Id == author).FirstOrDefault();
+        if(user != null)
+        {
+          authorName = user.UserName;
+        }
+      }
+      return authorName;
+    }
+
+    private string GetProjectNameById(long projectId)
+    {
+      string projectName = string.Empty;
+      var project = _unitOfWork.ProjectRepository.Get(x => x.Id == projectId).FirstOrDefault();
+      if(project != null)
+      {
+        projectName = project.Name;
+      }
+
+      return projectName;
+    }
+
     private List<ProjectEntity> MapProjectsList(List<ProjectResult> projects)
     {
       List<ProjectEntity> projectsMapped = new List<ProjectEntity>();
@@ -267,5 +368,6 @@ namespace BusinessServices
       return ret;
     }
 
+   
   }
 }

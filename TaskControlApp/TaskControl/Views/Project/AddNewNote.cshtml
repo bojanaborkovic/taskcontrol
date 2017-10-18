@@ -1,0 +1,80 @@
+﻿@using TaskControl.Models
+
+@model  ProjectNoteViewModel
+@{
+  ViewBag.Title = "Add new note";
+}
+
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Add note to project</h3>
+    </div>
+
+    <div class="modal-body">
+      @using (Ajax.BeginForm("AddNewNote", "Project", new AjaxOptions
+      {
+        HttpMethod = "POST",
+        OnSuccess = "addNewNoteSuccess()",
+        // OnFailure = "addUserToRoleFailure()"
+
+      }))
+      {
+
+        <div class="form-group">
+          @*@Html.LabelFor(x => x.RoleId)
+          @Html.DropDownListFor(x => x.RoleId, Model.UserRoles, "Select Role", new { @class = "form-control" })*@
+        </div>
+        <div class="form-group">
+          @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+          <div class="col-md-10">
+            @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", rows = "5" } })
+            </div>
+          </div>
+
+          <br/>
+          <br/>
+
+          <br />
+          <br />
+          <br />
+          <br />
+
+
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+
+      }
+
+    </div>
+
+  </div>
+</div>
+
+
+<div class="modal fade" id="OKModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Info</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Success!
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function addNewNoteSuccess()
+  {
+    $('#OKModal').modal('show');
+  }
+</script>
+

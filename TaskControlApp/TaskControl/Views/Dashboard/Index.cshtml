@@ -59,27 +59,49 @@
 
     <div class="col-sm-4">
       <!-- timeline starts here-->
+     
       <div class="timeline-centered" style="margin-top: 100px">
-        @foreach (var item in Model.TaskAuditViewModel)
-      {
-          <article class="timeline-entry">
+       
+        @if (Model.TaskAuditViewModel != null && Model.TaskAuditViewModel.Count > 0)
+        {
+          <h3 style="float:right"1>Activity stream</h3>
+          foreach (var item in Model.TaskAuditViewModel)
+          {
 
-            <div class="timeline-entry-inner">
+            <article class="timeline-entry">
 
-              <p><b>@Html.ActionLink(item.AsigneeChangedBy, "Details", "User", new { userId = item.AsigneeChangedById })</b> changed asignee to <b>@Html.ActionLink(item.AsigneeAfterUsername, "Details", "User", new { userId = item.AsigneeAfter })</b></p>
+              <div class="timeline-entry-inner">
 
-              <div class="timeline-icon bg-success">
-                <i class="entypo-feather"></i>
+
+                <div class="timeline-icon bg-success">
+                  <i class="entypo-feather"></i>
+                </div>
+                <time class="timeline-time"><span style="margin-left: -30px">@item.ChangedOn</span> </time>
+                @if (item.ChangeType == TaskControlDTOs.TaskChangeType.StatusChange)
+                {
+                  <div class="timeline-label">
+                    <p><b>@Html.ActionLink(item.ChangedByUsername, "Details", "User", new { userId = item.ChangedById }, null)</b> changed status from <b> @item.ChangedFrom</b> to <b> @item.ChangedTo</b> on task <b>@Html.ActionLink(item.TaskTitle, "Preview", "Task", new { taskId = item.TaskId }, null)</b> </p>
+                  </div>
+                }
+
+                @if (item.ChangeType == TaskControlDTOs.TaskChangeType.AsigneeChange)
+                {
+                  <div class="timeline-label">
+                    @if (item.ChangedFrom != "N/A")
+                    {
+                    <p><b>@Html.ActionLink(item.ChangedByUsername, "Details", "User", new { userId = item.ChangedById }, null)</b> changed asignee from <b>@Html.ActionLink(item.ChangedFrom, "Details", "User", new { userId = item.ChangedFromId }, null)</b> to <b>@Html.ActionLink(item.ChangedTo, "Details", "User", new { userId = item.ChangedToId }, null)</b> on task  <b>@Html.ActionLink(item.TaskTitle, "Preview", "Task", new { taskId = item.TaskId }, null)</b></p>
+                    }
+                    else
+                    {
+                      <p><b>@Html.ActionLink(item.ChangedByUsername, "Details", "User", new { userId = item.ChangedById }, null)</b> changed asignee from <b>@item.ChangedFrom</b> to <b>@Html.ActionLink(item.ChangedTo, "Details", "User", new { userId = item.ChangedToId }, null)</b> on task <b>@Html.ActionLink(item.TaskTitle, "Preview", "Task", new { taskId = item.TaskId }, null)</b></p>
+                    }
+                  </div>
+                }
+
               </div>
-              <time class="timeline-time"><span style="margin-left: -30px">@item.AsigneeChangedOn</span> </time>
 
-
-              <div class="timeline-label">
-                <h2><a href="#">@item.StatusChangeBy</a> <span>changed Status to @item.StatusAfterName</span></h2>
-              </div>
-            </div>
-
-          </article>
+            </article>
+          }
         }
 
       </div>

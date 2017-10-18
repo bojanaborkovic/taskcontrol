@@ -9,28 +9,45 @@
 <div class="container">
   <div class="well">
     <div class="media">
-      <a class="pull-left" href="#">
-        <img class="media-object" src="http://placekitten.com/150/150">
-      </a>
-      <div class="media-body">
-        <h4 class="media-heading">@Html.DisplayFor(model => model.Title)</h4>
-        <p class="text-right"><span class="glyphicon glyphicon-user">Reporter:@Html.DisplayFor(model => model.Asignee)</p>
-        <p>
-         @Html.DisplayFor(model=>model.Description)
-        </p>
-        <ul class="list-unstyled">
-          <li><span>Due date : <i class="glyphicon glyphicon-calendar"></i> @Html.DisplayFor(model => model.DueDate)</span></li>
-          <li><hr /></li>
-          <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
-          <li><hr/></li>
-          <li>
-            <span class="glyphicon glyphicon-user">Asignee:@Html.DisplayFor(model => model.Asignee)</span>
+      <div id="exTab3" class="container">
+        <ul class="nav nav-pills">
+          <li class="active">
+            <a href="#1b" data-toggle="tab">Overview</a>
           </li>
-          <li><hr/></li>
           <li>
-             <span class="glyphicon glyphicon-tag">Issue type:@Html.DisplayFor(model => model.IssueType)
+            <a href="#2b" data-toggle="tab">Activity</a>
+          </li>
+          <li>
+            <a href="#3b" data-toggle="tab">Comments</a>
           </li>
         </ul>
+
+        <div class="tab-content clearfix">
+          <div class="tab-pane active" id="1b">
+           
+            <br/>
+            <i class="glyphicon glyphicon-calendar"></i><label>Due date:</label><span> @Html.DisplayFor(model => model.DueDate)</span>
+            <br />
+            <span class="glyphicon glyphicon-user"><label>Asignee:</label>@Html.DisplayFor(model => model.Asignee)</span>
+            <br />
+            <span class="glyphicon glyphicon-tag"></span><label>Issue Type:</label> <span>@Html.DisplayFor(model => model.IssueTypeName) </span>
+            <br />
+            <span class="glyphicon glyphicon-calendar"><label>Date Created:</label>@Html.DisplayFor(model => model.DateCreated) </span>
+            <br/>
+            <label>Status:</label><span>@Html.DisplayFor(model => model.StatusName) </span>
+            <br/>
+            <label>Project:</label><span>@Html.DisplayFor(model => model.ProjectName)</span>
+            <br/>
+            <label>Priority:</label><span>@Html.DisplayFor(model => model.PriorityName)</span>
+            <br/>
+          </div>
+          <div class="tab-pane" id="2b">
+            <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+          </div>
+          <div class="tab-pane" id="3b">
+            <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -22,6 +22,9 @@ namespace DataModel.UnitOfWork
     private GenericRepository<Status> _statusRepository;
     private GenericRepository<Priority> _priorityRepository;
     private GenericRepository<RoleClaimsOnProject> _roleClaimsOnProjectRepository;
+    private GenericRepository<TaskAsigneeHistory> _taskAsigneeHistoryRepository;
+    private GenericRepository<TaskStatusHistory> _taskStatusHistoryRepository;
+    private GenericRepository<Note> _notesRepository;
     internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
     private bool disposed = false;
     #endregion
@@ -134,6 +137,45 @@ namespace DataModel.UnitOfWork
         return _priorityRepository;
       }
     }
+
+    public GenericRepository<TaskStatusHistory> TaskStatusHistoryRepository
+    {
+      get
+      {
+        if (this._taskStatusHistoryRepository == null)
+        {
+          this._taskStatusHistoryRepository = new GenericRepository<TaskStatusHistory>(context);
+        }
+        return _taskStatusHistoryRepository;
+      }
+    }
+
+    public GenericRepository<TaskAsigneeHistory> TaskAsigneeHistoryRepository
+    {
+      get
+      {
+        if (this._taskAsigneeHistoryRepository == null)
+        {
+          this._taskAsigneeHistoryRepository = new GenericRepository<TaskAsigneeHistory>(context);
+        }
+        return _taskAsigneeHistoryRepository;
+      }
+    }
+
+    public GenericRepository<Note> NoteRepository
+    {
+      get
+      {
+        if (this._notesRepository == null)
+        {
+          this._notesRepository = new GenericRepository<Note>(context);
+        }
+        return _notesRepository;
+      }
+    }
+
+
+
     #endregion
 
     #region public member methods

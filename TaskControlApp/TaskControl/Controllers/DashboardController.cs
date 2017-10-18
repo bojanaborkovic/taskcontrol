@@ -45,14 +45,15 @@ namespace TaskControl.Controllers
           model.TaskViewModel = MapTasksToDashboard(tasksForUser);
         }
       }
-      
-     
-      if(retTaskDetails != null && retTaskDetails.RecordCount > 0)
+
+      var taskHistory = taskServiceClient.GetTaskHistory(null);
+      if(taskHistory != null && taskHistory.RecordCount > 0)
       {
-        model.TaskAuditViewModel = new List<TaskAuditViewModel>();
-        if (retTaskDetails != null)
+        model.TaskAuditViewModel = new List<TaskAudit>();
+        if (taskHistory != null)
         {
-          model.TaskAuditViewModel = MapTasksAudit(retTaskDetails.TasksAudit);
+         var take = taskHistory.TasksAudit.Take(30).ToList();
+         model.TaskAuditViewModel = take;
         }
       }
 
@@ -63,7 +64,10 @@ namespace TaskControl.Controllers
       return View("Index", model);
     }
 
-  
+    private List<TaskAuditViewModel> MapTasksAudit(List<TaskAudit> tasksAudit)
+    {
+      throw new NotImplementedException();
+    }
 
     [HttpGet]
     public ActionResult GetAllTasks()
@@ -235,43 +239,43 @@ namespace TaskControl.Controllers
     }
 
 
-    private List<TaskAuditViewModel> MapTasksAudit(List<TaskAudit> tasksAudit)
-    {
-      List<TaskAuditViewModel> auditList = new List<TaskAuditViewModel>();
-      var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
+    //private List<TaskAuditViewModel> MapTasksAudit(List<TaskAudit> tasksAudit)
+    //{
+    //  List<TaskAuditViewModel> auditList = new List<TaskAuditViewModel>();
+    //  var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
 
   
 
-      if (tasksAudit != null && tasksAudit.Count > 0)
-      {
-        foreach (var item in tasksAudit)
-        {
-          TaskAuditViewModel auditItem = new TaskAuditViewModel();
-          auditItem.AsigneeAfter = item.AsigneeAfter;
-          auditItem.AsigneeBefore = item.AsigneeBefore;
-          auditItem.AsigneeBeforeUsername = item.AsigneeBefore != null ? userServiceClient.GetUserById((long)item.AsigneeBefore).UserName : string.Empty;
+    //  if (tasksAudit != null && tasksAudit.Count > 0)
+    //  {
+    //    foreach (var item in tasksAudit)
+    //    {
+    //      TaskAuditViewModel auditItem = new TaskAuditViewModel();
+    //      auditItem.AsigneeAfter = item.AsigneeAfter;
+    //      auditItem.AsigneeBefore = item.AsigneeBefore;
+    //      auditItem.AsigneeBeforeUsername = item.AsigneeBefore != null ? userServiceClient.GetUserById((long)item.AsigneeBefore).UserName : string.Empty;
 
-          auditItem.AsigneeChangedOn = item.AsigneeChangedOnDate;
-          auditItem.AsigneeAfterUsername = item.AsigneeAfter != null ? userServiceClient.GetUserById((long)item.AsigneeAfter).UserName : string.Empty;
+    //      auditItem.AsigneeChangedOn = item.AsigneeChangedOnDate;
+    //      auditItem.AsigneeAfterUsername = item.AsigneeAfter != null ? userServiceClient.GetUserById((long)item.AsigneeAfter).UserName : string.Empty;
 
-          auditItem.StatusBefore = item.StatusBefore;
-          auditItem.StatusAfter = item.StatusAfter;
+    //      auditItem.StatusBefore = item.StatusBefore;
+    //      auditItem.StatusAfter = item.StatusAfter;
 
-          auditItem.StatusBeforeName = item.StatusBefore != null ? statuses.Where(x => x.Id == item.StatusBefore).FirstOrDefault().Name : string.Empty;
-          auditItem.StatusAfterName = item.StatusAfter != null ? statuses.Where(x => x.Id == item.StatusAfter).FirstOrDefault().Name : string.Empty;
+    //      auditItem.StatusBeforeName = item.StatusBefore != null ? statuses.Where(x => x.Id == item.StatusBefore).FirstOrDefault().Name : string.Empty;
+    //      auditItem.StatusAfterName = item.StatusAfter != null ? statuses.Where(x => x.Id == item.StatusAfter).FirstOrDefault().Name : string.Empty;
 
-          auditItem.StatusChangeBy = item.StatusChangedBy != null ? userServiceClient.GetUserById((long)item.StatusChangedBy).UserName : string.Empty;
-          auditItem.AsigneeChangedBy = item.AsigneeChangedBy != null ? userServiceClient.GetUserById((long)item.AsigneeChangedBy).UserName : string.Empty;
+    //      auditItem.StatusChangeBy = item.StatusChangedBy != null ? userServiceClient.GetUserById((long)item.StatusChangedBy).UserName : string.Empty;
+    //      auditItem.AsigneeChangedBy = item.AsigneeChangedBy != null ? userServiceClient.GetUserById((long)item.AsigneeChangedBy).UserName : string.Empty;
 
-          auditItem.AsigneeChangedById = item.AsigneeChangedBy;
-          auditItem.TaskId = item.TaskId;
+    //      auditItem.AsigneeChangedById = item.AsigneeChangedBy;
+    //      auditItem.TaskId = item.TaskId;
 
-          auditList.Add(auditItem);
-        }
-      }
+    //      auditList.Add(auditItem);
+    //    }
+    //  }
 
-      return auditList;
-    }
+    //  return auditList;
+    //}
 
     private List<DashboardTaskViewModel> MapTasksToDashboard(SearchTasksReturn ret)
     {

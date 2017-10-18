@@ -112,6 +112,25 @@ namespace TaskControlAPI.Controllers
       return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Project not found");
     }
 
+    [HttpGet]
+    [ActionName("GetProjectNotes")]
+    public HttpResponseMessage GetProjectNotes([FromUri] long projectId)
+    {
+      _log.DebugFormat("GetProjectNotes for project {0}", projectId);
+      var notes = _projectService.GetProjectNotes(projectId);
+      if (notes != null)
+      {
+        if (notes.Notes.Any())
+        {
+          _log.DebugFormat("GetProjectNotes finished with : {0}", notes.Notes.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, notes);
+        }
+
+      }
+
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Project notes not found");
+    }
+
 
     [HttpPost]
     [ActionName("UpdateProject")]
@@ -142,6 +161,22 @@ namespace TaskControlAPI.Controllers
       else
       {
         return Request.CreateResponse(HttpStatusCode.OK);
+      }
+
+    }
+
+    [HttpPost]
+    [ActionName("AddNewNote")]
+    public HttpResponseMessage AddNewNote(Note note)
+    {
+      ProjectNotesReturn projectNotes = _projectService.AddNewNote(note);
+      if (projectNotes != null && !string.IsNullOrEmpty(projectNotes.ErrorMessage))
+      {
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not create project");
+      }
+      else
+      {
+        return Request.CreateResponse(HttpStatusCode.OK, projectNotes);
       }
 
     }

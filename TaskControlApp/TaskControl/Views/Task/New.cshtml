@@ -122,13 +122,13 @@
             </div>
         </div>
 
-        <div class="form-group input-group-sm">
-            @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-							@Html.TextBoxFor(model => model.DueDate, new { @class = "form-control datepicker", placeholder = "Enter due date here.." })
-							@Html.ValidationMessageFor(model => model.DueDate)
-            </div>
+      <div class="form-group">
+        @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+          @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control datepicker", placeholder = "Enter due date here..", @id ="dueDate" })
+          @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
         </div>
+      </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -145,7 +145,14 @@
 
 <script type="text/javascript">
 	$(document).ready(function () { // will trigger when the document is ready
-		$('.datepicker').datepicker(); //Initialise any date pickers
+	  $('.datepicker').datepicker({
+	    dateFormat: 'dd/mm/yy'
+
+	  });
+
+    //fix for chrome!!! to get rid of US date validation
+	  jQuery.validator.methods["date"] = function (value, element) { return true; } 
+
 
 		var availableUsers = @Html.Raw(userNames);	  
     
@@ -159,7 +166,10 @@
 		$(".autoproject").autocomplete({
         source: availableProjects
 
-    });
+		});
+
+		//$('#dueDate').removeAttr("data-val");
+
 
     });
 </script>

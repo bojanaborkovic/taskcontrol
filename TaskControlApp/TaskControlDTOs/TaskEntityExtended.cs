@@ -64,39 +64,50 @@ namespace TaskControlDTOs
   {
     [DataMember]
     public long TaskId { get; set; }
-    [DataMember]
-    public long? AsigneeBefore { get; set; }
-    [DataMember]
-    public long? AsigneeAfter { get; set; }
-    [DataMember]
-    public long? AsigneeChangedBy { get; set; }
 
     [DataMember]
-    public string AsigneeChangedOn
+    public string TaskTitle { get; set; }
+
+    [DataMember]
+    public TaskChangeType ChangeType { get; set; }
+
+    [DataMember]
+    public string ChangedByUsername { get; set; }
+
+    [DataMember]
+    public long? ChangedById { get; set; }
+
+    [DataMember]
+    public string ChangedFrom { get; set; }
+
+    [DataMember]
+    public long? ChangedFromId { get; set; }
+
+    [DataMember]
+    public string ChangedTo { get; set; }
+
+    [DataMember]
+    public long? ChangedToId { get; set; }
+
+    public DateTime ChangedOn { get; set; }
+
+    [DataMember]
+    public string ChangedOnString
     {
-      get { return this.AsigneeChangedOnDate.ToString("yyyy-MM-dd HH:mm:ss"); }
-      set { this.AsigneeChangedOnDate = DateTime.Parse(value); }
+      get { return this.ChangedOn.ToString("yyyy-MM-dd HH:mm:ss"); }
+      set { this.ChangedOn = DateTime.Parse(value); }
     }
 
-    public DateTime AsigneeChangedOnDate { get; set; }
 
-    [DataMember]
-    public int? StatusBefore { get; set; }
-    [DataMember]
-    public int? StatusAfter { get; set; }
-    [DataMember]
-    public long? StatusChangedBy { get; set; }
+  }
 
-    [DataMember]
-    public string StatusChangedOn
-    {
-      get { return this.StatusChangedOnDate.ToString("yyyy-MM-dd HH:mm:ss"); }
-      set { this.StatusChangedOnDate = DateTime.Parse(value); }
-    }
-
-    public DateTime StatusChangedOnDate { get; set; }
-
-
-
+  
+  [DataContract]
+  public enum TaskChangeType
+  {
+    [EnumMember]
+    StatusChange = 0,
+    [EnumMember]
+    AsigneeChange = 1
   }
 }

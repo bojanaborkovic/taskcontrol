@@ -58,6 +58,11 @@ namespace TaskControl.ServiceClients
       return ExecutePost<BaseProjectReturn>(string.Format("{0}/{1}", "projects", "update"), project);
     }
 
+    public ProjectNotesReturn AddNewNote(Note note)
+    {
+      return ExecutePost<ProjectNotesReturn>(string.Format("{0}/{1}", "projects", "newnote"), note);
+    }
+
     public GetProjectReturn GetProjectsWithOwner()
     {
       throw new NotImplementedException();
@@ -67,6 +72,12 @@ namespace TaskControl.ServiceClients
     {
       string url = string.Format("{0}{1}/{2}?projectId={3}", BaseUri.ToString(), "projects", "getstatistics", projectId);
       return Get<ProjectStatisticsReturn>(new Uri(url));
+    }
+
+    public ProjectNotesReturn GetProjectNotes(long projectId)
+    {
+      string url = string.Format("{0}{1}/{2}?projectId={3}", BaseUri.ToString(), "projects", "getprojectnotes", projectId);
+      return Get<ProjectNotesReturn>(new Uri(url));
     }
   }
 

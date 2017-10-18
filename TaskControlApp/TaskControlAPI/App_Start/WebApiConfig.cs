@@ -70,6 +70,18 @@ namespace TaskControlAPI
           defaults: new { controller = "Project", action = "UpdateProject" }
       );
 
+      config.Routes.MapHttpRoute(
+        name: "GetProjectNotes",
+        routeTemplate: "projects/getprojectnotes",
+        defaults: new { controller = "Project", action = "GetProjectNotes" }
+        );
+
+      config.Routes.MapHttpRoute(
+       name: "AddNewNote",
+       routeTemplate: "projects/newnote",
+       defaults: new { controller = "Project", action = "AddNewNote" }
+       );
+
       #endregion
 
       #region users routes
@@ -217,6 +229,13 @@ namespace TaskControlAPI
             routeTemplate: "tasks/updatetaskstatus",
             defaults: new { controller = "Task", action = "UpdateTaskStatus" }
             );
+
+      config.Routes.MapHttpRoute(
+           name: "GetTaskHistory",
+           routeTemplate: "tasks/gettaskhistory",
+           defaults: new { controller = "Task", action = "GetTaskHistory" }
+           );
+
 
       #endregion
 

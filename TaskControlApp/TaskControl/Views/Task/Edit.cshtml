@@ -91,9 +91,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DateCreated, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-              @Html.TextBoxFor(model => model.DateCreated, new { @class = "form-control datepicker", placeholder = "Enter due date here.." })
-                @Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })
-            </div>
+              @Html.DisplayFor(model => model.DateCreated)
+           </div>
         </div>
 
 			<div class="form-group">

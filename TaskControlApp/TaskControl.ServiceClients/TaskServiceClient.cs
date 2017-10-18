@@ -69,5 +69,11 @@ namespace TaskControl.ServiceClients
     { 
       return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "updatetaskstatus"), task);
     }
+
+    public TaskAuditReturn GetTaskHistory(long? taskId)
+    {
+      string url = string.Format("{0}/{1}?taskId={2}", BaseUri.ToString(), "gettaskhistory", taskId);
+      return Get<TaskAuditReturn>(new Uri(url));
+    }
   }
 }

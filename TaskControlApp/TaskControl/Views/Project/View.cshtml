@@ -1,0 +1,183 @@
+﻿@model TaskControl.Models.ProjectViewModel
+
+@{
+  ViewBag.Title = Model.Name;
+  string urlNewProjectComment = Url.Action("AddNewNote", "Project");
+}
+
+<h2>Details</h2>
+
+<div id='newProjectCommentModal' class="modal fade" role="dialog" tabindex="-1" data-url='@urlNewProjectComment'>
+
+</div>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Owner)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Owner)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InProgressCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InProgressCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompletedCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompletedCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ToDoCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ToDoCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalProgress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalProgress) %
+        </dd>
+
+    </dl>
+
+  <!-- comment box starts -->
+  <div class="detailBox">
+    <div class="titleBox">
+      <label>Project notes</label>
+      <button type="button" class="close" aria-hidden="true">&times;</button>
+    </div>
+    <div class="commentBox">
+
+      <p class="taskDescription">Notes on  @Html.DisplayFor(model => model.Name) project</p>
+    </div>
+    <div class="actionBox">
+      <ul class="commentList">
+        @foreach (var comment in Model.Notes)
+        {
+          <li>
+            <div class="commentItem">
+              <div class="commenterImage">
+                <b>@comment.AuthorName</b> added a note on <span class="date sub-text">@comment.CommentDate</span>
+              </div>
+              <br />
+              <div class="commentText">
+                <p>@comment.Note</p>
+              </div>
+            </div>
+          </li>
+     
+
+        }
+        </ul>
+        <form class="form-inline" role="form">
+          @*<div class="form-group">
+            <input class="form-control" type="text" placeholder="Your comments" />
+          </div>*@
+            @using (Ajax.BeginForm("AddNewNote", "Project", new AjaxOptions
+            {
+              HttpMethod = "POST",
+              //OnSuccess = "addUserToRoleSuccess()",
+              // OnFailure = "addUserToRoleFailure()"
+
+            }))
+            {
+              @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "projectId" } })
+              <div class="form-group">
+               @Html.TextAreaFor(model => model.CurrentComment, new { htmlAttributes = new { @class = "form-control" } })
+              </div>
+
+              <div class="form-group">
+                <button class="btn btn-default" id="addNote" type="submit">Add</button>
+              </div>
+            }
+         
+        </form>
+      </div>
+
+  </div>
+  <!-- comment box ends -->
+</div>
+@*<div class="col-md-10">
+  <button id='addNewNote' class="btn btn-secondary btn-success">Add New Note</button>
+</div>*@
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    $('#addNewNote').click(function () {
+      var url = $('#newProjectCommentModal').data('url');
+
+      $.get(url, function (data) {
+        $('#newProjectCommentModal').html(data);
+
+        $('#newProjectCommentModal').modal('show');
+      });
+    });
+
+    $("#addNote").click(function (e) {
+      e.preventDefault();
+      AddNew();
+    });
+
+    function AddNew() {
+      debugger;
+      var modelObj = {};
+      modelObj.Note = $("#CurrentComment").val();
+      modelObj.ProjectId = $("#Id").val();
+
+      // exucute ajax call to add new note
+      $.ajax({
+        type: "POST",
+        url: '@urlNewProjectComment',
+        data: JSON.stringify(modelObj),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+          location.reload();
+        },
+        error: function (result) {
+          //alert('error');
+        }
+      });
+    }
+
+  });
+
+</script>

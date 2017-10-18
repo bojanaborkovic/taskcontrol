@@ -20,5 +20,9 @@ namespace BusinessServices.Interfaces
 
     GetProjectReturn GetProjectsByOwner(long ownerId);
 
+    ProjectNotesReturn GetProjectNotes(long projectId);
+
+    ProjectNotesReturn AddNewNote(Note note);
+
   }
 }
