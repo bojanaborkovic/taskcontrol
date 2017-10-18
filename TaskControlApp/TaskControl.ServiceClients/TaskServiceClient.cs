@@ -53,9 +53,9 @@ namespace TaskControl.ServiceClients
       return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "update"), task);
     }
 
-    public SearchTasksReturn GetTasksForUser(long userId)
+    public SearchTasksReturn GetTasksForUser(long userId, long? projectId)
     {
-      string url = string.Format("{0}/{1}?userId={2}", BaseUri.ToString(), "gettasksforuser", userId);
+      string url = string.Format("{0}/{1}?userId={2}&projectId={3}", BaseUri.ToString(), "gettasksforuser", userId, projectId);
       return Get<SearchTasksReturn>(new Uri(url));
     }
 

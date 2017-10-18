@@ -17,7 +17,7 @@ namespace BusinessServices.Interfaces
     BasicReturn CreateTask(TaskEntity task);
     TasksDetailsReturn GetAllTasksDetails();
     BasicReturn UpdateTask(TaskEntity task);
-    SearchTasksReturn GetTasksForUser(long userId);
+    SearchTasksReturn GetTasksForUser(long userId, long? projectId);
     SearchTasksReturn GetTasksOnProject(long projectId);
 
     BasicReturn UpdateTaskStatus(UpdateTaskStatus update);

@@ -180,14 +180,14 @@ namespace TaskControlAPI.Controllers
 
     [HttpGet]
     [ActionName("GetTasksForUser")]
-    public HttpResponseMessage GetTasksForUser(long userId)
+    public HttpResponseMessage GetTasksForUser(long userId, long? projectId)
     {
       _log.DebugFormat("GetTasksForUser invoked with UserId: {0} ...", userId.ToString());
 
       try
       {
         //long taskId = _taskService.CreateTask(task);
-        var task = _taskService.GetTasksForUser(userId);
+        var task = _taskService.GetTasksForUser(userId, projectId);
         if (task != null)
         {
           _log.DebugFormat("GetTasksForUser finished with : {0}", task.ToString());

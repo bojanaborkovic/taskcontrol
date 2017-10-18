@@ -191,13 +191,19 @@ namespace BusinessServices
       return ret;
     }
 
-    public SearchTasksReturn GetTasksForUser(long userId)
+    public SearchTasksReturn GetTasksForUser(long userId, long? projectId)
     {
       _log.DebugFormat("GetTasksForUser invoked");
       SearchTasksReturn ret = new SearchTasksReturn();
       try
       {
         var tasks = _unitOfWork.TaskRepository.GetAll().Where(x => x.Asignee == userId).ToList();
+
+        if(projectId != null)
+        {
+          tasks = tasks.Where(x => x.ProjectId == projectId).ToList();
+        }
+
         tasks = tasks.OrderByDescending(x => x.DateCreated).ToList();
         if (tasks.Any())
         {

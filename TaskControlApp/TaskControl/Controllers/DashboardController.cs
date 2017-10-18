@@ -39,7 +39,7 @@ namespace TaskControl.Controllers
 
       if(user != null)
       {
-        var tasksForUser = taskServiceClient.GetTasksForUser(user.Id);
+        var tasksForUser = taskServiceClient.GetTasksForUser(user.Id, null);
         if (tasksForUser != null && tasksForUser.RecordCount > 0)
         {
           model.TaskViewModel = MapTasksToDashboard(tasksForUser);
@@ -56,6 +56,15 @@ namespace TaskControl.Controllers
          model.TaskAuditViewModel = take;
         }
       }
+
+      var projectsForOwner = projectServiceClient.GetProjectsByOwner(user.Id);
+
+
+      if (projectsForOwner != null)
+      {
+        model.OwnersProjects = MapOwnersProjects(projectsForOwner);
+      }
+
 
       ViewBag.TaskList = JsonConvert.SerializeObject(model.TaskViewModel, new JsonSerializerSettings
       {
@@ -87,7 +96,7 @@ namespace TaskControl.Controllers
     [StatusPreparer]
     public ActionResult GetTaskForUser(long userId)
     {
-      var ret = taskServiceClient.GetTasksForUser(userId);
+      var ret = taskServiceClient.GetTasksForUser(userId, null);
       var records = MapTasksToDashboard(ret);
       var serializedRecords = JsonConvert.SerializeObject(records, new JsonSerializerSettings
       {
@@ -99,17 +108,26 @@ namespace TaskControl.Controllers
 
     [HttpGet]
     [StatusPreparer]
-    public ActionResult GetTasksOnProject(long projectId)
+    public ActionResult GetTasksForUserOnProject(long? projectId)
     {
-      var ret = taskServiceClient.GetTasksOnProject(projectId);
-      var records = MapTasksToDashboard(ret);
-
-      var serializedRecords = JsonConvert.SerializeObject(records, new JsonSerializerSettings
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+      SearchTasksReturn ret = new SearchTasksReturn();
+      if(user != null)
       {
-        ContractResolver = new CamelCasePropertyNamesContractResolver()
-      });
+         ret = taskServiceClient.GetTasksForUser(user.Id, projectId);
+      }
+      DashboardViewModel model = new DashboardViewModel();
+      model.TaskViewModel = new List<DashboardTaskViewModel>();
 
-      return Content(serializedRecords, "application/json");
+      if (ret != null && ret.RecordCount > 0)
+      {
+        var records = MapTasksToDashboard(ret);
+        model.TaskViewModel = records;
+      }
+     
+     
+      return PartialView("TasksOnProject", model);
     }
 
 

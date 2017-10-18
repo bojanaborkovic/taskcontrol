@@ -309,6 +309,7 @@
     <Content Include="Views\Dashboard\Calendar.cshtml" />
     <Content Include="Views\Project\AddNewNote.cshtml" />
     <Content Include="Views\Project\View.cshtml" />
+    <Content Include="Views\Dashboard\TasksOnProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">

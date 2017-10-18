@@ -1,0 +1,51 @@
+﻿@model  TaskControl.Models.DashboardViewModel
+
+
+
+  <div>
+    <h3>ToDo</h3><h3>In Progress</h3><h3>Done</h3>
+  </div>
+
+  <ul id="ToDo">
+    @if (Model.TaskViewModel != null && Model.TaskViewModel.Count > 0)
+    {
+      foreach (var task in Model.TaskViewModel)
+      {
+        if (task.Status == "ToDo")
+        {
+          <li id="@task.Id" draggable="true" class="taskItem">@task.Title</li>
+        }
+      }
+    }
+  </ul>
+
+    <ul id="InProgress">
+  @if (Model.TaskViewModel != null && Model.TaskViewModel.Count > 0)
+  {
+    foreach (var task in Model.TaskViewModel)
+    {
+      if (task.Status == "InProgress")
+      {
+        <li id="@task.Id" draggable="true" class="taskItem"> @task.Title</li>
+      }
+    }
+  }
+  </ul>
+
+  <ul id="Done">
+    @if (Model.TaskViewModel != null && Model.TaskViewModel.Count > 0)
+    {
+      foreach (var task in Model.TaskViewModel)
+      {
+        if (task.Status == "Done")
+        {
+            <li id="@task.Id" draggable="true" class="taskItem">@task.Title</li>
+        }
+      }
+    }
+
+  </ul>
+  <div id="taskInfoBox" style="display:none;" class="timeline-label"> </div>
+
+
+

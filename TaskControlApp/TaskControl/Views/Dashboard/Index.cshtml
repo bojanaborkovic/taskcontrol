@@ -7,51 +7,27 @@
   string getAllTasksUrl = Url.Action("GetAllTasks", "Dashboard");
   string getTaskInfoById = Url.Action("GetTaskInfoById", "Dashboard");
   string updateTaskStatusUrl = Url.Action("UpdateTaskStatus", "Dashboard");
+  string getTasksOnProjectUrl = Url.Action("GetTasksForUserOnProject", "Dashboard");
+
   string userId = ViewBag.UserId;
 }
 
 <div class="container">
   <div class="row">
     <div class="col-sm-6">
+
+      
       <!-- planning board starts -->
       <h1>Planning board</h1>
-      <div id="board">
-        <div>
-          <h3>ToDo</h3><h3>In Progress</h3><h3>Done</h3>
-        </div>
-      
-        <ul id="ToDo">
-          @foreach (var task in Model.TaskViewModel)
-          {
-            if (task.Status == "ToDo")
-            {
-              <li id="@task.Id" draggable="true" class="taskItem">@task.Title</li>
-            }
-          }    
-        </ul>
-          
-        <ul id="InProgress">
-          @foreach (var task in Model.TaskViewModel)
-          {
-            if (task.Status == "InProgress")
-            {
-            <li id="@task.Id" draggable="true" class="taskItem"> @task.Title</li>
-            }
-          }
-        </ul>
-
-        <ul id="Done">
-          @foreach (var task in Model.TaskViewModel)
-          {
-            if (task.Status == "Done")
-            {
-            <li id="@task.Id" draggable="true" class="taskItem">@task.Title</li>
-            }
-          }
-
-        </ul>
-        <div id="taskInfoBox" style="display:none;" class="timeline-label"> </div> 
+      <div class="btn-group" role="group" aria-label="..." style="float:right">
+        @foreach (var item in Model.OwnersProjects)
+        {
+          <button type="button" class="btn btn-default projectButton" id="@item.Id">@item.Name</button>
+        }
       </div>
+      <div id="board">
+      </div>
+
       <!-- plannin board ends-->
       </div>  
         
@@ -114,16 +90,11 @@
 
   <script type="text/javascript">
     $(document).ready(function () {
-      //var event = { id: 1, title: 'SuperCoolProject', start: new Date() };
-      //var newEvent = {id : 2, title: 'Future project', start: '2017-09-20'}
+
       $('#mainCalendar').fullCalendar({
         defaultDate: '2017-09-05',
         editable: true,
         eventLimit: true, // allow "more" link when too many events
-        //eventSources: [
-        //  '/feed1.php',
-        //  '/feed2.php'
-        //]
       });
       var listOfTasks = @Html.Raw(taskList);
 
@@ -268,7 +239,41 @@
         });
       });
 
+
+     
+
     });
+
+    $(window).on("load", GetTasksOnProject);
+    /* project filtering for board*/
+    function GetTasksOnProject(e)
+    {
+      var projectId = e.currentTarget.id;
+      $.ajax({
+        type: "GET",
+        url: '@getTasksOnProjectUrl',
+        data :{
+          projectId:  projectId != null ? projectId : null
+        },
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        success: function(result) {
+         // $("#board").html(result);
+        },
+        error: function(result) {
+          //alert('error');
+        }
+      }).done(function(partialViewResult) {
+        $("#board").html(partialViewResult);
+      });
+
+      $(".projectButton").click(function(e){
+        e.preventDefault();
+       
+        GetTasksOnProject(e);
+      });
+
+    }
   </script>
 
 
