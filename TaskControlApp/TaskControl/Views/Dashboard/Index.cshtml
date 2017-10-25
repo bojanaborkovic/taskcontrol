@@ -20,9 +20,12 @@
       <!-- planning board starts -->
       <h1>Planning board</h1>
       <div class="btn-group" role="group" aria-label="..." style="float:right">
-        @foreach (var item in Model.OwnersProjects)
+        @if (Model.OwnersProjects != null && Model.OwnersProjects.Count > 0)
         {
-          <button type="button" class="btn btn-default projectButton" id="@item.Id">@item.Name</button>
+          foreach (var item in Model.OwnersProjects)
+          {
+            <button type="button" class="btn btn-default projectButton" id="@item.Id">@item.Name</button>
+          }
         }
       </div>
       <div id="board">
@@ -100,102 +103,6 @@
 
       $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
 
-
-      /* drag and drop functionality (plannig board) */
-      $('#board li').bind('dragstart', function(event) {
-        event.originalEvent.dataTransfer.setData("text/plain",  event.target.getAttribute('id'));
-      });
-
-      $('#board ul').bind('dragover', function(event) {
-        // debugger;
-        event.preventDefault();
-      });
-
-      $('#board ul').bind('dragenter', function(event) {
-        // debugger;
-        $(this).addClass("over");
-      });
-
-      $('#board ul').bind('dragleave drop', function(event) {
-        // debugger;
-        $(this).removeClass("over");
-      });
-
-      $('#board li').bind('drop', function(event) {
-        return false;
-      });
-
-      $('#board ul').bind('drop', function(event) {
-        debugger;
-        var listitem = event.originalEvent.dataTransfer.getData("text/plain"); // id of the task
-        var newStatus = event.currentTarget.id;
-        ChangeTaskStatus(newStatus, listitem);
-        event.target.appendChild(document.getElementById(listitem));
-        event.preventDefault();
-      });
-
-      $(".taskItem").click(function(e){
-        e.preventDefault();
-        var taskId = e.currentTarget.id;
-        GetTaskInfo(taskId);
-      });
-
-
-      function GetTaskInfo(taskId)
-      {
-        // exucute ajax call to get info about the task
-        $.ajax({
-          type: "GET",
-          url: '@getTaskInfoById',
-          data :{
-            taskId:  taskId
-          },
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          success: function(result) {
-            document.getElementById('taskInfoBox').innerHTML = PrepareInfo(result);
-            document.getElementById('taskInfoBox').style.display = "block";
-          },
-          error: function(result) {
-            //alert('error');
-          }
-        });
-      }
-
-      function ChangeTaskStatus(newStatus, taskId)
-      {
-        debugger;
-        var modelObj = {};
-        modelObj.StatusName = newStatus;
-        modelObj.TaskId = taskId;
-
-        // exucute ajax call to update task status
-        $.ajax({
-          type: "POST",
-          url: '@updateTaskStatusUrl',
-          data: JSON.stringify(modelObj),
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          success: function(result) {
-            
-          },
-          error: function(result) {
-            //alert('error');
-          }
-        });
-      }
-
-      function PrepareInfo(result)
-      {
-        var htmlText = '';
-        for(var key in result) {
-          if (result.hasOwnProperty(key)) {
-            htmlText += '<p>'+ key +': ' + result[key] + '</p>';
-          }
-        }
-
-        return htmlText;
-      }
 
       /* ajax calls for 'MyTasks' and 'All tasks'*/
       $("#myTasks").click(function(e) {

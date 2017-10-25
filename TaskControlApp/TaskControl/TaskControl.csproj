@@ -206,6 +206,7 @@
     <Compile Include="Models\CreateUserViewModel.cs" />
     <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />
+    <Compile Include="Models\ProjectFilterViewModel.cs" />
     <Compile Include="Models\ProjectViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -310,6 +311,8 @@
     <Content Include="Views\Project\AddNewNote.cshtml" />
     <Content Include="Views\Project\View.cshtml" />
     <Content Include="Views\Dashboard\TasksOnProject.cshtml" />
+    <Content Include="Views\Task\TaskList.cshtml" />
+    <Content Include="Views\Task\ProjectFilter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">

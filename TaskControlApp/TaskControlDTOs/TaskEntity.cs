@@ -37,6 +37,20 @@ namespace TaskControlDTOs
     }
     public DateTime DueDate { get; set; }
 
+    [DataMember]
+    public string AsigneeUsername { get; set; }
+
+    [DataMember]
+    public string StatusName { get; set; }
+
+    [DataMember]
+    public string IssueTypeName { get; set; }
+
+    [DataMember]
+    public string ReporterName { get; set; }
+
+    [DataMember]
+    public string PriorityName { get; set; }
 
     [DataMember]
     public string DateCreatedString

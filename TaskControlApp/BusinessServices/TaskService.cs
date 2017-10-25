@@ -215,7 +215,7 @@ namespace BusinessServices
           IMapper mapper = config.CreateMapper();
           var taskskMapped = mapper.Map<List<Task>, List<TaskEntity>>(tasks.ToList());
           _log.DebugFormat("GetTasksForUser finished with : {0}", tasks.ToString());
-          ret.Tasks = taskskMapped;
+          ret.Tasks = MapAdditionalFields(taskskMapped);
           ret.RecordCount = taskskMapped.Count;
           ret.StatusCode = "OK";
         }
@@ -226,6 +226,38 @@ namespace BusinessServices
         ret.ErrorMessage = ex.Message;
       }
       return ret;
+    }
+
+    private List<TaskEntity> MapAdditionalFields(List<TaskEntity> taskskMapped)
+    {
+      List<TaskEntity> tasks = new List<TaskEntity>();
+      if(taskskMapped != null && taskskMapped.Count > 0)
+      {
+        foreach(var item in taskskMapped)
+        {
+          tasks.Add(new TaskEntity()
+          {
+            Asignee = item.Asignee,
+            AsigneeUsername = GetUsernamebyId(item.Asignee),
+            Description = item.Description,
+            Status = item.Status,
+            StatusName = GetStatusNameById(item.Status),
+            ProjectId = item.ProjectId,
+            Title = item.Title,
+            IssueType = item.IssueType,
+            IssueTypeName = GetIssueTypeNameById(item.IssueType),
+            DateCreated = item.DateCreated,
+            DueDate = item.DueDate,
+            Reporter = item.Reporter,
+            ReporterName = GetUsernamebyId(item.Reporter),
+            Priority = item.Priority,
+            PriorityName = GetPriorityNameById(item.Priority),
+            Id = item.Id
+          });
+        }
+      }
+
+      return tasks;
     }
 
     public SearchTasksReturn GetTasksOnProject(long projectId)
@@ -389,6 +421,23 @@ namespace BusinessServices
 
     }
 
+
+    private string GetIssueTypeNameById(int? issueTypeId)
+    {
+      string issueType = "N/A";
+      if (issueType != null)
+      {
+        var issueTypeName = _unitOfWork.IssueTypeRepositorsy.Get(x => x.Id == issueTypeId).First();
+        if (issueTypeName != null)
+        {
+          issueType = issueTypeName.Name;
+        }
+      }
+
+      return issueType;
+    }
+
+
     private string GetUsernamebyId(long? changeBy)
     {
       string username = "N/A";
@@ -404,7 +453,22 @@ namespace BusinessServices
       return username;
     }
 
-   
+    private string GetPriorityNameById(int? priorityId)
+    {
+      string priority = "N/A";
+      if (priorityId != null)
+      {
+        var priorityItem = _unitOfWork.PriorityRepository.Get(x => x.Id == priorityId).First();
+        if (priorityItem != null)
+        {
+          priority = priorityItem.Name;
+        }
+      }
+
+      return priority;
+    }
+
+
     #endregion
 
     #region mappers

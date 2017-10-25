@@ -425,8 +425,9 @@ div#board {
 
 #exTab3 .tab-content {
   color : #333;
-  background-color: #f5f5f5;
+  background-color: #fff;
   padding : 5px 15px;
+  border-radius: 4px 4px 4px 4px;
 }
 
 
@@ -509,5 +510,29 @@ div#board {
     padding:10px;
 }
 
+.speech-bubble {
+	position: relative;
+	background: #f5f5f6;
+	border-radius: .4em;
+  margin-top: 2em;
+  padding: 15px;
+}
 
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-bottom-color: #f5f5f6;
+	border-top: 0;
+	border-left: 0;
+	margin-left: -10px;
+	margin-top: -20px;
+}
 
+div#projectFilter {
+    margin-bottom: 3em;
+}

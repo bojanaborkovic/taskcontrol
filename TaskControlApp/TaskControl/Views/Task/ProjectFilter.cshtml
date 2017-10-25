@@ -1,0 +1,50 @@
+﻿@model  TaskControl.Models.ProjectFilterViewModel
+
+@{ 
+  string getTasksOnProjectUrl = Url.Action("GetTasksForUserOnProject", "Task");
+}
+
+<div class="btn-group" role="group" aria-label="..." style="float:right" id="projectFilter">
+  @if (Model != null && Model.OwnersProject != null && Model.OwnersProject.Count > 0)
+  {
+    foreach (var item in Model.OwnersProject)
+    {
+      <button type="button" class="btn btn-default projectButton" id="@item.Id">@item.Name</button>
+    }
+  }
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    
+    function GetTasksOnProject(e) {
+      var projectId = e.currentTarget.id;
+      $.ajax({
+        type: "GET",
+        url: '@getTasksOnProjectUrl',
+        data: {
+          projectId: projectId != null ? projectId : null
+        },
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        success: function (result) {
+          // $("#board").html(result);
+        },
+        error: function (result) {
+          //alert('error');
+        }
+      }).done(function (partialViewResult) {
+        $("#tasksTable").html(partialViewResult);
+      });
+
+    }
+
+    $(".projectButton").click(function (e) {
+      e.preventDefault();
+      debugger;
+      GetTasksOnProject(e);
+    });
+
+    });
+</script>
+

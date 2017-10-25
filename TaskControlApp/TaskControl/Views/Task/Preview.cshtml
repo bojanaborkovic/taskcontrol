@@ -1,7 +1,12 @@
-﻿@model TaskControl.Models.TaskViewModel
+﻿@using TaskControl.ViewDataPreparers
+@using TaskControlDTOs
+@model TaskControl.Models.TaskViewModel
 
 @{
   ViewBag.Title = "Preview";
+  var getActivityOnTaskUrl = Url.Action("GetActivityOnTask", "Task");
+  var taskId = Model.Id;
+  var statusesList = new HtmlString(ViewBag.Statuses);
 }
 
 
@@ -12,18 +17,18 @@
       <div id="exTab3" class="container">
         <ul class="nav nav-pills">
           <li class="active">
-            <a href="#1b" data-toggle="tab">Overview</a>
+            <a href="#Overview" data-toggle="tab">Overview</a>
           </li>
           <li>
-            <a href="#2b" data-toggle="tab">Activity</a>
+            <a href="#activity" data-toggle="tab"  id="activityTab">Activity</a>
           </li>
           <li>
-            <a href="#3b" data-toggle="tab">Comments</a>
+            <a href="#commentsTab" data-toggle="tab">Comments</a>
           </li>
         </ul>
 
         <div class="tab-content clearfix">
-          <div class="tab-pane active" id="1b">
+          <div class="tab-pane active" id="Overview">
            
             <br/>
             <i class="glyphicon glyphicon-calendar"></i><label>Due date:</label><span> @Html.DisplayFor(model => model.DueDate)</span>
@@ -41,10 +46,12 @@
             <label>Priority:</label><span>@Html.DisplayFor(model => model.PriorityName)</span>
             <br/>
           </div>
-          <div class="tab-pane" id="2b">
-            <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+          <div class="tab-pane" id="activity">
+            <div id="activityContent">
+             
+            </div>
           </div>
-          <div class="tab-pane" id="3b">
+          <div class="tab-pane" id="commentsTab">
             <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
           </div>
         </div>
@@ -58,3 +65,59 @@
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     @Html.ActionLink("Back to List", "Index")
   </p>
+
+@section scripts
+{
+  <script type="text/javascript">
+    $(document).ready(function () {
+
+      $("#activityTab").click(function () {
+        getActivityOnTask();
+      });
+
+      function getActivityOnTask() {
+        debugger;
+        $.ajax({
+          url: "@getActivityOnTaskUrl",
+          data: { taskId: "@taskId" },
+          success: function (result) {
+            document.getElementById('activityContent').innerHTML = PrepareInfo(result);
+            document.getElementById('activityContent').style.display = "block";
+          }
+        });
+      }
+
+      function PrepareInfo(result) {
+        var htmlText = '';
+
+        if (result != null) {
+          for (var i = 0; i < result.length; i++) {
+
+            if (result[i] != null) {
+              if (result[i].changeType == 0) {
+                htmlText += '<p>User <b>' + result[i].changedByUsername + '</b>  changed status on task <b>' + result[i].taskTitle + '</b> to status:  <b>' + MapStatus(result[0].changedToId) + '</b> on ' + result[i].changedOnString + '</p>';
+              }
+              else {
+                htmlText += '<p>User  <b>' + result[i].changedByUsername + '</b> changed asignee on task  <b>' + result[i].taskTitle + '</b> to asignee: <b>' + MapAsignee(result[0].changedToId) + '</b> on ' + result[i].changedOnString + '</p>';
+              }
+            }
+
+          }
+        }
+
+        return htmlText;
+      }
+
+      function MapStatus(statusId) {
+        var statuses = @Html.Raw(statusesList);
+
+        return "ToDo";
+      }
+
+      function MapAsignee(asigneeId) {
+        return "bojanaborkovic@hotmail.com";
+      }
+
+    });
+  </script>
+}

@@ -76,13 +76,14 @@
   <div class="detailBox">
     <div class="titleBox">
       <label>Project notes</label>
-      <button type="button" class="close" aria-hidden="true">&times;</button>
     </div>
     <div class="commentBox">
 
       <p class="taskDescription">Notes on  @Html.DisplayFor(model => model.Name) project</p>
     </div>
     <div class="actionBox">
+      @if (Model.Notes != null && Model.Notes.Count > 0)
+      {
       <ul class="commentList">
         @foreach (var comment in Model.Notes)
         {
@@ -97,10 +98,11 @@
               </div>
             </div>
           </li>
-     
+
 
         }
         </ul>
+      }
         <form class="form-inline" role="form">
           @*<div class="form-group">
             <input class="form-control" type="text" placeholder="Your comments" />

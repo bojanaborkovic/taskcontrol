@@ -1,0 +1,70 @@
+﻿@using TaskControl.Models
+@using PagedList.Mvc
+
+@model PagedList.IPagedList<TaskSearchViewModel>
+
+<table class="table" id="tasksTable">
+  <thead>
+    <tr>
+      <th>
+        @Html.ActionLink("#", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.IdSortParam))
+        @*@Html.SortIdentifier(currentSort, "Id")*@
+      </th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>IssueType</th>
+      <th>Priority</th>
+      <th>
+        @Html.ActionLink("Status", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.StatusSortParam))
+      @*@Html.SortIdentifier(currentSort, "status")*@
+    </th>
+    <th>
+      @Html.ActionLink("Asignee", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.AsigneeSortParam))
+    @*@Html.SortIdentifier(currentSort, "asignee")*@
+  </th>
+  <th>
+    @Html.ActionLink("DueDate", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.DueDateSortParam))
+  @*@Html.SortIdentifier(currentSort, "duedate")*@
+</th>
+</tr>
+</thead>
+
+  @foreach (var item in Model)
+  {
+    <tbody>
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.TaskId)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.IssueType)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Priority)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Asignee)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.DueDate)
+        </td>
+        <td>
+          <b>@Html.ActionLink("Edit", "Edit", new { taskId = item.TaskId })</b>
+        </td>
+        <td>
+          <b>@Html.ActionLink("Details", "Preview", new { taskId = item.TaskId })</b>
+        </td>
+      </tr>
+    </tbody>
+  }
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

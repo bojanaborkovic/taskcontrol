@@ -9,6 +9,9 @@ using TaskControlDTOs;
 using System;
 using Microsoft.AspNet.Identity;
 using PagedList;
+using Newtonsoft.Json.Serialization;
+using BussinesService.Interfaces.Responses.Task;
+using BussinesService.Interfaces.Responses.Project;
 
 namespace TaskControl.Controllers
 {
@@ -20,52 +23,53 @@ namespace TaskControl.Controllers
     private ProjectServiceClient projectServiceClient = new ProjectServiceClient();
 
     // GET: Tasks
-    public ActionResult Index()
-    {
-      var ret = taskServiceClient.GetAllTasksDetails();
-      List<TaskSearchViewModel> viewModel = new List<TaskSearchViewModel>();
-      if (ret != null && ret.RecordCount > 0)
-      {
-        viewModel = MapToViewModel(ret.Tasks);
-      }
+    //public ActionResult Index()
+    //{
+    //  var ret = taskServiceClient.GetAllTasksDetails();
+    //  List<TaskSearchViewModel> viewModel = new List<TaskSearchViewModel>();
+    //  if (ret != null && ret.RecordCount > 0)
+    //  {
+    //    viewModel = MapToViewModel(ret.Tasks);
+    //  }
 
-      return View("Index", viewModel.ToPagedList(1, 10));
-    }
+    //  return View("Index", viewModel.ToPagedList(1, 10));
+    //}
 
-    [HttpGet]
-    public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 10)
+    public ActionResult Index(string searchString, string sortOption, int page = 1)
     {
+      int pageSize = 10;
       //var usersRet = serviceClient.SearchUsers();
       var tasksRet = taskServiceClient.GetAllTasksDetails();
       ViewBag.CurrentFilter = searchString;
-      pageNumber = pageNumber > 0 ? pageNumber : 1;
+      page = page > 0 ? page : 1;
       pageSize = pageSize > 0 ? pageSize : 10;
 
-      ViewBag.AsigneeSortParam = sortOrder == "asignee" ? "asignee_desc" : "asignee";
-      ViewBag.DueDateSortParam = sortOrder == "duedate" ? "duedate_desc" : "duedate";
-      ViewBag.StatusSortParam = sortOrder == "status" ? "status_desc" : "status";
-      ViewBag.IdSortParam = sortOrder == "Id" ? "Id_desc" : "Id";
+      ViewBag.AsigneeSortParam = sortOption == "asignee" ? "asignee_desc" : "asignee";
+      ViewBag.DueDateSortParam = sortOption == "duedate" ? "duedate_desc" : "duedate";
+      ViewBag.StatusSortParam = sortOption == "status" ? "status_desc" : "status";
+      ViewBag.IdSortParam = sortOption == "Id" ? "Id_desc" : "Id";
 
-      ViewBag.CurrentSort = sortOrder;
+      ViewBag.CurrentSort = sortOption;
 
       List<TaskEntityExtended> sortedTasks = new List<TaskEntityExtended>();
 
       if (!string.IsNullOrEmpty(searchString))
       {
-        tasksRet.Tasks = tasksRet.Tasks.Where(x => x.Title.Contains(searchString) || x.Description.Contains(searchString)).ToList();
+        tasksRet.Tasks = tasksRet.Tasks.Where(x => x.Title.ToLower().Contains(searchString) || x.Description.ToLower().Contains(searchString)).ToList();
       }
 
-      if (searchString != null)
+      long userId = GetUserId();
+
+      var projectsForOwner = projectServiceClient.GetProjectsByOwner(userId);
+
+
+      if (projectsForOwner != null)
       {
-        pageNumber = 1;
-      }
-      else
-      {
-        searchString = currentFilter;
+        ViewBag.OwnersProject = MapOwnersProjects(projectsForOwner);
       }
 
 
-      switch (sortOrder)
+      switch (sortOption)
       {
         case "asignee_desc":
           sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.Asignee).ToList();
@@ -96,7 +100,26 @@ namespace TaskControl.Controllers
 
       var mappedTasks = MapToViewModel(sortedTasks);
 
-      return View("Index", mappedTasks.ToPagedList(pageNumber, pageSize));
+      //return View("Index", mappedTasks.ToPagedList(pageNumber, pageSize));
+      return Request.IsAjaxRequest()
+               ? (ActionResult)PartialView("TaskList", mappedTasks.ToPagedList(page, pageSize))
+               : View(mappedTasks.ToPagedList(page, pageSize));
+    }
+
+    private long GetUserId()
+    {
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+
+
+      if (user != null)
+      {
+        return user.Id;
+      }
+      else
+      {
+        return 0;
+      }
     }
 
     [IssueTypePreparer, StatusPreparer, PriorityPreparer]
@@ -159,6 +182,8 @@ namespace TaskControl.Controllers
     {
       var retTask = taskServiceClient.GetTaskByIdCustom(taskId);
       TaskViewModel model = MapToViewModel(retTask);
+      var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
+      ViewBag.Statuses = JsonConvert.SerializeObject(statuses);
       return View("Preview", model);
 
     }
@@ -188,47 +213,64 @@ namespace TaskControl.Controllers
       }
     }
 
-    private void PrepareViewModel()
+    [HttpGet]
+    public ActionResult GetActivityOnTask(string taskId)
     {
-      var usernames = userServiceClient.GetAllUsers();
-      if (usernames != null && usernames.RecordCount > 0)
+      long taskID = long.Parse(taskId);
+      var ret = taskServiceClient.GetTaskHistory(taskID);
+      var serializedRecords = JsonConvert.SerializeObject(ret.TasksAudit, new JsonSerializerSettings
       {
-        var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
-        ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
-      }
-      var projects = projectServiceClient.GetAllProjects();
-
-      if (projects != null && projects.RecordCount > 0)
-      {
-        ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
-      }
+        ContractResolver = new CamelCasePropertyNamesContractResolver()
+      });
+      return Content(serializedRecords, "application/json");
     }
 
-    private TaskEntity MapToEntity(TaskViewModel model)
+    [HttpGet]
+    [StatusPreparer]
+    public ActionResult GetTasksForUserOnProject(long? projectId)
     {
-      var asigneeRet = userServiceClient.GetUserByUsername(model.Asignee);
-      //var asignee = JsonConvert.DeserializeObject<UserEntity>(asigneeRet);
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+      SearchTasksReturn ret = new SearchTasksReturn();
+      if (user != null)
+      {
+        ret = taskServiceClient.GetTasksForUser(user.Id, projectId);
+      }
 
-      var reporterRet = userServiceClient.GetUserByUsername(model.Reporter);
-      //var reporter = JsonConvert.DeserializeObject<UserEntity>(reporterRet);
+      List<TaskSearchViewModel> mappedTasks = new List<TaskSearchViewModel>();
 
-      var project = projectServiceClient.GetProjectByName(model.ProjectName);
+      if (ret != null && ret.RecordCount > 0)
+      {
+        mappedTasks = MapTasksToViewModel(ret.Tasks);
+      }
 
-      TaskEntity task = new TaskEntity();
-      task.Asignee = asigneeRet != null ? asigneeRet.Id : 0;
-      task.DateCreated = DateTime.UtcNow;
-      task.CreatedBy = model.CreatedBy;
-      task.Description = model.Description;
-      task.DueDate = model.DueDate;
-      task.Reporter = reporterRet != null ? reporterRet.Id : 0;
-      task.IssueType = model.IssueType;
-      task.Priority = model.Priority;
-      task.Status = model.Status;
-      task.ProjectId = project.Id;
-      task.Title = model.Title;
-      task.Id = model.Id;
-      return task;
+
+      return PartialView("TaskList", mappedTasks.ToPagedList(1, 10));
     }
+
+    private List<TaskSearchViewModel> MapTasksToViewModel(List<TaskEntity> tasks)
+    {
+      List<TaskSearchViewModel> viewmodel = new List<TaskSearchViewModel>();
+      foreach (var item in tasks)
+      {
+        viewmodel.Add(new TaskSearchViewModel()
+        {
+          Asignee = item.AsigneeUsername,
+          Description = item.Description,
+          Status = item.StatusName,
+          Project = item.ProjectId.ToString(),
+          Title = item.Title,
+          IssueType = item.IssueTypeName,
+          DateCreated = item.DateCreated,
+          DueDate = item.DueDate,
+          Reporter = item.ReporterName,
+          Priority = item.PriorityName,
+          TaskId = item.Id
+        });
+      }
+      return viewmodel;
+    }
+
 
     #region mappers
 
@@ -277,6 +319,74 @@ namespace TaskControl.Controllers
       taskModel.Id = taskEntity.Id;
 
       return taskModel;
+    }
+
+    private void PrepareViewModel()
+    {
+      var usernames = userServiceClient.GetAllUsers();
+      if (usernames != null && usernames.RecordCount > 0)
+      {
+        var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
+        ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
+      }
+      var projects = projectServiceClient.GetAllProjects();
+
+      if (projects != null && projects.RecordCount > 0)
+      {
+        ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects.Select(x => x.Name));
+      }
+    }
+
+    private TaskEntity MapToEntity(TaskViewModel model)
+    {
+      var asigneeRet = userServiceClient.GetUserByUsername(model.Asignee);
+      //var asignee = JsonConvert.DeserializeObject<UserEntity>(asigneeRet);
+
+      var reporterRet = userServiceClient.GetUserByUsername(model.Reporter);
+      //var reporter = JsonConvert.DeserializeObject<UserEntity>(reporterRet);
+
+      var project = projectServiceClient.GetProjectByName(model.ProjectName);
+
+      TaskEntity task = new TaskEntity();
+      task.Asignee = asigneeRet != null ? asigneeRet.Id : 0;
+      task.DateCreated = DateTime.UtcNow;
+      task.CreatedBy = model.CreatedBy;
+      task.Description = model.Description;
+      task.DueDate = model.DueDate;
+      task.Reporter = reporterRet != null ? reporterRet.Id : 0;
+      task.IssueType = model.IssueType;
+      task.Priority = model.Priority;
+      task.Status = model.Status;
+      task.ProjectId = project.Id;
+      task.Title = model.Title;
+      task.Id = model.Id;
+      return task;
+    }
+
+    private ProjectFilterViewModel MapOwnersProjects(GetProjectReturn projectsForOwner)
+    {
+      ProjectFilterViewModel model = new ProjectFilterViewModel();
+      List<ProjectViewModel> projectsOnDashboard = new List<ProjectViewModel>();
+
+      if (projectsForOwner != null && projectsForOwner.RecordCount > 0)
+      {
+        foreach (var project in projectsForOwner.Projects)
+        {
+          projectsOnDashboard.Add(new ProjectViewModel()
+          {
+            Id = project.Id,
+            Name = project.Name,
+            OwnerId = project.OwnerId,
+            Owner = project.Owner,
+            Description = project.Description
+
+          });
+        }
+      }
+
+      model.OwnersProject = projectsOnDashboard;
+
+      return model;
     }
     #endregion
   }

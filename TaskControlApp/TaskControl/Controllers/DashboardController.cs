@@ -199,7 +199,22 @@ namespace TaskControl.Controllers
       return View("Calendar", model);
     }
 
-   
+
+    [HttpGet]
+    [StatusPreparer]
+    public ActionResult GetTasksOnProject(long projectId)
+    {
+      var ret = taskServiceClient.GetTasksOnProject(projectId);
+      var records = MapTasksToDashboard(ret);
+
+      var serializedRecords = JsonConvert.SerializeObject(records, new JsonSerializerSettings
+      {
+        ContractResolver = new CamelCasePropertyNamesContractResolver()
+      });
+
+      return Content(serializedRecords, "application/json");
+    }
+
 
     // GET: Dashboard/Details/5
     public ActionResult Details(int id)
