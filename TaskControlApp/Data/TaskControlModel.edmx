@@ -59,6 +59,7 @@
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="500" />
           <Property Name="LastName" Type="nvarchar" MaxLength="500" />
+          <Property Name="CultureCode" Type="varchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -335,6 +336,7 @@
         </Association>
         <Function Name="GetAllProjectsWithOwner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllTasksDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+		<Function Name="SearchUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetProjectStatistics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="projectId" Type="bigint" Mode="In" />
         </Function>
@@ -489,6 +491,7 @@
           <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Tasks" Relationship="TaskControlModel.FK_Task_AspNetUsers" FromRole="AspNetUser" ToRole="Task" />
+          <Property Name="CultureCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -818,10 +821,10 @@
           <Parameter Name="taskId" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="GetProjectStatistics" ReturnType="Collection(TaskControlModel.GetProjectStatistics_Result)">
-            <Parameter Name="projectId" Mode="In" Type="Int64" />
+          <Parameter Name="projectId" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="GetTasksAudit">
-          <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="FromDate" Mode="In" Type="DateTime" />
             <Parameter Name="ToDate" Mode="In" Type="DateTime" />
             <Parameter Name="pageNumber" Mode="In" Type="Int32" />
             <Parameter Name="pageSize" Mode="In" Type="Int32" />
@@ -984,6 +987,7 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="TaskControlModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="CultureCode" ColumnName="CultureCode" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -1124,6 +1128,18 @@
                 <ScalarProperty Name="TaskStatus" ColumnName="TaskStatus" />
                 <ScalarProperty Name="Reporter" ColumnName="Reporter" />
                 <ScalarProperty Name="Project" ColumnName="Project" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+		  <FunctionImportMapping FunctionImportName="SearchUsers" FunctionName="TaskControlModel.Store.SearchUsers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.SearchUsersResult">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

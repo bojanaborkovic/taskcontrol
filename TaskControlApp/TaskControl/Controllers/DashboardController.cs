@@ -11,6 +11,7 @@ using Newtonsoft.Json.Serialization;
 using TaskControlDTOs;
 using TaskControl.ViewDataPreparers;
 using BussinesService.Interfaces.Responses.Project;
+using Newtonsoft.Json.Converters;
 
 namespace TaskControl.Controllers
 {
@@ -65,7 +66,7 @@ namespace TaskControl.Controllers
         model.OwnersProjects = MapOwnersProjects(projectsForOwner);
       }
 
-
+     
       ViewBag.TaskList = JsonConvert.SerializeObject(model.TaskViewModel, new JsonSerializerSettings
       {
         ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -137,7 +138,7 @@ namespace TaskControl.Controllers
       var ret = taskServiceClient.GetTaskByIdCustom(taskId);
       var records = MapTaskToDashboard(ret);
 
-      var serializedRecords = JsonConvert.SerializeObject(records);
+      var serializedRecords = JsonConvert.SerializeObject(records, new IsoDateTimeConverter() { DateTimeFormat = "dd-MM-yyyy HH:mm:ss" });
 
       return Content(serializedRecords, "application/json");
     }
@@ -191,6 +192,11 @@ namespace TaskControl.Controllers
       {
         model.OwnersProjects = MapOwnersProjects(projectsForOwner);
       }
+
+      //get user defined language
+      string language = userServiceClient.GetUserLanguage(userId).LanguageCode;
+      string languageCode = language + "_cyrl";
+      ViewBag.Language = languageCode;
 
       ViewBag.TaskList = JsonConvert.SerializeObject(model.TaskViewModel, new JsonSerializerSettings
       {

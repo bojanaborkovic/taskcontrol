@@ -127,6 +127,18 @@ namespace TaskControlAPI
             routeTemplate: "users/update",
             defaults: new { controller = "User", action = "UpdateUser" }
             );
+
+      config.Routes.MapHttpRoute(
+            name: "GetUserLanguage",
+            routeTemplate: "users/getuserlanguage",
+            defaults: new { controller = "User", action = "GetUserLanguage" }
+            );
+
+      config.Routes.MapHttpRoute(
+            name: "SetUserLanguage",
+            routeTemplate: "users/setuserlanguage",
+            defaults: new { controller = "User", action = "SetUserLanguage" }
+            );
       #endregion
 
       #region roles routes

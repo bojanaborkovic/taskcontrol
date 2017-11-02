@@ -13,6 +13,8 @@
     }
   }
 </div>
+<br/>
+<a href="#" id="DownloadAttachment" class="btn btn-info"><span class="glyphicon glyphicon-export"></span> @Resources.Resources.ExportToExcel_Button</a>
 
 <script type="text/javascript">
   $(document).ready(function () {
@@ -43,6 +45,7 @@
       e.preventDefault();
       debugger;
       GetTasksOnProject(e);
+      $("#mainPagination").hide();
     });
 
     });

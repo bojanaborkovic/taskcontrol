@@ -10,20 +10,21 @@
         @Html.ActionLink("#", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.IdSortParam))
         @*@Html.SortIdentifier(currentSort, "Id")*@
       </th>
-      <th>Title</th>
-      <th>Description</th>
-      <th>IssueType</th>
-      <th>Priority</th>
+      <th>@Resources.Resources.Title_Label</th>
+      <th>@Resources.Resources.Description_Label</th>
+      <th>@Resources.Resources.IssueType_Label</th>
+      <th>@Resources.Resources.Priority_Label</th>
       <th>
-        @Html.ActionLink("Status", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.StatusSortParam))
+        @Html.ActionLink(Resources.Resources.Status_Label, "Index", "Status")
       @*@Html.SortIdentifier(currentSort, "status")*@
     </th>
     <th>
-      @Html.ActionLink("Asignee", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.AsigneeSortParam))
+      @Html.ActionLink(Resources.Resources.Assignee_Label, "Index", "Asignee")
     @*@Html.SortIdentifier(currentSort, "asignee")*@
   </th>
   <th>
-    @Html.ActionLink("DueDate", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.DueDateSortParam))
+    @*@Html.ActionLink(Resources.Resources.DueDate_Label, "Index", "DueDate", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.DueDateSortParam))*@
+    @Html.ActionLink(Resources.Resources.DueDate_Label, "Index", "DueDate")
   @*@Html.SortIdentifier(currentSort, "duedate")*@
 </th>
 </tr>
@@ -58,13 +59,15 @@
           @Html.DisplayFor(modelItem => item.DueDate)
         </td>
         <td>
-          <b>@Html.ActionLink("Edit", "Edit", new { taskId = item.TaskId })</b>
+          <b>@Html.ActionLink(Resources.Resources.Edit_Link, "Edit", new { taskId = item.TaskId })</b>
         </td>
         <td>
-          <b>@Html.ActionLink("Details", "Preview", new { taskId = item.TaskId })</b>
+          <b>@Html.ActionLink(Resources.Resources.Details_Label, "Preview", new { taskId = item.TaskId })</b>
         </td>
       </tr>
     </tbody>
   }
 </table>
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+<div id="mainPagination">
+  @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>

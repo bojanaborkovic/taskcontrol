@@ -19,7 +19,12 @@ namespace TaskControl.ServiceClients
     public UserServiceClient(string repoName)
     {
       endpoint = string.Empty;
-      BaseUri = new Uri(string.Format("{0}{1}", ConfigurationManager.AppSettings["TaskControlApiURL"], repoName));
+      string apiURL = ConfigurationManager.AppSettings["TaskControlApiURL"];
+      if(string.IsNullOrEmpty(apiURL))
+      {
+        apiURL = "http://localhost/TaskControlAPI/";
+      }
+      BaseUri = new Uri(string.Format("{0}{1}", apiURL , repoName));
       client.DefaultRequestHeaders.Accept.Clear();
       client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
@@ -80,5 +85,17 @@ namespace TaskControl.ServiceClients
       return Get<SearchUsersReturn>(new Uri(string.Format("{0}/{1}", BaseUri.ToString(), "search")));
     }
 
+    public UserLanguageReturn GetUserLanguage(long userId)
+    {
+      string uri = string.Format("{0}/{1}?userId={2}", BaseUri.ToString(), "getuserlanguage", userId);
+      Uri getUserLanguageUrl = new Uri(uri);
+      return Get<UserLanguageReturn>(getUserLanguageUrl);
+    }
+
+    public UserLanguageReturn SetUserLanguage(UserLanguageReturn userLanguage)
+    {
+      string uri = string.Format("{0}/{1}", "users", "setuserlanguage");
+      return ExecutePost<UserLanguageReturn>(uri, userLanguage);
+    }
   }
 }

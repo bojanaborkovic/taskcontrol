@@ -48,4 +48,14 @@ namespace BussinesService.Interfaces.Responses.User
     public int RecordCount { get; set; }
   }
 
+  [DataContract]
+  public class UserLanguageReturn : BasicReturn
+  {
+    [DataMember]
+    public long UserId { get; set; }
+
+    [DataMember]
+    public string LanguageCode { get; set; }
+  }
+
 }

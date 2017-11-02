@@ -17,13 +17,13 @@
       <div id="exTab3" class="container">
         <ul class="nav nav-pills">
           <li class="active">
-            <a href="#Overview" data-toggle="tab">Overview</a>
+            <a href="#Overview" data-toggle="tab">@Resources.Resources.Overview_Tab</a>
           </li>
           <li>
-            <a href="#activity" data-toggle="tab"  id="activityTab">Activity</a>
+            <a href="#activity" data-toggle="tab"  id="activityTab">@Resources.Resources.Activity_Tab</a>
           </li>
           <li>
-            <a href="#commentsTab" data-toggle="tab">Comments</a>
+            <a href="#commentsTab" data-toggle="tab">@Resources.Resources.Comments_Tab</a>
           </li>
         </ul>
 
@@ -62,8 +62,8 @@
 
 
   <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink(Resources.Resources.Edit_Link, "Edit", new {  taskId = Model.Id  }) |
+    @Html.ActionLink(Resources.Resources.BackToList_Link, "Index")
   </p>
 
 @section scripts

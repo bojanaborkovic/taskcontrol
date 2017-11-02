@@ -2,14 +2,14 @@
 
 @model  UserInRoleViewModel
 @{
-  ViewBag.Title = "AddUserToRole";
+  ViewBag.Title = Resources.Resources.АddUserToRole_Button;
 }
 
 
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Add user to role</h3>
+        <h3 class="modal-title">@Resources.Resources.АddUserToRole_Button</h3>
       </div>
 
       <div class="modal-body">
@@ -23,11 +23,11 @@
         {
 
       <div class="form-group">
-        @Html.LabelFor(x => x.RoleId)
+        @Resources.Resources.UserRole_Label
         @Html.DropDownListFor(x => x.RoleId, Model.UserRoles, "Select Role", new { @class = "form-control" })
       </div>
       <div class="form-group">
-        @Html.LabelFor(x => x.UserId)
+        @Resources.Resources.User_Label
         @Html.DropDownListFor(x => x.UserId, Model.Users, "Select User", new { @class = "form-control" })
       </div>
 
@@ -35,8 +35,8 @@
 
 
 
-      <button type="submit" class="btn btn-primary">Save changes</button>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">@Resources.Resources.SaveChanged_Button</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">@Resources.Resources.Close_Button</button>
 
 
 

@@ -1,5 +1,6 @@
 ﻿using BusinessServices;
 using BusinessServices.Interfaces;
+using BussinesService.Interfaces.Responses.User;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,42 @@ namespace TaskControlAPI.Controllers
       {
 
         _log.DebugFormat("GetUserByUsername finished with : {0}", user.ToString());
+        return Request.CreateResponse(HttpStatusCode.OK, user);
+
+      }
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "User not found");
+
+    }
+
+    [HttpGet]
+    [ActionName("GetUserLanguage")]
+    public HttpResponseMessage GetUserLanguage([FromUri] long userId)
+    {
+      _log.DebugFormat("GetUserLanguage invoked for userId : {0}", userId);
+
+      var user = _userService.GetUserLanguage(userId);
+      if (user != null)
+      {
+
+        _log.DebugFormat("GetUserLanguage finished with : {0}", user.ToString());
+        return Request.CreateResponse(HttpStatusCode.OK, user);
+
+      }
+      return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "User not found");
+
+    }
+
+    [HttpPost]
+    [ActionName("SetUserLanguage")]
+    public HttpResponseMessage SetUserLanguage(UserLanguageReturn userLanguage)
+    {
+      _log.DebugFormat("SetUserLanguage invoked for userId : {0} and language : {1}", userLanguage.UserId, userLanguage.LanguageCode);
+
+      var user = _userService.SetUserLanguage(userLanguage);
+      if (user != null)
+      {
+
+        _log.DebugFormat("SetUserLanguage finished with : {0}", userLanguage.ToString());
         return Request.CreateResponse(HttpStatusCode.OK, user);
 
       }

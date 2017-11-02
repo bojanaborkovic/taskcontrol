@@ -1,22 +1,24 @@
 ﻿@model TaskControl.Models.DashboardViewModel
 
 @{
-  ViewBag.Title = "Calendar";
+  ViewBag.Title = Resources.Resources.Calendar_Menu_Item;
   var taskList = ViewBag.TaskList;
   string getMyTasksUrl = Url.Action("GetTaskForUser", "Dashboard");
   string getAllTasksUrl = Url.Action("GetAllTasks", "Dashboard");
   string getTasksOnProjectUrl = Url.Action("GetTasksOnProject", "Dashboard");
+  string getTaskInfoById = Url.Action("GetTaskInfoById", "Dashboard");
+
   string userId = ViewBag.UserId;
 }
 
 
 <div class="row">
 
-    <h2>Calendar</h2>
+    <h2>@Resources.Resources.Calendar_Menu_Item</h2>
 
     <div class="btn-group">
-      <button class="btn btn-primary" id="myTasks">My tasks</button>
-      <button class="btn btn-secondary btn-success" id="allTasks">All tasks</button>
+      <button class="btn btn-primary" id="myTasks">@Resources.Resources.MyTasks_Button</button>
+      <button class="btn btn-secondary btn-success" id="allTasks">@Resources.Resources.AllTasks_Button</button>
     </div>
 
   <div class="btn-group" role="group" aria-label="..." style="float:right">
@@ -31,24 +33,69 @@
     </div>
 
 
-</div>
+  <div class="modal fade" id="taskInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">×</a>
+          <h3>This is a Modal Heading</h3>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn" data-dismiss="modal">Close</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
 
 <script type="text/javascript">
   $(document).ready(function () {
     //var event = { id: 1, title: 'SuperCoolProject', start: new Date() };
     //var newEvent = {id : 2, title: 'Future project', start: '2017-09-20'}
     $('#mainCalendar').fullCalendar({
-      defaultDate: '2017-09-05',
+      //defaultDate: '2017-09-05',
       editable: true,
-      eventLimit: true, // allow "more" link when too many events
-      //eventSources: [
-      //  '/feed1.php',
-      //  '/feed2.php'
-      //]
+      eventLimit: false, 
+      header: {
+        right: 'prev,next today',
+        center: 'title',
+        left: 'month,agendaWeek,agendaDay,listMonth',
+        weekNumbers: true,
+        navLinks: true, // can click day/week names to navigate views
+      },
+      locale: '@ViewBag.Language',
+      eventClick: function(calEvent, jsEvent, view) {
+        debugger;
+        $.ajax({
+          type: "GET",
+          url: '@getTaskInfoById',
+          data: {
+            taskId: calEvent.id
+          },
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (result) {
+            $('#taskInfo .modal-body').html(PrepareInfo(result));
+            $('#taskInfo .modal-header').html(calEvent.title);
+            $('#taskInfo').modal('show');
+          },
+          error: function (result) {
+            //alert('error');
+          }
+        });
+        
+        
+      }
     });
     var listOfTasks = @Html.Raw(taskList);
 
     $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
+
 
     $(".projectButton").click(function(e) {
       e.preventDefault();
@@ -114,6 +161,26 @@
         }
       });
     });
+
+
+    //get task info on click
+    function GetTaskInfo(taskId) {
+      // exucute ajax call to get info about the task
+      
+
+    }
+
+
+    function PrepareInfo(result) {
+      var htmlText = '';
+      for (var key in result) {
+        if (result.hasOwnProperty(key)) {
+          htmlText += '<p> <b>' + key + '</b>: ' + result[key] + '</p>';
+        }
+      }
+
+      return htmlText;
+    }
 
   });
 </script>

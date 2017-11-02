@@ -118,6 +118,51 @@ namespace BusinessServices
       return ret;
     }
 
+    public UserLanguageReturn GetUserLanguage(long userId)
+    {
+      UserLanguageReturn ret = new UserLanguageReturn();
+      try
+      {
+        var user = _unitOfWork.UserRepository.GetByID(userId);
+        if (user != null)
+        {
+          ret.LanguageCode = user.CultureCode;
+          ret.UserId = user.Id;
+        }
+      }
+      catch(Exception ex)
+      {
+        _log.ErrorFormat("Error during user... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+        ret.StatusCode = "Error";
+      }
+      return ret;
+    }
+
+
+    public UserLanguageReturn SetUserLanguage(UserLanguageReturn userLanguage)
+    {
+      UserLanguageReturn ret = new UserLanguageReturn();
+      try
+      {
+
+        var user = _unitOfWork.UserRepository.GetByID(userLanguage.UserId);
+        user.CultureCode = userLanguage.LanguageCode;
+        _unitOfWork.UserRepository.Update(user);
+        _unitOfWork.Save();
+
+        ret.UserId = userLanguage.UserId;
+        ret.LanguageCode = userLanguage.LanguageCode;
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during user update... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+        ret.StatusCode = "Error";
+      }
+      return ret;
+    }
+
     public BaseUserReturn GetUserByUsername(string username)
     {
       BaseUserReturn ret = new BaseUserReturn();
@@ -316,7 +361,7 @@ namespace BusinessServices
           Email = user.Email,
           FirstName = user.FirstName,
           LastName = user.LastName,
-          RoleName = user.RoleName
+          RoleName = string.IsNullOrEmpty(user.RoleName) ? "N/A" : user.RoleName
         });
       }
 

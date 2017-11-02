@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About_Menu_Item" xml:space="preserve">
+    <value>О апликацији</value>
+  </data>
+  <data name="ActivityStream_Label_Dashboard" xml:space="preserve">
+    <value>Активности</value>
+  </data>
+  <data name="Assignee_Label" xml:space="preserve">
+    <value>Задужени</value>
+  </data>
+  <data name="BackToList_Link" xml:space="preserve">
+    <value>Назад на листу</value>
+  </data>
+  <data name="Calendar_Menu_Item" xml:space="preserve">
+    <value>Календар</value>
+  </data>
+  <data name="CompletedCount_Label" xml:space="preserve">
+    <value>Укупно 'урађено'</value>
+  </data>
+  <data name="Complete_ProgressBar_Label" xml:space="preserve">
+    <value>Урађено</value>
+  </data>
+  <data name="Contact_Menu_Item" xml:space="preserve">
+    <value>Контакт</value>
+  </data>
+  <data name="CreateNewProject_Button" xml:space="preserve">
+    <value>Креирај нови пројекат</value>
+  </data>
+  <data name="CreateNewTask_Button" xml:space="preserve">
+    <value>Креирај нови задатак</value>
+  </data>
+  <data name="Create_Button" xml:space="preserve">
+    <value>Креирај</value>
+  </data>
+  <data name="Description_Label" xml:space="preserve">
+    <value>Опис</value>
+  </data>
+  <data name="Details_Label" xml:space="preserve">
+    <value>Детаљи</value>
+  </data>
+  <data name="Done_PlanningBoard_Title" xml:space="preserve">
+    <value>Урађено</value>
+  </data>
+  <data name="DueDate_Label" xml:space="preserve">
+    <value>Датум завршетка</value>
+  </data>
+  <data name="Email_Label" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="FindByName_Label" xml:space="preserve">
+    <value>Претражи по називу</value>
+  </data>
+  <data name="Hello_Label" xml:space="preserve">
+    <value>Здраво</value>
+  </data>
+  <data name="Home_Menu_Item" xml:space="preserve">
+    <value>Почетна</value>
+  </data>
+  <data name="InProgressCount_Label" xml:space="preserve">
+    <value>Укупно 'у изради'</value>
+  </data>
+  <data name="InProgress_PlanningBoard_Title" xml:space="preserve">
+    <value>У изради</value>
+  </data>
+  <data name="IssueType_Label" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="LogIn_Button" xml:space="preserve">
+    <value>Пријави се</value>
+  </data>
+  <data name="Login_Menu_Item" xml:space="preserve">
+    <value>Пријава</value>
+  </data>
+  <data name="LogOff_Label" xml:space="preserve">
+    <value>Одјавите се</value>
+  </data>
+  <data name="Name_Label" xml:space="preserve">
+    <value>Назив</value>
+  </data>
+  <data name="NewProject_Label" xml:space="preserve">
+    <value>Нови пројекат</value>
+  </data>
+  <data name="Owner_Label" xml:space="preserve">
+    <value>Одговорни</value>
+  </data>
+  <data name="Password_Label" xml:space="preserve">
+    <value>Лозинка</value>
+  </data>
+  <data name="PlanningBoard_Label_Dashboard" xml:space="preserve">
+    <value>Планер</value>
+  </data>
+  <data name="Priority_Label" xml:space="preserve">
+    <value>Приоритет</value>
+  </data>
+  <data name="Projects_Label" xml:space="preserve">
+    <value>Пројекти</value>
+  </data>
+  <data name="Projects_Menu_Item" xml:space="preserve">
+    <value>Пројекти</value>
+  </data>
+  <data name="RegisterNewUser_Link" xml:space="preserve">
+    <value>Региструј се као нови корисник</value>
+  </data>
+  <data name="Register_Menu_Item" xml:space="preserve">
+    <value>Региструј се</value>
+  </data>
+  <data name="Roles_Menu_Item" xml:space="preserve">
+    <value>Улоге</value>
+  </data>
+  <data name="Search_Label" xml:space="preserve">
+    <value>Претражи!</value>
+  </data>
+  <data name="Status_Label" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Tasks_Label" xml:space="preserve">
+    <value>Задаци</value>
+  </data>
+  <data name="Tasks_Menu_Item" xml:space="preserve">
+    <value>Задаци</value>
+  </data>
+  <data name="Title_Label" xml:space="preserve">
+    <value>Назив</value>
+  </data>
+  <data name="ToDoCount_Label" xml:space="preserve">
+    <value>Укупно 'за урадити'</value>
+  </data>
+  <data name="ToDo_PlanningBoard_Title" xml:space="preserve">
+    <value>Урадити</value>
+  </data>
+  <data name="TotalProgress_Label" xml:space="preserve">
+    <value>Укупно урађено</value>
+  </data>
+  <data name="Users_Menu_Item" xml:space="preserve">
+    <value>Корисници</value>
+  </data>
+  <data name="Edit_Link" xml:space="preserve">
+    <value>Уреди</value>
+  </data>
+  <data name="ExportToExcel_Button" xml:space="preserve">
+    <value>Експортуј у Ексел</value>
+  </data>
+  <data name="NewTask_Title" xml:space="preserve">
+    <value>Нови таск</value>
+  </data>
+  <data name="Reporter_Label" xml:space="preserve">
+    <value>Пријавио</value>
+  </data>
+  <data name="Activity_Tab" xml:space="preserve">
+    <value>Aктивност</value>
+  </data>
+  <data name="AllTasks_Button" xml:space="preserve">
+    <value>Сви задаци</value>
+  </data>
+  <data name="Comments_Tab" xml:space="preserve">
+    <value>Коментари</value>
+  </data>
+  <data name="MyTasks_Button" xml:space="preserve">
+    <value>Моји задаци</value>
+  </data>
+  <data name="Overview_Tab" xml:space="preserve">
+    <value>Преглед</value>
+  </data>
+  <data name="Save_Button" xml:space="preserve">
+    <value>Сачувај</value>
+  </data>
+  <data name="AddNewUser_Button" xml:space="preserve">
+    <value>Додај новог корисника</value>
+  </data>
+  <data name="FirstName_Label" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="LastName_Label" xml:space="preserve">
+    <value>Презиме</value>
+  </data>
+  <data name="SelectedProject_Label" xml:space="preserve">
+    <value>Изабрани пројекат:</value>
+  </data>
+  <data name="Username_Label" xml:space="preserve">
+    <value>Koрисничко име</value>
+  </data>
+  <data name="ConfirmPassword_Label" xml:space="preserve">
+    <value>Потврди лозинку</value>
+  </data>
+  <data name="CreateNewUser_Label" xml:space="preserve">
+    <value>Креирај новог корисника</value>
+  </data>
+  <data name="PhoneNumber_Label" xml:space="preserve">
+    <value>Број телефона</value>
+  </data>
+  <data name="AddNewRole_Button" xml:space="preserve">
+    <value>Додај нову улогу</value>
+  </data>
+  <data name="BackButton_Label" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="DateCreated_Label" xml:space="preserve">
+    <value>Датум креирања</value>
+  </data>
+  <data name="RoleName_Label" xml:space="preserve">
+    <value>Улога</value>
+  </data>
+  <data name="Roles_Label" xml:space="preserve">
+    <value>Улоге</value>
+  </data>
+  <data name="АddUserToRole_Button" xml:space="preserve">
+    <value>Додај корисника у улогу</value>
+  </data>
+  <data name="Account_Title" xml:space="preserve">
+    <value>Налог</value>
+  </data>
+  <data name="ChangeSettings_Label" xml:space="preserve">
+    <value>Промјени поставке налога</value>
+  </data>
+  <data name="ChangeYourLanguage_Label" xml:space="preserve">
+    <value>Промјени језик</value>
+  </data>
+  <data name="ChangeYourPassword_Label" xml:space="preserve">
+    <value>Промјени лозинку</value>
+  </data>
+  <data name="Close_Button" xml:space="preserve">
+    <value>Затвори</value>
+  </data>
+  <data name="CreateNewRole_Title" xml:space="preserve">
+    <value>Креирај нову улогу</value>
+  </data>
+  <data name="Language_Label" xml:space="preserve">
+    <value>Jезик</value>
+  </data>
+  <data name="NewRole_Label" xml:space="preserve">
+    <value>Нова улога</value>
+  </data>
+  <data name="Page_Label" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Page_Of_Label" xml:space="preserve">
+    <value>од</value>
+  </data>
+  <data name="ProjectAccess_Title" xml:space="preserve">
+    <value>Приступ пројектима</value>
+  </data>
+  <data name="SaveChanged_Button" xml:space="preserve">
+    <value>Сачувај промјене</value>
+  </data>
+  <data name="UserRole_Label" xml:space="preserve">
+    <value>Корисничка улога</value>
+  </data>
+  <data name="User_Label" xml:space="preserve">
+    <value>Корисник</value>
+  </data>
+</root>

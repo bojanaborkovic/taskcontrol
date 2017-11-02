@@ -20,5 +20,8 @@ namespace BusinessServices.Interfaces
     BasicReturn AddUserToRole(UserInRoleEntity userInRole);
     RoleReturn AddNewRole(RoleEntity role);
     SearchUsersReturn SearchUsers();
+    UserLanguageReturn GetUserLanguage(long userId);
+
+    UserLanguageReturn SetUserLanguage(UserLanguageReturn userLanguage);
   }
 }

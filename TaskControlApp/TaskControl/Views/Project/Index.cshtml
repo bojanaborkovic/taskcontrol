@@ -1,14 +1,14 @@
 ﻿
 @model   IEnumerable<TaskControl.Models.ProjectViewModel>
 @{
-    ViewBag.Title = "Projects";
+    ViewBag.Title = Resources.Resources.Projects_Label;
 }
 
-<h2>Projects</h2>
+<h2> @Resources.Resources.Projects_Label</h2>
 
 <p>
   <button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Project")'">
-    Create new project
+    @Resources.Resources.CreateNewProject_Button
   </button>
 </p>
 
@@ -28,7 +28,7 @@
 				</h2>
 
 				<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
-					<span>Owner : @Html.DisplayFor(modelItem => item.Owner)</span>
+					<span>@Resources.Resources.Owner_Label : @Html.DisplayFor(modelItem => item.Owner)</span>
 					
 					<br />
 					<br />
@@ -49,7 +49,7 @@
 				</div>
         <div>
          
-         @Html.ActionLink("Details", "ViewProject", new { projectId = item.Id }, new { @class = "btn btn-primary" })
+         @Html.ActionLink(Resources.Resources.Details_Label, "ViewProject", "Project", new { projectId = item.Id }, new { @class = "btn btn-primary" })
         </div>
 			</div>
 		</div>

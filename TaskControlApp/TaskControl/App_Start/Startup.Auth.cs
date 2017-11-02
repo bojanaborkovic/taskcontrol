@@ -8,6 +8,8 @@ using Owin;
 using TaskControl.Models;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
+using System.Web.Mvc;
+using TaskControl.App_Start;
 
 namespace TaskControl
 {
@@ -26,6 +28,8 @@ namespace TaskControl
 
       log4net.Config.XmlConfigurator.Configure();
 
+      //use localized controller activator for every controller
+      ControllerBuilder.Current.SetControllerFactory(new DefaultControllerFactory(new LocalizedControllerActivator()));
 
 
       // Enable the application to use a cookie to store information for the signed in user

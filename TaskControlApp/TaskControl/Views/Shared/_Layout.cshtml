@@ -8,6 +8,8 @@
 
   <link rel="stylesheet" href="~/Content/dist/css/app.min.css">
   <link rel="stylesheet" href="~/Content/site.css">
+  <link rel="stylesheet" href="~/Content/fullcalendar.min.css" />
+  <link rel="stylesheet" href="~/Content/fullcalendar.print.css" media="print"/>
 
  
   
@@ -20,7 +22,7 @@
 
   <script src="~/Scripts/masonry.pkgd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/locale/sr-cyrl.js"></script>
 	
 
 </head>
@@ -40,14 +42,14 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Dashboard")</li>
-										<li>@Html.ActionLink("Projects", "Index", "Project")</li>
-										<li>@Html.ActionLink("Tasks", "Index", "Task")</li>
-                    <li>@Html.ActionLink("Calendar", "Calendar", "Dashboard")</li>
-										<li>@Html.ActionLink("Users", "Index", "User")</li>
-										<li>@Html.ActionLink("Roles", "Index", "Roles")</li>
-										<li>@Html.ActionLink("About", "About", "Home")</li>
-										<li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink(@Resources.Resources.Home_Menu_Item, "Index", "Dashboard")</li>
+										<li>@Html.ActionLink(@Resources.Resources.Projects_Menu_Item, "Index", "Project")</li>
+										<li>@Html.ActionLink(@Resources.Resources.Tasks_Menu_Item, "Index", "Task")</li>
+                    <li>@Html.ActionLink(@Resources.Resources.Calendar_Menu_Item, "Calendar", "Dashboard")</li>
+										<li>@Html.ActionLink(@Resources.Resources.Users_Menu_Item, "Index", "User")</li>
+										<li>@Html.ActionLink(@Resources.Resources.Roles_Menu_Item, "Index", "Roles")</li>
+										<li>@Html.ActionLink(@Resources.Resources.About_Menu_Item, "About", "Home")</li>
+										<li>@Html.ActionLink(@Resources.Resources.Contact_Menu_Item, "Contact", "Home")</li>
                     
 					
                 </ul>

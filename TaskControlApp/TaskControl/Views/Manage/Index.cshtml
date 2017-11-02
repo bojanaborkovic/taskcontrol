@@ -1,22 +1,22 @@
 ﻿@model TaskControl.Models.IndexViewModel
 @{
-    ViewBag.Title = "Account";
+    ViewBag.Title = Resources.Resources.Account_Title;
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>@Resources.Resources.Account_Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
 	
-    <h4>Change your account settings</h4>
+    <h4>@Resources.Resources.ChangeSettings_Label</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>Password:</dt>
+        <dt>@Resources.Resources.Password_Label:</dt>
         <dd>
             [
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                @Html.ActionLink(@Resources.Resources.ChangeYourPassword_Label, "ChangePassword")
             }
             else
             {
@@ -24,6 +24,13 @@
             }
             ]
         </dd>
+      <dt>@Resources.Resources.Language_Label:</dt>
+      <dd>
+        [
+          @Html.ActionLink(Resources.Resources.ChangeYourLanguage_Label, "ChangeLanguage")
+        ]
+      </dd>
+
         @*<dt>External Logins:</dt>
         <dd>
             @Model.Logins.Count [

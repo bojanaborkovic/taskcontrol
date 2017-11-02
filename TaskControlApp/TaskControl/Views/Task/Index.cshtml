@@ -4,7 +4,7 @@
 @model  PagedList.IPagedList<TaskSearchViewModel>
 
 @{
-  ViewBag.Title = "Tasks";
+  ViewBag.Title = Resources.Resources.Tasks_Label;
   string currentFilter = ViewBag.CurrentFilter;
   string currentSort = ViewBag.CurrentSort;
 
@@ -15,17 +15,20 @@
   }
 }
 
-<h2 class="text-primary">Tasks</h2>
+<h2 class="text-primary">@Resources.Resources.Tasks_Label</h2>
 <br />
 <button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Task")'">
-  Create new task
+  @Resources.Resources.CreateNewTask_Button
 </button>
 <br />
 <br />
+
 <p>
-  Find by name: <input id="SearchString" name="SearchString" type="text" value="" />
-  <input type="button" value="Search" id="btnSearch" />
+  @Resources.Resources.FindByName_Label <input id="SearchString" name="SearchString" type="text" value="" />
+  <input type="button" value="@Resources.Resources.Search_Label" id="btnSearch" />
 </p>
+
+
 
 <div id="projectFiltering">
   @Html.Partial("ProjectFilter", (ProjectFilterViewModel)ViewBag.OwnersProject)
@@ -42,6 +45,23 @@
   <script type="text/javascript">
 
     $(document).ready(function () {
+
+
+      $("#DownloadAttachment").click(function () {
+        $.ajax(
+        {
+          url: '@Url.Action("GenerateExcel", "Task")',
+          contentType: 'application/json; charset=utf-8',
+          datatype: 'json',
+          type: "GET",
+          success: function () {
+            window.location = '@Url.Action("GenerateExcel", "Task")';
+          }
+        });
+
+      });
+
+
       // Adding popstate event listener to handle browser back button
       window.addEventListener("popstate", function (e) {
         debugger;
@@ -52,6 +72,7 @@
           }
         });
       });
+
 
       function ChangeUrl(page, url) {
         if (typeof (history.pushState) != "undefined") {
@@ -106,7 +127,9 @@
             searchString = '&searchString=' + searchString;
           }
           var url = $(this).attr('href') + searchString;
+
           console.log(url);
+
           $.ajax({
             url: url,
             success: function (result) {
@@ -120,9 +143,10 @@
         $('body').on('click', '#TaskList .table a', function (event) {
 
           event.preventDefault();
-          var link = $(this).text();
+          // var link = $(this).text();
+          var link = event.currentTarget.href.substr(this.href.lastIndexOf('/') + 1);
 
-          if (link == "Edit" || link == "Details") {
+          if (link.includes("Edit") || link.includes("Preview")) {
             window.location = event.target.href;
           }
           else {
@@ -134,30 +158,35 @@
               searchString = '&searchString=' + searchString;
             }
 
-            var columnToSort = $(this).text();
+            //var columnToSort = $(this).text();
+            var columnToSort = event.currentTarget.href.substr(this.href.lastIndexOf('/') + 1);
 
-            var currentSortOption = getUrlVars()['sortOption'];
+
+            //var currentSortOption = getUrlVars()['sortOption'];
+            var initialOrder = '_acs';
+            var currentSortOption = columnToSort.toLowerCase() + initialOrder;
+
             console.log(currentSortOption);
             var sort;
 
             switch (currentSortOption) {
               case "asignee_acs":
-                sort = 'sortOption=asignee_desc';
+                sort = 'asignee_desc';
                 break;
               case "asignee_desc":
-                sort = 'sortOption=asignee_acs';
+                sort = 'asignee_acs';
                 break;
               case "duedate_acs":
-                sort = 'sortOption=duedate_desc';
+                sort = 'duedate_desc';
                 break;
               case "duedate_desc":
-                sort = 'sortOption=duedate_acs';
+                sort = 'duedate_acs';
                 break;
               case "status_acs":
-                sort = 'sortOption=status_desc';
+                sort = 'status_desc';
                 break;
               case "status_desc":
-                sort = 'sortOption=status_acs';
+                sort = 'status_acs';
                 break;
               default:
                 sort = '';
@@ -169,17 +198,17 @@
             switch (columnToSort) {
               case 'Asignee':
                 if (currentSortOption != 'asignee_acs' && currentSortOption != 'asignee_desc') {
-                  sort = 'sortOption=asignee_acs';
+                  sort = 'asignee_desc';
                 }
                 break;
               case 'DueDate':
                 if (currentSortOption != 'duedate_acs' && currentSortOption != 'duedate_desc') {
-                  sort = 'sortOption=duedate_acs';
+                  sort = 'duedate_decs';
                 }
                 break;
               case 'Status':
                 if (currentSortOption != 'status_acs' && currentSortOption != 'status_desc') {
-                  sort = 'sortOption=status_desc';
+                  sort = 'status_desc';
                 }
                 break;
               default:
@@ -194,12 +223,22 @@
             var url = '/Task/Index?' + searchString + sort;
 
             $.ajax({
-              url: url,
+              url: "@indexUrl",
+              data: { sortOption : sort },
               success: function (result) {
-                ChangeUrl('index', url);
+               // ChangeUrl("index", "/Task/Index?sortOption=" + sort);
                 $('#TaskList').html(result);
               }
             });
+
+            //$.ajax({
+            //  url: url,
+            //  type: "GET",
+            //  success: function (result) {
+            //    ChangeUrl('index', url);
+            //    $('#TaskList').html(result);
+            //  }
+            //});
 
           }
 

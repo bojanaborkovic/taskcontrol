@@ -4,7 +4,7 @@
 @model PagedList.IPagedList<UserViewModel>
 
  @{
-   ViewBag.Title = "Users";
+   ViewBag.Title = Resources.Resources.Users_Menu_Item;
    string currentFilter = ViewBag.CurrentFilter;
    string currentSort = ViewBag.CurrentSort;
    if (string.IsNullOrEmpty(currentSort))
@@ -12,10 +12,10 @@
      currentSort = "Id_desc";
    }
 }
-<h2 class="text-primary">Users</h2>
+<h2 class="text-primary"> @Resources.Resources.Users_Menu_Item</h2>
 <br/>
 <button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("CreateUser", "User")'">
-	Add new user
+	@Resources.Resources.AddNewUser_Button
 </button>
 <br/>
 <br/>
@@ -26,14 +26,14 @@
   <form>
     <div class="form-group">
 
-			@Html.Label("Find by name:", htmlAttributes: new { @class = "control-label" })
+			@Html.Label(Resources.Resources.FindByName_Label, htmlAttributes: new { @class = "control-label" })
 			<div class="col-md-10">
 				@Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
 				<br/>
 				
 				</div>
 			<div class="col-md-offset-10">
-				<input type="submit" value="Search" class="btn btn-primary btn-lg" id="searchUsers" />
+				<input type="submit" value="@Resources.Resources.Search_Label" class="btn btn-primary btn-lg" id="searchUsers" />
 			</div>
 			</div>
 			
@@ -53,16 +53,16 @@
           @Html.SortIdentifier(currentSort, "Id")
         </th>
         <th>
-          @Html.ActionLink("Username", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.UsernameSortParam))
+          @Html.ActionLink(Resources.Resources.Username_Label, "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.UsernameSortParam))
           @Html.SortIdentifier(currentSort, "username")
         </th>
-        <th>Email</th>
+        <th>@Resources.Resources.Email_Label</th>
         <th>
-          @Html.ActionLink("First Name", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.FirstNameSortParam))
+          @Html.ActionLink(Resources.Resources.FirstName_Label, "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.FirstNameSortParam))
           @Html.SortIdentifier(currentSort, "firstname")
         </th>
-        <th>Last Name</th>
-        <th>Role</th>
+        <th>@Resources.Resources.LastName_Label</th>
+        <th>@Resources.Resources.Roles_Menu_Item</th>
       </tr>
     </thead>
     @foreach (var item in Model)
@@ -100,7 +100,7 @@
       sortOrder = ViewBag.currentSort, 
       currentFilter = ViewBag.CurrentFilter
     }))
-    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Resources.Resources.Page_Label @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) @Resources.Resources.Page_Of_Label @Model.PageCount
   </div>
 
 

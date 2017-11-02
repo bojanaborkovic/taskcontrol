@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TaskControl.Models;
+using TaskControl.ServiceClients;
+using BussinesService.Interfaces.Responses.User;
 
 namespace TaskControl.Controllers
 {
@@ -15,7 +17,7 @@ namespace TaskControl.Controllers
   {
     private ApplicationSignInManager _signInManager;
     private ApplicationUserManager _userManager;
-
+    private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
     public ManageController()
     {
     }
@@ -215,6 +217,7 @@ namespace TaskControl.Controllers
 
     //
     // GET: /Manage/ChangePassword
+    [HttpGet]
     public ActionResult ChangePassword()
     {
       return View();
@@ -243,6 +246,72 @@ namespace TaskControl.Controllers
       AddErrors(result);
       return View(model);
     }
+
+
+    public ActionResult ChangeLanguage()
+    {
+      long userId = User.Identity.GetUserId<int>();
+      var result = userServiceClient.GetUserLanguage(userId);
+
+      ChangeLanguageViewModel viewModel = new ChangeLanguageViewModel();
+
+      if (result != null && string.IsNullOrEmpty(result.ErrorMessage))
+      {
+        switch (result.LanguageCode)
+        {
+          case "en":
+            viewModel.UserLanguage = LanguagesEnum.en;
+            break;
+          case "sr":
+            viewModel.UserLanguage = LanguagesEnum.sr;
+            break;
+          default:
+            viewModel.UserLanguage = LanguagesEnum.en;
+            break;
+        }
+      }
+
+      return View(viewModel);
+    }
+
+    //
+    // POST: /Manage/ChangeLanguage
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult ChangeLanguage(ChangeLanguageViewModel model)
+    {
+      if (!ModelState.IsValid)
+      {
+        return View(model);
+      }
+      //var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId<int>(), "123456789");
+      long userId = User.Identity.GetUserId<int>();
+      var result = userServiceClient.GetUserLanguage(userId);
+      if(result != null && string.IsNullOrEmpty(result.ErrorMessage))
+      {
+        if(model.UserLanguage.ToString() != result.LanguageCode)
+        {
+          UserLanguageReturn userLanguage = new UserLanguageReturn();
+          userLanguage.LanguageCode = model.UserLanguage.ToString();
+          userLanguage.UserId = userId;
+
+          var updateLanguage = userServiceClient.SetUserLanguage(userLanguage);
+        }
+      }
+
+      //if (result.Succeeded)
+      //{
+      //  var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
+      //  if (user != null)
+      //  {
+      //    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+      //  }
+      //  return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+      //}
+
+      return View(model);
+    }
+
 
     //
     // GET: /Manage/SetPassword

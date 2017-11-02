@@ -18,13 +18,14 @@
 
       
       <!-- planning board starts -->
-      <h1>Planning board</h1>
+      <h1>@Resources.Resources.PlanningBoard_Label_Dashboard</h1>
       <div class="btn-group" role="group" aria-label="..." style="float:right">
+         @Resources.Resources.SelectedProject_Label<div id="selectedProject"></div>
         @if (Model.OwnersProjects != null && Model.OwnersProjects.Count > 0)
         {
           foreach (var item in Model.OwnersProjects)
           {
-            <button type="button" class="btn btn-default projectButton" id="@item.Id">@item.Name</button>
+            <button type="button" selected="false" class="btn btn-default projectButton" projectId="@item.Id">@item.Name</button>
           }
         }
       </div>
@@ -38,12 +39,12 @@
 
     <div class="col-sm-4">
       <!-- timeline starts here-->
-     
+      <h3 style="float:right">@Resources.Resources.ActivityStream_Label_Dashboard</h3>
       <div class="timeline-centered" style="margin-top: 100px">
-       
+      
         @if (Model.TaskAuditViewModel != null && Model.TaskAuditViewModel.Count > 0)
         {
-          <h3 style="float:right"1>Activity stream</h3>
+         
           foreach (var item in Model.TaskAuditViewModel)
           {
 
@@ -103,6 +104,7 @@
 
       $('#mainCalendar').fullCalendar('renderEvents', listOfTasks, true);
 
+      
 
       /* ajax calls for 'MyTasks' and 'All tasks'*/
       $("#myTasks").click(function(e) {
@@ -155,7 +157,19 @@
     /* project filtering for board*/
     function GetTasksOnProject(e)
     {
+      //var projectId = e.currentTarget.getAttribute('projectId');
       var projectId = e.currentTarget.id;
+
+      if(e.type == "load")
+      {
+        projectId = null;
+      }
+
+      if(e.type == "click")
+      {
+        projectId = e.currentTarget.getAttribute('projectId');
+      }
+
       $.ajax({
         type: "GET",
         url: '@getTasksOnProjectUrl',
@@ -176,9 +190,33 @@
 
       $(".projectButton").click(function(e){
         e.preventDefault();
-       
+        ResetSelectedFlag();
+        e.currentTarget.setAttribute("selected", "true");
         GetTasksOnProject(e);
+        GetSelectedProject();
       });
+
+      function GetSelectedProject()
+      {
+        var numberOfProjects = $(".projectButton").length;
+        for(var i=0; i<numberOfProjects; i++)
+        {
+          var selected = $(".projectButton")[i].getAttribute('selected');
+          if(selected != null && selected == "true")
+          {
+            $("#selectedProject").html($(".projectButton")[i].innerHTML);
+          }
+        }
+      }
+
+      function ResetSelectedFlag()
+      {
+        var numberOfProjects = $(".projectButton").length;
+        for(var i=0; i<numberOfProjects; i++)
+        {
+          $(".projectButton")[i].setAttribute("selected", "false");
+        }
+      }
 
     }
   </script>

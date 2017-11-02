@@ -4,7 +4,7 @@
 @model PagedList.IPagedList<RoleViewModel>
 
 @{
-  ViewBag.Title = "Roles";
+  ViewBag.Title = Resources.Resources.Roles_Menu_Item;
   string currentFilter = ViewBag.CurrentFilter;
   string currentSort = ViewBag.CurrentSort;
   string urlUserRole = Url.Action("AddUserToRole", "Roles");
@@ -19,7 +19,7 @@
 
 @*<script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>*@
 
-<h2>Roles</h2>
+<h2>@Resources.Resources.Roles_Menu_Item</h2>
 
 <div id='userInRoleModal' class="modal fade" role="dialog" tabindex="-1" data-url='@urlUserRole'>
  
@@ -29,8 +29,8 @@
 
 </div>
 
-<button id='addUserToRole' class="btn btn-primary">Add User To Role</button>
-<button id='addNewRole' class="btn btn-secondary btn-success">Add New Role</button>
+<button id='addUserToRole' class="btn btn-primary">@Resources.Resources.АddUserToRole_Button</button>
+<button id='addNewRole' class="btn btn-secondary btn-success">@Resources.Resources.AddNewRole_Button</button>
 
 
 
@@ -42,14 +42,14 @@
         @Html.SortIdentifier(currentSort, "Id")
       </th>
       <th>
-        @Html.ActionLink("Role Name", "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.RoleNameSortParam))
+        @Html.ActionLink(Resources.Resources.RoleName_Label, "Search", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.RoleNameSortParam))
         @Html.SortIdentifier(currentSort, "rolename")
       </th>
 			<th>
-				Description
+				@Resources.Resources.Description_Label
 			</th>
 			<th>
-				Date created
+				@Resources.Resources.DateCreated_Label
 			</th>
     </tr>
   </thead>
@@ -84,7 +84,7 @@
   sortOrder = ViewBag.currentSort,
   currentFilter = ViewBag.CurrentFilter
 }))
-    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Resources.Resources.Page_Label @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) @Resources.Resources.Page_Of_Label @Model.PageCount
   </div>
 }
 
