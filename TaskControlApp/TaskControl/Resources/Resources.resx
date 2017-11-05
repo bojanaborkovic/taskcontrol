@@ -369,4 +369,67 @@
   <data name="Contact_Title" xml:space="preserve">
     <value>Contact</value>
   </data>
+  <data name="ChangeLanguage_Title" xml:space="preserve">
+    <value>Change Language</value>
+  </data>
+  <data name="ChangePassword_Button" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="ChangePassword_Label" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="Change_Button" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="ConfirmNewPassword_Label" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="CurrentLanguage_Label" xml:space="preserve">
+    <value>Current language</value>
+  </data>
+  <data name="CurrentPassword_Label" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="NewPassword_Label" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="Register_Button" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="AddedANote_Text" xml:space="preserve">
+    <value>added a note</value>
+  </data>
+  <data name="Add_Button" xml:space="preserve">
+    <value>Аdd</value>
+  </data>
+  <data name="ProjectNotes_Title" xml:space="preserve">
+    <value>Project notes</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="EditProject_Title" xml:space="preserve">
+    <value>Edit project</value>
+  </data>
+  <data name="Edit_Label" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ProjectName_Label" xml:space="preserve">
+    <value>Project</value>
+  </data>
+  <data name="ChangedAssigneeOnTask_Text" xml:space="preserve">
+    <value>changed asignee on task</value>
+  </data>
+  <data name="ChangedStatusOnTask_Text" xml:space="preserve">
+    <value>changed status on task</value>
+  </data>
+  <data name="ToAssignee_Text" xml:space="preserve">
+    <value>to assignee</value>
+  </data>
+  <data name="ТоStatus_Text" xml:space="preserve">
+    <value>to status</value>
+  </data>
+  <data name="TaskComments_Title" xml:space="preserve">
+    <value>Task comments</value>
+  </data>
 </root>

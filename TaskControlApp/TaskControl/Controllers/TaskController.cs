@@ -44,7 +44,7 @@ namespace TaskControl.Controllers
     {
       int pageSize = 10;
       //var usersRet = serviceClient.SearchUsers();
-      var tasksRet = taskServiceClient.GetAllTasksDetails();
+      var tasksRet = taskServiceClient.GetAllTasksDetails(GetUserId());
       ViewBag.CurrentFilter = searchString;
       page = page > 0 ? page : 1;
       pageSize = pageSize > 0 ? pageSize : 10;
@@ -74,6 +74,7 @@ namespace TaskControl.Controllers
       }
 
 
+
       switch (sortOption)
       {
         case "asignee_desc":
@@ -98,7 +99,7 @@ namespace TaskControl.Controllers
           sortedTasks = tasksRet.Tasks.OrderBy(x => x.Id).ToList();
           break;
         default:
-          sortedTasks = tasksRet.Tasks.OrderBy(x => x.DateCreated).ToList();
+          sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.DateCreated).ToList();
           break;
 
       }
@@ -182,7 +183,7 @@ namespace TaskControl.Controllers
     {
       var retTask = taskServiceClient.GetTaskByIdCustom(taskId);
 
-      var projects = projectServiceClient.GetAllProjects();
+      var projects = projectServiceClient.GetAllProjects(GetUserId());
       var users = userServiceClient.GetAllUsers();
       
 
@@ -197,18 +198,47 @@ namespace TaskControl.Controllers
     public ActionResult Preview(long taskId)
     {
       var retTask = taskServiceClient.GetTaskByIdCustom(taskId);
-      TaskViewModel model = MapToViewModel(retTask);
+      TaskViewModel model = new TaskViewModel();
+
+      TaskCommentsReturn comments = taskServiceClient.GetTaskComments(taskId);
+
+      if(retTask != null)
+      {
+        model = MapToViewModel(retTask);
+      }
+
+      if(comments != null)
+      {
+        MapCommentsToViewModel(model, comments);
+      }
+      
       var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
       ViewBag.Statuses = JsonConvert.SerializeObject(statuses);
       return View("Preview", model);
 
     }
 
+    private void MapCommentsToViewModel(TaskViewModel model, TaskCommentsReturn comments)
+    {
+      model.TaskComments = new List<Models.Comment>();
+
+      foreach(var comment in comments.TaskComments)
+      {
+        model.TaskComments.Add(new Models.Comment()
+        {
+          AuthorId = comment.AuthorId,
+          AuthorName = comment.AuthorName,
+          DateCreated = comment.DateCreated,
+          Content = comment.Content
+        });
+      }
+    }
+
     [HttpPost]
     [IssueTypePreparer, StatusPreparer, PriorityPreparer]
     public ActionResult Edit(TaskViewModel model)
     {
-      var projects = projectServiceClient.GetAllProjects();
+      var projects = projectServiceClient.GetAllProjects(GetUserId());
       var users = userServiceClient.GetAllUsers();
 
       string userName = System.Web.HttpContext.Current.User.Identity.Name;
@@ -301,6 +331,20 @@ namespace TaskControl.Controllers
       return View();
     }
 
+    [HttpGet]
+    public ActionResult AddNewComment()
+    {
+      Models.Comment taskComment = new Models.Comment();
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+      if (user != null)
+      {
+        taskComment.AuthorId = user.Id;
+        taskComment.AuthorName = user.UserName;
+      }
+      return PartialView("AddNewNote", taskComment);
+    }
+
     private List<TaskSearchViewModel> MapTasksToViewModel(List<TaskEntity> tasks)
     {
       List<TaskSearchViewModel> viewmodel = new List<TaskSearchViewModel>();
@@ -371,6 +415,7 @@ namespace TaskControl.Controllers
       taskModel.StatusName = statuses.Where(x => x.Id == taskEntity.StatusId).First().Name;
       taskModel.Id = taskEntity.Id;
 
+
       return taskModel;
     }
 
@@ -382,7 +427,7 @@ namespace TaskControl.Controllers
         var userNamesList = usernames.Users.Select(x => x.UserName).ToList();
         ViewBag.Usernames = JsonConvert.SerializeObject(userNamesList);
       }
-      var projects = projectServiceClient.GetAllProjects();
+      var projects = projectServiceClient.GetAllProjects(GetUserId());
 
       if (projects != null && projects.RecordCount > 0)
       {

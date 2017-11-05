@@ -38,10 +38,28 @@ namespace TaskControl.Models
 
     public string ProjectName { get; set; }
 
-    [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yy}", ApplyFormatInEditMode = true)]
+    [DataType(DataType.DateTime)]
     public DateTime DueDate { get; set; }
 
     public long? CreatedBy { get; set; }
 
+    public List<Comment> TaskComments { get; set; }
+
+    [DataType(DataType.MultilineText)]
+    public string CurrentComment { get; set; }
+
+  }
+
+  public class Comment
+  {
+    public long AuthorId { get; set; }
+
+    public string AuthorName { get; set; }
+
+    public DateTime? DateCreated { get; set; }
+
+    public string Content { get; set; }
+
+    public long TaskId { get; set; }
   }
 }

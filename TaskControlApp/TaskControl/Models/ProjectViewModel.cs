@@ -27,6 +27,7 @@ namespace TaskControl.Models
 
     public List<ProjectNoteViewModel> Notes { get; set; }
 
+    [DataType(DataType.MultilineText)]
     public string CurrentComment { get; set; }
   }
 

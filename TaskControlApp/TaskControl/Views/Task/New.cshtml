@@ -124,8 +124,12 @@
       <div class="form-group">
         <b class="control-label col-md-2"> @Resources.Resources.DueDate_Label </b>
         <div class="col-md-10">
-          @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control datepicker", placeholder = "Enter due date here..", @id ="dueDate" })
+          @*@Html.TextBoxFor(model => model.DueDate, new { @class = "form-control datepicker", placeholder = "Enter due date here..", @id ="dueDate" })*@
+          @Html.TextBoxFor(model => model.DueDate,  new { @class = "form-control datepicker", placeholder = "Enter due date here..", @id = "dueDate"  })
+
+
           @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
+
         </div>
       </div>
 
@@ -146,11 +150,9 @@
 
 <script type="text/javascript">
 	$(document).ready(function () { // will trigger when the document is ready
-	  $('.datepicker').datepicker({
-	    dateFormat: 'dd/mm/yy'
+	  $('.datepicker').datetimepicker();
 
-	  });
-
+	  $('#datetimepicker1').datetimepicker();
     //fix for chrome!!! to get rid of US date validation
 	  jQuery.validator.methods["date"] = function (value, element) { return true; } 
 

@@ -106,6 +106,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Аdd.
+        /// </summary>
+        public static string Add_Button {
+            get {
+                return ResourceManager.GetString("Add_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to added a note.
+        /// </summary>
+        public static string AddedANote_Text {
+            get {
+                return ResourceManager.GetString("AddedANote_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add new role.
         /// </summary>
         public static string AddNewRole_Button {
@@ -169,6 +187,60 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change.
+        /// </summary>
+        public static string Change_Button {
+            get {
+                return ResourceManager.GetString("Change_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to changed asignee on task.
+        /// </summary>
+        public static string ChangedAssigneeOnTask_Text {
+            get {
+                return ResourceManager.GetString("ChangedAssigneeOnTask_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to changed status on task.
+        /// </summary>
+        public static string ChangedStatusOnTask_Text {
+            get {
+                return ResourceManager.GetString("ChangedStatusOnTask_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Language.
+        /// </summary>
+        public static string ChangeLanguage_Title {
+            get {
+                return ResourceManager.GetString("ChangeLanguage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change password.
+        /// </summary>
+        public static string ChangePassword_Button {
+            get {
+                return ResourceManager.GetString("ChangePassword_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change password.
+        /// </summary>
+        public static string ChangePassword_Label {
+            get {
+                return ResourceManager.GetString("ChangePassword_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change your account settings.
         /// </summary>
         public static string ChangeSettings_Label {
@@ -228,6 +300,15 @@ namespace Resources {
         public static string CompletedCount_Label {
             get {
                 return ResourceManager.GetString("CompletedCount_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm new password.
+        /// </summary>
+        public static string ConfirmNewPassword_Label {
+            get {
+                return ResourceManager.GetString("ConfirmNewPassword_Label", resourceCulture);
             }
         }
         
@@ -304,6 +385,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current language.
+        /// </summary>
+        public static string CurrentLanguage_Label {
+            get {
+                return ResourceManager.GetString("CurrentLanguage_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current password.
+        /// </summary>
+        public static string CurrentPassword_Label {
+            get {
+                return ResourceManager.GetString("CurrentPassword_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date created.
         /// </summary>
         public static string DateCreated_Label {
@@ -351,9 +450,27 @@ namespace Resources {
         /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
+        public static string Edit_Label {
+            get {
+                return ResourceManager.GetString("Edit_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
         public static string Edit_Link {
             get {
                 return ResourceManager.GetString("Edit_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit project.
+        /// </summary>
+        public static string EditProject_Title {
+            get {
+                return ResourceManager.GetString("EditProject_Title", resourceCulture);
             }
         }
         
@@ -502,6 +619,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New password.
+        /// </summary>
+        public static string NewPassword_Label {
+            get {
+                return ResourceManager.GetString("NewPassword_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New project.
         /// </summary>
         public static string NewProject_Label {
@@ -610,6 +736,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Project.
+        /// </summary>
+        public static string ProjectName_Label {
+            get {
+                return ResourceManager.GetString("ProjectName_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project notes.
+        /// </summary>
+        public static string ProjectNotes_Title {
+            get {
+                return ResourceManager.GetString("ProjectNotes_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Projects.
         /// </summary>
         public static string Projects_Label {
@@ -624,6 +768,15 @@ namespace Resources {
         public static string Projects_Menu_Item {
             get {
                 return ResourceManager.GetString("Projects_Menu_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Register_Button {
+            get {
+                return ResourceManager.GetString("Register_Button", resourceCulture);
             }
         }
         
@@ -718,6 +871,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task comments.
+        /// </summary>
+        public static string TaskComments_Title {
+            get {
+                return ResourceManager.GetString("TaskComments_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tasks.
         /// </summary>
         public static string Tasks_Label {
@@ -741,6 +912,15 @@ namespace Resources {
         public static string Title_Label {
             get {
                 return ResourceManager.GetString("Title_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to assignee.
+        /// </summary>
+        public static string ToAssignee_Text {
+            get {
+                return ResourceManager.GetString("ToAssignee_Text", resourceCulture);
             }
         }
         
@@ -813,6 +993,15 @@ namespace Resources {
         public static string АddUserToRole_Button {
             get {
                 return ResourceManager.GetString("АddUserToRole_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to status.
+        /// </summary>
+        public static string ТоStatus_Text {
+            get {
+                return ResourceManager.GetString("ТоStatus_Text", resourceCulture);
             }
         }
     }

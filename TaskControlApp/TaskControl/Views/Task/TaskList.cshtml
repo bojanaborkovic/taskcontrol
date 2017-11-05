@@ -22,6 +22,7 @@
       @Html.ActionLink(Resources.Resources.Assignee_Label, "Index", "Asignee")
     @*@Html.SortIdentifier(currentSort, "asignee")*@
   </th>
+      <th>@Resources.Resources.DateCreated_Label</th>
   <th>
     @*@Html.ActionLink(Resources.Resources.DueDate_Label, "Index", "DueDate", Request.QueryString.ToRouteValueDictionary("sortOrder", (string)ViewBag.DueDateSortParam))*@
     @Html.ActionLink(Resources.Resources.DueDate_Label, "Index", "DueDate")
@@ -54,6 +55,9 @@
         </td>
         <td>
           @Html.DisplayFor(modelItem => item.Asignee)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.DateCreated)
         </td>
         <td>
           @Html.DisplayFor(modelItem => item.DueDate)

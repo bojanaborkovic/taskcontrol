@@ -20,6 +20,20 @@ namespace TaskControl.Controllers
     private UserServiceClient rolesServiceClient = new UserServiceClient("roles") { DoSerialize = true };
     private UserServiceClient usersServiceClient = new UserServiceClient("users") { DoSerialize = true };
     private ProjectServiceClient projectServiceClient = new ProjectServiceClient() { DoSerialize = true };
+    private long? currentUserId;
+
+    public RolesController()
+    {
+      if (currentUserId == null)
+      {
+        string user = System.Web.HttpContext.Current.User.Identity.Name;
+        var userRet = usersServiceClient.GetUserByUsername(user);
+        if (userRet != null)
+        {
+          currentUserId = userRet.Id;
+        }
+      }
+    }
     // GET: Roles
     public ActionResult Index()
     {
@@ -65,7 +79,7 @@ namespace TaskControl.Controllers
     public ActionResult NewRole()
     {
       RoleViewModel newRole = new RoleViewModel();
-      var projects = projectServiceClient.GetAllProjects();
+      var projects = projectServiceClient.GetAllProjects((long)currentUserId);
       if(projects != null && projects.RecordCount > 0)
       {
         newRole.ProjectsAccess = MapProjectsToView(projects);

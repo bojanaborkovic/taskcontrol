@@ -7,6 +7,7 @@
   var getActivityOnTaskUrl = Url.Action("GetActivityOnTask", "Task");
   var taskId = Model.Id;
   var statusesList = new HtmlString(ViewBag.Statuses);
+  string urlNewProjectComment = Url.Action("AddNewComment", "Task");
 }
 
 
@@ -31,19 +32,19 @@
           <div class="tab-pane active" id="Overview">
            
             <br/>
-            <i class="glyphicon glyphicon-calendar"></i><label>Due date:</label><span> @Html.DisplayFor(model => model.DueDate)</span>
+            <i class="glyphicon glyphicon-calendar"></i><label>@Resources.Resources.DueDate_Label :</label><span> @Html.DisplayFor(model => model.DueDate)</span>
             <br />
-            <span class="glyphicon glyphicon-user"><label>Asignee:</label>@Html.DisplayFor(model => model.Asignee)</span>
+            <span class="glyphicon glyphicon-user"><label>@Resources.Resources.Assignee_Label :</label>@Html.DisplayFor(model => model.Asignee)</span>
             <br />
-            <span class="glyphicon glyphicon-tag"></span><label>Issue Type:</label> <span>@Html.DisplayFor(model => model.IssueTypeName) </span>
+            <span class="glyphicon glyphicon-tag"></span><label>@Resources.Resources.IssueType_Label :</label> <span>@Html.DisplayFor(model => model.IssueTypeName) </span>
             <br />
-            <span class="glyphicon glyphicon-calendar"><label>Date Created:</label>@Html.DisplayFor(model => model.DateCreated) </span>
+            <span class="glyphicon glyphicon-calendar"><label>@Resources.Resources.DateCreated_Label :</label>@Html.DisplayFor(model => model.DateCreated) </span>
             <br/>
-            <label>Status:</label><span>@Html.DisplayFor(model => model.StatusName) </span>
+            <label>@Resources.Resources.Status_Label :</label><span>@Html.DisplayFor(model => model.StatusName) </span>
             <br/>
-            <label>Project:</label><span>@Html.DisplayFor(model => model.ProjectName)</span>
+            <label>@Resources.Resources.ProjectName_Label :</label><span>@Html.DisplayFor(model => model.ProjectName)</span>
             <br/>
-            <label>Priority:</label><span>@Html.DisplayFor(model => model.PriorityName)</span>
+            <label>@Resources.Resources.Priority_Label :</label><span>@Html.DisplayFor(model => model.PriorityName)</span>
             <br/>
           </div>
           <div class="tab-pane" id="activity">
@@ -52,7 +53,71 @@
             </div>
           </div>
           <div class="tab-pane" id="commentsTab">
-            <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+            <!-- comment box starts -->
+            <div class="detailBox">
+              <div class="titleBox">
+                <label>@Resources.Resources.TaskComments_Title</label>
+              </div>
+              <div class="commentBox">
+
+
+              </div>
+              <div class="actionBox">
+                @if (Model.TaskComments != null && Model.TaskComments.Count > 0)
+      {
+                  <ul class="commentList">
+                    @foreach (var comment in Model.TaskComments)
+        {
+                      <li>
+                        <div class="commentItem">
+                          <div class="commenterImage">
+                            <b>@comment.AuthorName</b> @Resources.Resources.AddedANote_Text <span class="date sub-text">@comment.DateCreated</span>
+                          </div>
+                          <br />
+                          <div class="commentText">
+                            <p>@comment.Content</p>
+                          </div>
+                        </div>
+                      </li>
+
+
+                    }
+                  </ul>
+                }
+                <form class="form-inline" role="form">
+                  @*<div class="form-group">
+            <input class="form-control" type="text" placeholder="Your comments" />
+          </div>*@
+                  @using (Ajax.BeginForm("AddNewComment", "Task", new AjaxOptions
+                  {
+                    HttpMethod = "POST",
+                    //OnSuccess = "addUserToRoleSuccess()",
+                    // OnFailure = "addUserToRoleFailure()"
+
+                  }))
+                  {
+                    @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "projectId" } })
+
+
+                    <div class="form-group">
+                      <div class="col-md-10">
+                        @Html.EditorFor(model => model.CurrentComment, new { htmlAttributes = new { @class = "form-control", rows = "5" } })
+                        @Html.ValidationMessageFor(model => model.CurrentComment, "", new { @class = "text-danger" })
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div>
+                        <button class="btn btn-default" id="addNote" type="submit">@Resources.Resources.Add_Button</button>
+                      </div>
+                    </div>
+                  }
+
+                </form>
+              </div>
+
+            </div>
+            <!-- comment box ends -->
           </div>
         </div>
       </div>
@@ -95,10 +160,10 @@
 
             if (result[i] != null) {
               if (result[i].changeType == 0) {
-                htmlText += '<p>User <b>' + result[i].changedByUsername + '</b>  changed status on task <b>' + result[i].taskTitle + '</b> to status:  <b>' + MapStatus(result[0].changedToId) + '</b> on ' + result[i].changedOnString + '</p>';
+                htmlText += '<p> '+' @Resources.Resources.User_Label' + ' <b> ' + result[i].changedByUsername + '</b> ' + '@Resources.Resources.ChangedStatusOnTask_Text' + '<b> ' + result[i].taskTitle + '</b> ' + '@Resources.Resources.ТоStatus_Text' + '<b> ' + MapStatus(result[0].changedToId) + '</b>  ' + result[i].changedOnString + '</p>';
               }
               else {
-                htmlText += '<p>User  <b>' + result[i].changedByUsername + '</b> changed asignee on task  <b>' + result[i].taskTitle + '</b> to asignee: <b>' + MapAsignee(result[0].changedToId) + '</b> on ' + result[i].changedOnString + '</p>';
+                htmlText += '<p> ' + '@Resources.Resources.User_Label' + ' <b> ' + result[i].changedByUsername + '</b> '+ '@Resources.Resources.ChangedAssigneeOnTask_Text' + '<b> ' + result[i].taskTitle + '</b> ' + '@Resources.Resources.ToAssignee_Text' + '<b> ' + MapAsignee(result[0].changedToId) + '</b>  ' + result[i].changedOnString + '</p>';
               }
             }
 
@@ -116,6 +181,44 @@
 
       function MapAsignee(asigneeId) {
         return "bojanaborkovic@hotmail.com";
+      }
+
+      //add new comment
+      $('#addNewNote').click(function () {
+        var url = $('#newProjectCommentModal').data('url');
+
+        $.get(url, function (data) {
+          $('#newProjectCommentModal').html(data);
+
+          $('#newProjectCommentModal').modal('show');
+        });
+      });
+
+      $("#addNote").click(function (e) {
+        e.preventDefault();
+        AddNew();
+      });
+
+      function AddNew() {
+        debugger;
+        var modelObj = {};
+        modelObj.Note = $("#CurrentComment").val();
+        modelObj.ProjectId = $("#Id").val();
+
+        // exucute ajax call to add new note
+        $.ajax({
+          type: "POST",
+          url: '@urlNewProjectComment',
+          data: JSON.stringify(modelObj),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (result) {
+            location.reload();
+          },
+          error: function (result) {
+            //alert('error');
+          }
+        });
       }
 
     });

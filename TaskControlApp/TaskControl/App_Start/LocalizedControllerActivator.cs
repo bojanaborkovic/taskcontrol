@@ -42,12 +42,19 @@ namespace TaskControl.App_Start
       }
       else
       {
-        var configuredLanguage = serviceClient.GetUserLanguage(long.Parse(user));
-        if(configuredLanguage != null && string.IsNullOrEmpty(configuredLanguage.ErrorMessage))
+        if (user == null)
         {
-          if (_dbLanguage != configuredLanguage.LanguageCode)
+          lang = "en";
+        }
+        else
+        {
+          var configuredLanguage = serviceClient.GetUserLanguage(long.Parse(user));
+          if (configuredLanguage != null && string.IsNullOrEmpty(configuredLanguage.ErrorMessage))
           {
-            _dbLanguage = configuredLanguage.LanguageCode;
+            if (_dbLanguage != configuredLanguage.LanguageCode)
+            {
+              _dbLanguage = configuredLanguage.LanguageCode;
+            }
           }
         }
       }

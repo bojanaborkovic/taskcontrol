@@ -23,9 +23,19 @@ namespace TaskControl.Controllers
     private UnitOfWork unitOfWork = new UnitOfWork();
     private ProjectServiceClient serviceClient = new ProjectServiceClient() { DoSerialize = true };
     private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
+    private long? currentUserId;
 
     public ProjectController()
     {
+      if (currentUserId == null)
+      {
+        string user = System.Web.HttpContext.Current.User.Identity.Name;
+        var userRet = userServiceClient.GetUserByUsername(user);
+        if (userRet != null)
+        {
+          currentUserId = userRet.Id;
+        }
+      }
     }
 
 
@@ -33,7 +43,7 @@ namespace TaskControl.Controllers
     [HttpGet]
     public ActionResult Index()
     {
-      GetProjectReturn responseData = serviceClient.GetAllProjects();
+      GetProjectReturn responseData = serviceClient.GetAllProjects((long)currentUserId);
 
       if (responseData != null && responseData.Projects.Count > 0)
       {

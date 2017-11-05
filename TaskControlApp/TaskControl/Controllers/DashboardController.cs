@@ -36,7 +36,7 @@ namespace TaskControl.Controllers
         ViewBag.UserId = user.Id.ToString();
       }
       
-      var retTaskDetails = taskServiceClient.GetAllTasksDetails();
+      var retTaskDetails = taskServiceClient.GetAllTasksDetails(GetUserId());
 
       if(user != null)
       {
@@ -82,7 +82,7 @@ namespace TaskControl.Controllers
     [HttpGet]
     public ActionResult GetAllTasks()
     {
-      var ret = taskServiceClient.GetAllTasksDetails();
+      var ret = taskServiceClient.GetAllTasksDetails(GetUserId());
 
       var records = MapTasksToDashboard(ret);
       var serializedRecords = JsonConvert.SerializeObject(records, new JsonSerializerSettings
@@ -173,7 +173,7 @@ namespace TaskControl.Controllers
     {
       string userName = System.Web.HttpContext.Current.User.Identity.Name;
       long userId = userServiceClient.GetUserByUsername(userName).Id;
-      var ret = taskServiceClient.GetAllTasksDetails();
+      var ret = taskServiceClient.GetAllTasksDetails(GetUserId());
       ViewBag.UserId = userId.ToString();
 
       var projectsForOwner = projectServiceClient.GetProjectsByOwner(userId);
@@ -338,6 +338,21 @@ namespace TaskControl.Controllers
       return tasksDashboard;
     }
 
+    private long GetUserId()
+    {
+      string userName = System.Web.HttpContext.Current.User.Identity.Name;
+      var user = userServiceClient.GetUserByUsername(userName);
+
+
+      if (user != null)
+      {
+        return user.Id;
+      }
+      else
+      {
+        return 0;
+      }
+    }
 
     #endregion
   }

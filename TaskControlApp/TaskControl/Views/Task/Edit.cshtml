@@ -3,7 +3,7 @@
 @model TaskControl.Models.TaskViewModel
 
 @{
-  ViewBag.Title = "Edit";
+  ViewBag.Title = Resources.Resources.Edit_Label;
   var issueTypes = ViewData[IssueTypePreparer.ViewDataKey] as List<IssueTypeEntity>;
   List<SelectListItem> issueTypesItems = issueTypes.ConvertAll(a =>
   {
@@ -43,7 +43,7 @@
 
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
 
-<h2>Edit</h2>
+<h2>@Resources.Resources.Edit_Label</h2>
 
 @using (Html.BeginForm("Edit", "Task", FormMethod.Post))
 {
@@ -55,7 +55,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+          <b class="control-label col-md-2"> @Resources.Resources.Title_Label </b>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
@@ -63,7 +63,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+          <b class="control-label col-md-2"> @Resources.Resources.Description_Label </b>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
@@ -71,7 +71,7 @@
         </div>
 
 			<div class="form-group">
-				@Html.LabelFor(model => model.Asignee, htmlAttributes: new { @class = "control-label col-md-2" })
+        <b class="control-label col-md-2"> @Resources.Resources.Assignee_Label </b>
 				<div class="col-md-10">
 					@*@Html.EditorFor(model => model.Asignee, new { htmlAttributes = new { @class = "form-control" } })*@
 
@@ -82,14 +82,14 @@
 			</div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DateCreated, htmlAttributes: new { @class = "control-label col-md-2" })
+          <b class="control-label col-md-2"> @Resources.Resources.DateCreated_Label </b>
             <div class="col-md-10">
               @Html.DisplayFor(model => model.DateCreated)
            </div>
         </div>
 
 			<div class="form-group">
-				@Html.LabelFor(model => model.IssueType, htmlAttributes: new { @class = "control-label col-md-2" })
+        <b class="control-label col-md-2"> @Resources.Resources.IssueType_Label </b>
 				<div class="col-md-10">
 					@Html.DropDownListFor(x => x.IssueType, issueTypesItems, "Select Issue Type", new { @class = "form-control" })
 				</div>
@@ -103,7 +103,7 @@
 			</div>
 
 			<div class="form-group">
-				@Html.LabelFor(model => model.Reporter, htmlAttributes: new { @class = "control-label col-md-2" })
+        <b class="control-label col-md-2"> @Resources.Resources.Reporter_Label </b>
 				<div class="col-md-10">
 					@*@Html.EditorFor(model => model.Reporter, new { htmlAttributes = new { @class = "form-control" } })*@
 					@Html.EditorFor(m => m.Reporter, new { htmlAttributes = new { @class = "form-control autoasignee", @placeholder = "Enter username" } })
@@ -112,14 +112,14 @@
 			</div>
 
 			<div class="form-group">
-				@Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
+        <b class="control-label col-md-2"> @Resources.Resources.Priority_Label </b>
 				<div class="col-md-10">
 					@Html.DropDownListFor(x => x.Priority, priorItems, "Select Priority", new { @class = "form-control" })
 				</div>
 			</div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+          <b class="control-label col-md-2"> @Resources.Resources.ProjectName_Label </b>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control autocomplete" }, @placeholder = "Enter project name" })
                 @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
@@ -127,7 +127,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "control-label col-md-2" })
+          <b class="control-label col-md-2"> @Resources.Resources.DueDate_Label </b>
             <div class="col-md-10">
               @Html.TextBoxFor(model => model.DueDate, new { @class = "form-control datepicker", placeholder = "Enter due date here.." })
                 @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
@@ -148,7 +148,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function () { // will trigger when the document is ready
-		$('.datepicker').datepicker(); //Initialise any date pickers
+		$('.datepicker').datetimepicker(); //Initialise any date pickers
 
 		var availableTags = @Html.Raw(projectNames);
 

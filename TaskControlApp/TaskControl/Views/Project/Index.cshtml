@@ -39,13 +39,13 @@
           </div>
         </div>
 				<div class="alert alert-success" role="alert">
-					<strong>@Html.DisplayFor(modelItem => item.CompletedCount) tasks</strong> Completed
+					<strong>@Html.DisplayFor(modelItem => item.CompletedCount) tasks</strong> @Resources.Resources.Complete_ProgressBar_Label
 				</div>
 				<div class="alert alert-warning" role="alert">
-					<strong>@Html.DisplayFor(modelItem => item.InProgressCount) tasks</strong> In progress
+					<strong>@Html.DisplayFor(modelItem => item.InProgressCount) tasks</strong> @Resources.Resources.InProgress_PlanningBoard_Title
 				</div>
 				<div class="alert alert-danger" role="alert">
-					<strong>@Html.DisplayFor(modelItem => item.ToDoCount)  tasks</strong> To do
+					<strong>@Html.DisplayFor(modelItem => item.ToDoCount)  tasks</strong> @Resources.Resources.ToDo_PlanningBoard_Title
 				</div>
         <div>
          

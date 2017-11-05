@@ -259,7 +259,7 @@
     <value>Експортуј у Ексел</value>
   </data>
   <data name="NewTask_Title" xml:space="preserve">
-    <value>Нови таск</value>
+    <value>Нови задатак</value>
   </data>
   <data name="Reporter_Label" xml:space="preserve">
     <value>Пријавио</value>
@@ -365,5 +365,65 @@
   </data>
   <data name="User_Label" xml:space="preserve">
     <value>Корисник</value>
+  </data>
+  <data name="ChangeLanguage_Title" xml:space="preserve">
+    <value>Промјени језик</value>
+  </data>
+  <data name="ChangePassword_Button" xml:space="preserve">
+    <value>Промјени лозинку</value>
+  </data>
+  <data name="ChangePassword_Label" xml:space="preserve">
+    <value>Промјени лозинку</value>
+  </data>
+  <data name="Change_Button" xml:space="preserve">
+    <value>Промјени</value>
+  </data>
+  <data name="ConfirmNewPassword_Label" xml:space="preserve">
+    <value>Потврди нову лозинку</value>
+  </data>
+  <data name="CurrentLanguage_Label" xml:space="preserve">
+    <value>Тренутни језик</value>
+  </data>
+  <data name="CurrentPassword_Label" xml:space="preserve">
+    <value>Тренутна лозинка</value>
+  </data>
+  <data name="NewPassword_Label" xml:space="preserve">
+    <value>Нова лозинка</value>
+  </data>
+  <data name="Register_Button" xml:space="preserve">
+    <value>Региструј се</value>
+  </data>
+  <data name="AddedANote_Text" xml:space="preserve">
+    <value>је додао/ла биљешку</value>
+  </data>
+  <data name="Add_Button" xml:space="preserve">
+    <value>Додај</value>
+  </data>
+  <data name="ProjectNotes_Title" xml:space="preserve">
+    <value>Биљешке на пројекту</value>
+  </data>
+  <data name="ChangedAssigneeOnTask_Text" xml:space="preserve">
+    <value>промјенио/ла одговорног на задатку</value>
+  </data>
+  <data name="ChangedStatusOnTask_Text" xml:space="preserve">
+    <value>промјенио/ла статус на задатку</value>
+  </data>
+  <data name="EditProject_Title" xml:space="preserve">
+    <value>Уреди пројекат</value>
+  </data>
+  <data name="Edit_Label" xml:space="preserve">
+    <value>Уреди задатак</value>
+  </data>
+  <data name="ProjectName_Label" xml:space="preserve">
+    <value>Пројекат</value>
+  </data>
+  <data name="ToAssignee_Text" xml:space="preserve">
+    <value>на </value>
+  </data>
+  <data name="ТоStatus_Text" xml:space="preserve">
+    <value>у статус</value>
+  </data>
+  <data name="TaskComments_Title" xml:space="preserve">
+    <value>Коментари</value>
   </data>
 </root>
