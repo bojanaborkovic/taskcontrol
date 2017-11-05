@@ -4,9 +4,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -256,6 +258,8 @@ namespace TaskControl.Controllers
 
     private List<ProjectViewModel> MapToProjectsViewModel(List<ProjectEntity> projects)
     {
+      Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
+
       List<ProjectViewModel> viewMOdel = new List<ProjectViewModel>();
       foreach (var project in projects)
       {

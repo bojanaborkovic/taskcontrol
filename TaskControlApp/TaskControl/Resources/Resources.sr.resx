@@ -426,4 +426,13 @@
   <data name="TaskComments_Title" xml:space="preserve">
     <value>Коментари</value>
   </data>
+  <data name="LogIn_Label" xml:space="preserve">
+    <value>Пријава</value>
+  </data>
+  <data name="LogIn_Text" xml:space="preserve">
+    <value>Искористите локални налог да се пријавите.</value>
+  </data>
+  <data name="RememberMe_Label" xml:space="preserve">
+    <value>Запамти ме?</value>
+  </data>
 </root>

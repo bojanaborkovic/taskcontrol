@@ -583,11 +583,29 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log in.
+        /// </summary>
+        public static string LogIn_Label {
+            get {
+                return ResourceManager.GetString("LogIn_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login_Menu_Item {
             get {
                 return ResourceManager.GetString("Login_Menu_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use a local account to log in..
+        /// </summary>
+        public static string LogIn_Text {
+            get {
+                return ResourceManager.GetString("LogIn_Text", resourceCulture);
             }
         }
         
@@ -795,6 +813,15 @@ namespace Resources {
         public static string RegisterNewUser_Link {
             get {
                 return ResourceManager.GetString("RegisterNewUser_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember me?.
+        /// </summary>
+        public static string RememberMe_Label {
+            get {
+                return ResourceManager.GetString("RememberMe_Label", resourceCulture);
             }
         }
         

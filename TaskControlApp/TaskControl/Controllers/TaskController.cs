@@ -58,9 +58,12 @@ namespace TaskControl.Controllers
 
       List<TaskEntityExtended> sortedTasks = new List<TaskEntityExtended>();
 
-      if (!string.IsNullOrEmpty(searchString))
+      if (tasksRet != null && tasksRet.RecordCount > 0)
       {
-        tasksRet.Tasks = tasksRet.Tasks.Where(x => x.Title.ToLower().Contains(searchString) || x.Description.ToLower().Contains(searchString)).ToList();
+        if (!string.IsNullOrEmpty(searchString))
+        {
+          tasksRet.Tasks = tasksRet.Tasks.Where(x => x.Title.ToLower().Contains(searchString) || x.Description.ToLower().Contains(searchString)).ToList();
+        }
       }
 
       long userId = GetUserId();

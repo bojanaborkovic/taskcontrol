@@ -79,7 +79,7 @@ namespace TaskControl.Controllers
     public ActionResult NewRole()
     {
       RoleViewModel newRole = new RoleViewModel();
-      var projects = projectServiceClient.GetAllProjects((long)currentUserId);
+      var projects = projectServiceClient.GetAllProjects(null);
       if(projects != null && projects.RecordCount > 0)
       {
         newRole.ProjectsAccess = MapProjectsToView(projects);

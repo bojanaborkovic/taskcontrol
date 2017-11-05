@@ -9,7 +9,7 @@
     <h3>@Resources.Resources.ToDo_PlanningBoard_Title</h3><h3>@Resources.Resources.InProgress_PlanningBoard_Title</h3><h3>@Resources.Resources.Done_PlanningBoard_Title</h3>
   </div>
 
-  <ul id="ToDo">
+  <ul id="ToDo" class="alert alert-danger">
     @if (Model.TaskViewModel != null && Model.TaskViewModel.Count > 0)
     {
       foreach (var task in Model.TaskViewModel)
@@ -22,7 +22,7 @@
     }
   </ul>
 
-    <ul id="InProgress">
+    <ul id="InProgress" class="alert alert-warning">
   @if (Model.TaskViewModel != null && Model.TaskViewModel.Count > 0)
   {
     foreach (var task in Model.TaskViewModel)
@@ -35,7 +35,7 @@
   }
   </ul>
 
-  <ul id="Done">
+  <ul id="Done" class="alert alert-success">
     @if (Model.TaskViewModel != null && Model.TaskViewModel.Count > 0)
     {
       foreach (var task in Model.TaskViewModel)
