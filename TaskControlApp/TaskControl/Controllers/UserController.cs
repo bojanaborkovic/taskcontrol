@@ -18,10 +18,10 @@ namespace TaskControl.Controllers
   public class UserController : Controller
   {
     private UnitOfWork unitOfWork = new UnitOfWork();
-    private UserServiceClient serviceClient = new UserServiceClient("users") { DoSerialize = true };
+    private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
     private ApplicationUserManager _userManager;
 
-    public UserController() 
+    public UserController()
     {
 
     }
@@ -46,7 +46,7 @@ namespace TaskControl.Controllers
     // GET: User
     public ActionResult Index()
     {
-      var responseData = serviceClient.GetAllUsers();
+      var responseData = userServiceClient.GetAllUsers();
 
       //var users = JsonConvert.DeserializeObject<List<UserEntity>>(responseData);
       var mappedUsers = MapToUsersViewModel(responseData.Users);
@@ -58,7 +58,7 @@ namespace TaskControl.Controllers
     [HttpGet]
     public ActionResult Search(string sortOrder, string currentFilter, string searchString, int pageNumber = 1, int pageSize = 5)
     {
-      var usersRet = serviceClient.SearchUsers();
+      var usersRet = userServiceClient.SearchUsers();
       ViewBag.CurrentFilter = searchString;
       pageNumber = pageNumber > 0 ? pageNumber : 1;
       pageSize = pageSize > 0 ? pageSize : 25;
@@ -118,8 +118,8 @@ namespace TaskControl.Controllers
     [HttpGet]
     public ActionResult Details(long userId)
     {
-      var userRet = serviceClient.GetUserById(userId);
-      if(userRet != null)
+      var userRet = userServiceClient.GetUserById(userId);
+      if (userRet != null)
       {
         UserViewModel userModel = MapUserModel(userRet);
         return View("Details", userModel);
@@ -150,7 +150,7 @@ namespace TaskControl.Controllers
         {
           Email = user.Email,
           PhoneNumber = user.PhoneNumber,
-          UserName = user.UserName,
+          UserName = user.Email,
           FirstName = user.FirstName,
           LastName = user.LastName
 
@@ -172,14 +172,46 @@ namespace TaskControl.Controllers
 
     }
 
-    //[HttpGet]
-    //public ActionResult Search(UserSearchViewModel model)
-    //{
-    //  //gather data from model
-    //  //perfrom search call 
-    //  return RedirectToAction("Index");
-    //}
 
+    [HttpGet]
+    public ActionResult EditUser(long userId)
+    {
+      var responseData = userServiceClient.GetUserById(userId);
+      if (responseData != null && string.IsNullOrEmpty(responseData.ErrorMessage))
+      {
+        UserViewModel user = new UserViewModel();
+        user.FirstName = responseData.FirstName;
+        user.LastName = responseData.LastName;
+        user.RoleName = responseData.RoleName;
+        user.PhoneNumber = responseData.PhoneNumber;
+        user.UserName = responseData.UserName;
+        user.Email = responseData.Email;
+
+        return View(user);
+      }
+      else
+      {
+        return View("Error", new ErrorModel() { Message = responseData != null ? responseData.ErrorMessage : "Error during fetching user!" });
+      }
+
+    }
+
+    [HttpPost]
+    public ActionResult EditUser(UserViewModel userViewModel)
+    {
+      var ret = userServiceClient.UpdateUser(MapUserViewModel(userViewModel));
+      if (ret != null && !string.IsNullOrEmpty(ret.ErrorMessage))
+      {
+        return View("Error", ret);
+      }
+      else
+      {
+        return RedirectToAction("Index");
+      }
+
+    }
+
+    #region mappers
     private UserEntity MapUserEnity(CreateUserViewModel user)
     {
       UserEntity entity = new UserEntity();
@@ -193,6 +225,18 @@ namespace TaskControl.Controllers
       return entity;
     }
 
+    private UserEntity MapUserViewModel(UserViewModel user)
+    {
+      UserEntity entity = new UserEntity();
+      entity.Email = user.Email;
+      entity.FirstName = user.FirstName;
+      entity.LastName = user.LastName;
+      entity.PhoneNumber = user.PhoneNumber;
+      entity.UserName = user.UserName;
+      entity.Id = user.UserId;
+      return entity;
+    }
+
     private UserViewModel MapUserModel(BaseUserReturn userEntity)
     {
       UserViewModel userModel = new UserViewModel();
@@ -202,6 +246,7 @@ namespace TaskControl.Controllers
       userModel.PhoneNumber = userEntity.PhoneNumber;
       userModel.UserName = userEntity.UserName;
       userModel.UserId = userEntity.Id;
+      userModel.RoleName = userEntity.RoleName;
       return userModel;
     }
 
@@ -223,5 +268,7 @@ namespace TaskControl.Controllers
 
       return viewMOdel;
     }
+
+    #endregion
   }
 }

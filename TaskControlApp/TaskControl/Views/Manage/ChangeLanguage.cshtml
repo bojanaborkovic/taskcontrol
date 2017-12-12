@@ -6,6 +6,8 @@
 
 <h2>@ViewBag.Title</h2>
 
+<img src="~/Content/images/lang.png" />
+
 @using (Html.BeginForm("ChangeLanguage", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()

@@ -31,7 +31,10 @@
 
 
 <div id="projectFiltering">
-  @Html.Partial("ProjectFilter", (ProjectFilterViewModel)ViewBag.OwnersProject)
+  @if (ViewBag.OwnersProject != null)
+  {
+    @Html.Partial("ProjectFilter", (ProjectFilterViewModel)ViewBag.OwnersProject)
+  }
 </div>
 
 

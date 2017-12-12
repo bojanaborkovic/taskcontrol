@@ -98,10 +98,16 @@ namespace TaskControlDTOs
       set { this.ChangedOn = DateTime.Parse(value); }
     }
 
+    [DataMember]
+    public long ProjectId { get; set; }
+
+    [DataMember]
+    public string ProjectName { get; set; }
+
 
   }
 
-  
+
   [DataContract]
   public enum TaskChangeType
   {

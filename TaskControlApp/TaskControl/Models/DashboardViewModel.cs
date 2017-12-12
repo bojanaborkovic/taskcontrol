@@ -37,6 +37,7 @@ namespace TaskControl.Models
 
     [JsonIgnore]
     public string Color { get; set; }
+
   }
 
   public class TaskAuditViewModel

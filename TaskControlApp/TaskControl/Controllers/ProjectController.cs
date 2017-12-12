@@ -117,12 +117,14 @@ namespace TaskControl.Controllers
         return View("Error", new ErrorModel() { Message = responseData != null ? responseData.ErrorMessage : "Error during fetching project!" });
       }
 
-      
+
     }
 
     [HttpGet]
     public ActionResult ViewProject(long projectId)
     {
+      Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
+
       var responseData = serviceClient.GetProjectById(projectId);
       if (responseData != null && string.IsNullOrEmpty(responseData.ErrorMessage))
       {
@@ -156,9 +158,14 @@ namespace TaskControl.Controllers
           project.TotalProgress = (decimal)((decimal)(completedCount) / (decimal)(toDoCount + inProgressCount + completedCount)) * 100;
         }
 
+        NumberFormatInfo nfi = new NumberFormatInfo();
+        nfi.NumberDecimalSeparator = ".";
+
+        project.TotalProgress.ToString(nfi);
+
 
         ProjectNotesReturn notesRet = serviceClient.GetProjectNotes(projectId);
-        if(notesRet != null && notesRet.RecordCount > 0)
+        if (notesRet != null && notesRet.RecordCount > 0)
         {
           project.Notes = MapProjectNotes(notesRet.Notes);
         }
@@ -175,7 +182,7 @@ namespace TaskControl.Controllers
     {
       List<ProjectNoteViewModel> projectNotes = new List<ProjectNoteViewModel>();
 
-      foreach(var item in notes)
+      foreach (var item in notes)
       {
         projectNotes.Add(new ProjectNoteViewModel()
         {
@@ -210,7 +217,7 @@ namespace TaskControl.Controllers
       ProjectNoteViewModel projectNote = new ProjectNoteViewModel();
       string userName = System.Web.HttpContext.Current.User.Identity.Name;
       var user = userServiceClient.GetUserByUsername(userName);
-      if(user != null)
+      if (user != null)
       {
         projectNote.AuthorId = user.Id;
         projectNote.AuthorName = user.UserName;
@@ -269,9 +276,9 @@ namespace TaskControl.Controllers
         int inProgressCount = 0;
         if (statistics != null && statistics.Tasks.Count > 0)
         {
-           toDoCount = statistics.Tasks.Where(x => x.Status == (int)Status.ToDo).ToList().Count;
-           completedCount = statistics.Tasks.Where(x => x.Status == (int)Status.Done).ToList().Count;
-           inProgressCount = statistics.Tasks.Where(x => x.Status == (int)Status.InProgress).ToList().Count;
+          toDoCount = statistics.Tasks.Where(x => x.Status == (int)Status.ToDo).ToList().Count;
+          completedCount = statistics.Tasks.Where(x => x.Status == (int)Status.Done).ToList().Count;
+          inProgressCount = statistics.Tasks.Where(x => x.Status == (int)Status.InProgress).ToList().Count;
         }
 
 
@@ -286,7 +293,7 @@ namespace TaskControl.Controllers
           InProgressCount = inProgressCount
         };
 
-        if(toDoCount == 0 && completedCount == 0 && inProgressCount == 0)
+        if (toDoCount == 0 && completedCount == 0 && inProgressCount == 0)
         {
           projectViewModel.TotalProgress = 0M;
         }

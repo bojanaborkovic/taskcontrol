@@ -57,6 +57,7 @@ namespace BusinessServices
         });
         IMapper mapper = config.CreateMapper();
         var userToUpdate = mapper.Map<AspNetUser>(user);
+
         _unitOfWork.UserRepository.Update(userToUpdate);
         _unitOfWork.Save();
       }
@@ -113,6 +114,18 @@ namespace BusinessServices
 
         IMapper mapper = config.CreateMapper();
         var userMapped = mapper.Map<AspNetUser, UserEntity>(user);
+
+        if (user.AspNetUserRoles != null && user.AspNetUserRoles.Count > 0)
+        {
+          long userRoleId = user.AspNetUserRoles.FirstOrDefault().RoleId;
+          var role = _unitOfWork.RoleRepository.GetByID(userRoleId);
+
+          if (role != null)
+          {
+            userMapped.RoleName = role.Name;
+          }
+        }
+
         ret = MapUser(userMapped);
       }
       return ret;
@@ -130,7 +143,7 @@ namespace BusinessServices
           ret.UserId = user.Id;
         }
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         _log.ErrorFormat("Error during user... {0}", ex.Message);
         ret.ErrorMessage = ex.Message;
@@ -223,7 +236,7 @@ namespace BusinessServices
           ret.Roles = rolesMapped;
           ret.RecordCount = rolesMapped.Count;
           ret.StatusCode = "Success";
-         
+
         }
       }
       catch (Exception ex)
@@ -323,9 +336,9 @@ namespace BusinessServices
         _unitOfWork.RoleRepository.Insert(roleToInsert);
         _unitOfWork.Save();
 
-        if(role.ProjectAccess != null && role.ProjectAccess.Count()>0)
+        if (role.ProjectAccess != null && role.ProjectAccess.Count() > 0)
         {
-          foreach(var project in role.ProjectAccess)
+          foreach (var project in role.ProjectAccess)
           {
             RoleClaimsOnProject roleClaim = new DataModel.RoleClaimsOnProject();
             roleClaim.ProjectId = project;
@@ -333,7 +346,7 @@ namespace BusinessServices
             roleClaim.HaveAcess = true;
             _unitOfWork.RoleClaimsRepository.Insert(roleClaim);
             _unitOfWork.Save();
-          }         
+          }
         }
 
         ret.RoleId = roleToInsert.Id;

@@ -435,4 +435,61 @@
   <data name="RememberMe_Label" xml:space="preserve">
     <value>Запамти ме?</value>
   </data>
+  <data name="AppInfo_Text" xml:space="preserve">
+    <value>Систем за управљање софтверским задацима</value>
+  </data>
+  <data name="EditUser_Title" xml:space="preserve">
+    <value>Уреди податке о кориснику</value>
+  </data>
+  <data name="AboutApp" xml:space="preserve">
+    <value>O апликацији</value>
+  </data>
+  <data name="AppDescription_Text" xml:space="preserve">
+    <value>Апликација је развијена у склопу дипломског рада на тему "Развој система за управљање софтверским задацима".</value>
+  </data>
+  <data name="Contact_Title" xml:space="preserve">
+    <value>Контакт</value>
+  </data>
+  <data name="Associate_Text" xml:space="preserve">
+    <value>Повежите свој</value>
+  </data>
+  <data name="CreateNewAccount_Text" xml:space="preserve">
+    <value>Креирајте нови налог.</value>
+  </data>
+  <data name="EnterEmail_Text" xml:space="preserve">
+    <value>Молимо унесите имејл да би сте завршили регистрацију и пријавили се.</value>
+  </data>
+  <data name="ExternalLogin_Text" xml:space="preserve">
+    <value>Пријавите се преко другог сервиса.</value>
+  </data>
+  <data name="Register_Text" xml:space="preserve">
+    <value>Регистрација</value>
+  </data>
+  <data name="SuccessAuth_Text" xml:space="preserve">
+    <value>Успјешно сте се аутентификовали преко </value>
+  </data>
+  <data name="ChangedAssigneeFrom_Text" xml:space="preserve">
+    <value>промјенио/ла одговорног са</value>
+  </data>
+  <data name="ChangeStatusFrom_Text" xml:space="preserve">
+    <value>промјенио/ла статус из</value>
+  </data>
+  <data name="ChangeStatusTo_Text" xml:space="preserve">
+    <value>у</value>
+  </data>
+  <data name="ChangeTo_Text" xml:space="preserve">
+    <value>у</value>
+  </data>
+  <data name="OnProject_Text" xml:space="preserve">
+    <value>на пројекту</value>
+  </data>
+  <data name="OnTask_Text" xml:space="preserve">
+    <value>на задатку</value>
+  </data>
+  <data name="TaskHistory_Label" xml:space="preserve">
+    <value>Историја задатака</value>
+  </data>
+  <data name="LoadEverything_Label" xml:space="preserve">
+    <value>Учитај све</value>
+  </data>
 </root>

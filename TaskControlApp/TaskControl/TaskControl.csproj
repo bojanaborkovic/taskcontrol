@@ -18,10 +18,10 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressSSLPort>58069</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -242,6 +242,18 @@
     <Content Include="Content\dist\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fullcalendar.min.css" />
     <Content Include="Content\fullcalendar.print.css" />
+    <Content Include="Content\images\about.png" />
+    <Content Include="Content\images\activity.png" />
+    <Content Include="Content\images\contact.png" />
+    <Content Include="Content\images\lang.png" />
+    <Content Include="Content\images\passwd.png" />
+    <Content Include="Content\images\projectDetail.png" />
+    <Content Include="Content\images\projectNote.png" />
+    <Content Include="Content\images\settings.png" />
+    <Content Include="Content\images\TaskControlICO.ico" />
+    <Content Include="Content\images\TaskControlIcon.png" />
+    <Content Include="Content\images\tasks.png" />
+    <Content Include="Content\images\user.png" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\sb-admin.css" />
     <Content Include="favicon.ico" />
@@ -265,7 +277,9 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\sb-admin.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -316,7 +330,6 @@
     <Content Include="Views\Task\Preview.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\images\" />
     <Folder Include="Views\Roles\Partials\" />
     <Folder Include="Views\User\Partials\" />
   </ItemGroup>
@@ -331,6 +344,10 @@
     <Content Include="Views\Task\TaskList.cshtml" />
     <Content Include="Views\Task\ProjectFilter.cshtml" />
     <Content Include="Views\Manage\ChangeLanguage.cshtml" />
+    <Content Include="Views\User\EditUser.cshtml" />
+    <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy.pubxml" />
+    <Content Include="Views\Dashboard\TaskHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BussinesService.Interfaces\BussinesService.Interfaces.csproj">

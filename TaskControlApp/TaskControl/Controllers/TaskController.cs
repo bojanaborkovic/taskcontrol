@@ -77,38 +77,40 @@ namespace TaskControl.Controllers
       }
 
 
-
-      switch (sortOption)
+      if (tasksRet != null && tasksRet.RecordCount > 0)
       {
-        case "asignee_desc":
-          sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.Asignee).ToList();
-          break;
-        case "asignee":
-          sortedTasks = tasksRet.Tasks.OrderBy(x => x.Asignee).ToList();
-          break;
-        case "duedate_desc":
-          sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.DueDate).ToList();
-          break;
-        case "duedate":
-          sortedTasks = tasksRet.Tasks.OrderBy(x => x.DueDate).ToList();
-          break;
-        case "status_desc":
-          List<TaskEntityExtended> list = tasksRet.Tasks.ToList();
-          var result = tasksRet.Tasks.GroupBy(u => u.Status).Select(grp => new { Status = grp.Key, list = grp.ToList() }).ToList();
-          var groupedList = result.SelectMany(x => x.list).ToList();
-          sortedTasks = groupedList;
-          break;
-        case "Id":
-          sortedTasks = tasksRet.Tasks.OrderBy(x => x.Id).ToList();
-          break;
-        default:
-          sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.DateCreated).ToList();
-          break;
+        switch (sortOption)
+        {
+          case "asignee_desc":
+            sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.Asignee).ToList();
+            break;
+          case "asignee":
+            sortedTasks = tasksRet.Tasks.OrderBy(x => x.Asignee).ToList();
+            break;
+          case "duedate_desc":
+            sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.DueDate).ToList();
+            break;
+          case "duedate":
+            sortedTasks = tasksRet.Tasks.OrderBy(x => x.DueDate).ToList();
+            break;
+          case "status_desc":
+            List<TaskEntityExtended> list = tasksRet.Tasks.ToList();
+            var result = tasksRet.Tasks.GroupBy(u => u.Status).Select(grp => new { Status = grp.Key, list = grp.ToList() }).ToList();
+            var groupedList = result.SelectMany(x => x.list).ToList();
+            sortedTasks = groupedList;
+            break;
+          case "Id":
+            sortedTasks = tasksRet.Tasks.OrderBy(x => x.Id).ToList();
+            break;
+          default:
+            sortedTasks = tasksRet.Tasks.OrderByDescending(x => x.DateCreated).ToList();
+            break;
 
+        }
       }
 
       var mappedTasks = MapToViewModel(sortedTasks);
-      
+
       if (Session["TaskList"] != null)
       {
         Session["TaskList"] = null;
@@ -118,7 +120,7 @@ namespace TaskControl.Controllers
       {
         Session["TaskList"] = mappedTasks;
       }
-    
+
 
       //return View("Index", mappedTasks.ToPagedList(pageNumber, pageSize));
       return Request.IsAjaxRequest()
@@ -188,7 +190,7 @@ namespace TaskControl.Controllers
 
       var projects = projectServiceClient.GetAllProjects(GetUserId());
       var users = userServiceClient.GetAllUsers();
-      
+
 
       ViewBag.ProjectNames = JsonConvert.SerializeObject(projects.Projects);
       ViewBag.UserNames = JsonConvert.SerializeObject(users.Users.Select(x => x.UserName).ToList());
@@ -205,16 +207,16 @@ namespace TaskControl.Controllers
 
       TaskCommentsReturn comments = taskServiceClient.GetTaskComments(taskId);
 
-      if(retTask != null)
+      if (retTask != null)
       {
         model = MapToViewModel(retTask);
       }
 
-      if(comments != null)
+      if (comments != null)
       {
         MapCommentsToViewModel(model, comments);
       }
-      
+
       var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
       ViewBag.Statuses = JsonConvert.SerializeObject(statuses);
       return View("Preview", model);
@@ -225,7 +227,7 @@ namespace TaskControl.Controllers
     {
       model.TaskComments = new List<Models.Comment>();
 
-      foreach(var comment in comments.TaskComments)
+      foreach (var comment in comments.TaskComments)
       {
         model.TaskComments.Add(new Models.Comment()
         {

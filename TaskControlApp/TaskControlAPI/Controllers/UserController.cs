@@ -36,7 +36,7 @@ namespace TaskControlAPI.Controllers
         return Request.CreateResponse(HttpStatusCode.OK, usersRet);
       }
 
-      
+
       return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Users not found");
     }
 
@@ -152,7 +152,7 @@ namespace TaskControlAPI.Controllers
     [ActionName("UpdateUser")]
     public HttpResponseMessage UpdateUser(UserEntity user)
     {
-      _log.DebugFormat("CrateUser invoked with : {0}", user.ToString());
+      _log.DebugFormat("UpdateUser invoked with : {0}", user.ToString());
       var ret = _userService.UpdateUser(user);
       if (!string.IsNullOrEmpty(ret.ErrorMessage))
       {
@@ -160,7 +160,7 @@ namespace TaskControlAPI.Controllers
       }
       else
       {
-        return Request.CreateResponse(HttpStatusCode.OK);
+        return Request.CreateResponse(HttpStatusCode.OK, ret);
       }
 
     }
@@ -174,8 +174,8 @@ namespace TaskControlAPI.Controllers
       var roles = _userService.GetAllRoles();
       if (roles != null && roles.RecordCount > 0)
       {
-          _log.DebugFormat("GetAllRoles finished with : {0}", roles.StatusCode.ToString());
-          return Request.CreateResponse(HttpStatusCode.OK, roles);
+        _log.DebugFormat("GetAllRoles finished with : {0}", roles.StatusCode.ToString());
+        return Request.CreateResponse(HttpStatusCode.OK, roles);
       }
       return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Roles not found");
     }

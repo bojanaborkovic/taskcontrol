@@ -15,13 +15,14 @@ namespace BusinessServices.Interfaces
     TaskEntityExtendedReturn GetTaskByIdCustom(long TaskId);
     SearchTasksReturn GetAllTasks();
     BasicReturn CreateTask(TaskEntity task);
-    TasksDetailsReturn GetAllTasksDetails();
+    TasksDetailsReturn GetAllTasksDetails(long userId);
     BasicReturn UpdateTask(TaskEntity task);
     SearchTasksReturn GetTasksForUser(long userId, long? projectId);
     SearchTasksReturn GetTasksOnProject(long projectId);
 
     BasicReturn UpdateTaskStatus(UpdateTaskStatus update);
     TaskAuditReturn GetTaskHistory(long? taskId);
+    TaskCommentsReturn GetTaskComments(long taskId);
 
   }
 }

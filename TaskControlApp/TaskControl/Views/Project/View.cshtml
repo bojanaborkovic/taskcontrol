@@ -7,6 +7,8 @@
 
 <h2>@Resources.Resources.Details_Label</h2>
 
+<img src="~/Content/images/projectDetail.png"/>
+
 <div id='newProjectCommentModal' class="modal fade" role="dialog" tabindex="-1" data-url='@urlNewProjectComment'>
 
 </div>
@@ -67,7 +69,12 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TotalProgress) %
+          <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@Html.DisplayFor(model => model.TotalProgress)"
+                 aria-valuemin="0" aria-valuemax="100" style="width:@Html.DisplayFor(model => model.TotalProgress)%">
+             @Html.DisplayFor(model => model.TotalProgress)% @Resources.Resources.Complete_ProgressBar_Label
+            </div>
+          </div>
         </dd>
 
     </dl>
@@ -75,12 +82,9 @@
   <!-- comment box starts -->
   <div class="detailBox">
     <div class="titleBox">
-      <label>@Resources.Resources.ProjectNotes_Title</label>
+      <label>@Resources.Resources.ProjectNotes_Title <img src="~/Content/images/projectNote.png" /></label>
     </div>
-    <div class="commentBox">
 
-
-    </div>
     <div class="actionBox">
       @if (Model.Notes != null && Model.Notes.Count > 0)
       {
@@ -101,48 +105,51 @@
 
 
         }
+
         </ul>
-      }
-        <form class="form-inline" role="form">
-          @*<div class="form-group">
-            <input class="form-control" type="text" placeholder="Your comments" />
-          </div>*@
-            @using (Ajax.BeginForm("AddNewNote", "Project", new AjaxOptions
-            {
-              HttpMethod = "POST",
-              //OnSuccess = "addUserToRoleSuccess()",
-              // OnFailure = "addUserToRoleFailure()"
+        <!-- comment box input-->
+        <form role="form">
+          <div class="row">
+            <div class="col-xs-12">
 
-            }))
-            {
-              @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "projectId" } })
+              @using (Ajax.BeginForm("AddNewNote", "Project", new AjaxOptions
+              {
+                HttpMethod = "POST"
+
+              }))
+              {
+                @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "projectId" } })
 
 
-                <div class="form-group">
-                  <div class="col-md-10">
-                    @Html.EditorFor(model => model.CurrentComment, new { htmlAttributes = new { @class = "form-control", rows = "5" } })
+                <div class="input-group input-group-lg">
+                  <div>
+                    @Html.EditorFor(model => model.CurrentComment, new { htmlAttributes = new { @class = "form-control commentText", rows = "5", cols = "20" } })
                     @Html.ValidationMessageFor(model => model.CurrentComment, "", new { @class = "text-danger" })
+                    <button class="btn btn-default" id="addNote" type="submit">@Resources.Resources.Add_Button</button>
                   </div>
                 </div>
 
-              <div class="form-group">
-                <div>
-                  <button class="btn btn-default" id="addNote" type="submit">@Resources.Resources.Add_Button</button>
-                  </div>
-                </div>
-            }
-         
+              }
+            </div><!-- /.col-xs-12 -->
+          </div><!-- /.row -->
         </form>
-      </div>
+      }
+
+        
+        
+
+
+      </div> <!--action box end -->
 
   </div>
   <!-- comment box ends -->
+
 </div>
 @*<div class="col-md-10">
   <button id='addNewNote' class="btn btn-secondary btn-success">Add New Note</button>
 </div>*@
 <p>
-    @Html.ActionLink(Resources.Resources.Edit_Link, "Edit", new { id = Model.Id }) |
+    @Html.ActionLink(Resources.Resources.Edit_Link, "EditProject", new { projectId = Model.Id }) |
     @Html.ActionLink(Resources.Resources.BackToList_Link, "Index")
 </p>
 

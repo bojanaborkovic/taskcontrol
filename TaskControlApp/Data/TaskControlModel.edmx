@@ -336,7 +336,6 @@
         </Association>
         <Function Name="GetAllProjectsWithOwner" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllTasksDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-		<Function Name="SearchUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetProjectStatistics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="projectId" Type="bigint" Mode="In" />
         </Function>
@@ -351,6 +350,7 @@
           <Parameter Name="pageSize" Type="int" Mode="In" />
           <Parameter Name="orderBy" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="SearchUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="TaskControlModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
@@ -836,6 +836,7 @@
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
             <End Role="RoleClaimsOnProject" EntitySet="RoleClaimsOnProjects" />
           </AssociationSet>
+          <FunctionImport Name="GetAllTasksDetails1" ReturnType="Collection(TaskControlModel.GetAllTasksDetails_Result)" />
 
 
         </EntityContainer>
@@ -941,6 +942,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetAllTasksDetails_Result">
+          <Property Type="Int64" Name="TaskId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Asignee" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="true" Precision="23" />
+          <Property Type="String" Name="IssueType" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Priority" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="TaskStatus" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="Reporter" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Project" Nullable="false" MaxLength="250" />
+          <Property Type="Int64" Name="ProjectId" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1114,23 +1129,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetAllTasksDetails" FunctionName="TaskControlModel.Store.GetAllTasksDetails">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="TaskControlModel.TaskDetailsResult">
-                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Asignee" ColumnName="Asignee" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="IssueType" ColumnName="IssueType" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="TaskStatus" ColumnName="TaskStatus" />
-                <ScalarProperty Name="Reporter" ColumnName="Reporter" />
-                <ScalarProperty Name="Project" ColumnName="Project" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
 		  <FunctionImportMapping FunctionImportName="SearchUsers" FunctionName="TaskControlModel.Store.SearchUsers">
             <ResultMapping>
               <ComplexTypeMapping TypeName="TaskControlModel.SearchUsersResult">
@@ -1206,6 +1204,24 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllTasksDetails1" FunctionName="TaskControlModel.Store.GetAllTasksDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TaskControlModel.GetAllTasksDetails_Result">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Asignee" ColumnName="Asignee" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IssueType" ColumnName="IssueType" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="TaskStatus" ColumnName="TaskStatus" />
+                <ScalarProperty Name="Reporter" ColumnName="Reporter" />
+                <ScalarProperty Name="Project" ColumnName="Project" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1220,8 +1236,8 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

@@ -79,14 +79,14 @@ namespace TaskControl.Controllers
       switch (result)
       {
         case SignInStatus.Success:
-          if(string.IsNullOrEmpty(returnUrl))
+          if (string.IsNullOrEmpty(returnUrl))
           {
             return RedirectToAction("Index", "Dashboard");
           }
           else
           {
             return RedirectToLocal(returnUrl);
-          }         
+          }
         case SignInStatus.LockedOut:
           return View("Lockout");
         case SignInStatus.RequiresVerification:

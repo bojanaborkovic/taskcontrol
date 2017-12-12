@@ -405,9 +405,6 @@
   <data name="ProjectNotes_Title" xml:space="preserve">
     <value>Project notes</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="EditProject_Title" xml:space="preserve">
     <value>Edit project</value>
   </data>
@@ -440,5 +437,60 @@
   </data>
   <data name="RememberMe_Label" xml:space="preserve">
     <value>Remember me?</value>
+  </data>
+  <data name="AppInfo_Text" xml:space="preserve">
+    <value>Software tasks management system</value>
+  </data>
+  <data name="EditUser_Title" xml:space="preserve">
+    <value>Edit user</value>
+  </data>
+  <data name="AboutApp" xml:space="preserve">
+    <value>About application</value>
+  </data>
+  <data name="AppDescription_Text" xml:space="preserve">
+    <value>Application was developed as a project for final exam (BSc degree).</value>
+  </data>
+  <data name="Associate_Text" xml:space="preserve">
+    <value>Associate your</value>
+  </data>
+  <data name="CreateNewAccount_Text" xml:space="preserve">
+    <value>Create new account.</value>
+  </data>
+  <data name="EnterEmail_Text" xml:space="preserve">
+    <value>Please enter a user name for this site below and click the Register button to finish
+        logging in.</value>
+  </data>
+  <data name="ExternalLogin_Text" xml:space="preserve">
+    <value>Use another service to log in.</value>
+  </data>
+  <data name="Register_Text" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="SuccessAuth_Text" xml:space="preserve">
+    <value>You've successfully authenticated with</value>
+  </data>
+  <data name="ChangedAssigneeFrom_Text" xml:space="preserve">
+    <value>changed asignee from</value>
+  </data>
+  <data name="ChangeStatusFrom_Text" xml:space="preserve">
+    <value>changed status from</value>
+  </data>
+  <data name="ChangeStatusTo_Text" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="ChangeTo_Text" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="OnProject_Text" xml:space="preserve">
+    <value>on project</value>
+  </data>
+  <data name="OnTask_Text" xml:space="preserve">
+    <value>on task</value>
+  </data>
+  <data name="TaskHistory_Label" xml:space="preserve">
+    <value>Task history</value>
+  </data>
+  <data name="LoadEverything_Label" xml:space="preserve">
+    <value>Load everything</value>
   </data>
 </root>

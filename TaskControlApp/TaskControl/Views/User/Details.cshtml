@@ -1,25 +1,20 @@
 ﻿@model TaskControl.Models.UserViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Resources.Resources.Details_Label;
 }
 
-<h2>Details</h2>
+<h2>@Resources.Resources.Details_Label</h2>
+
+<img src="~/Content/images/user.png" />
 
 <div>
-    <h4>User</h4>
+    <h4>@Resources.Resources.User_Label</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.UserName)
+           @Resources.Resources.Username_Label
         </dt>
 
         <dd>
@@ -27,7 +22,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
+           @Resources.Resources.FirstName_Label
         </dt>
 
         <dd>
@@ -35,7 +30,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.LastName)
+          @Resources.Resources.LastName_Label
         </dt>
 
         <dd>
@@ -43,7 +38,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Email)
+           @Resources.Resources.Email_Label
         </dt>
 
         <dd>
@@ -51,7 +46,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+          @Resources.Resources.PhoneNumber_Label
         </dt>
 
         <dd>
@@ -59,7 +54,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RoleName)
+           @Resources.Resources.RoleName_Label
         </dt>
 
         <dd>
@@ -69,6 +64,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink(Resources.Resources.Edit_Link, "EditUser", new {  userId = Model.UserId }) |
+    @Html.ActionLink(Resources.Resources.BackToList_Link, "Index")
 </p>

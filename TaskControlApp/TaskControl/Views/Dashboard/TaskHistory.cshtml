@@ -1,0 +1,87 @@
+﻿@model IEnumerable<TaskControlDTOs.TaskAudit>
+
+@{
+    ViewBag.Title = Resources.Resources.TaskHistory_Label;
+}
+
+<h2>@Resources.Resources.TaskHistory_Label</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TaskId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TaskTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedByUsername)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedById)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedFrom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedFromId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedTo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedToId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangedOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedByUsername)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedById)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedFrom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedFromId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedToId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectName)
+        </td>
+
+    </tr>
+}
+
+</table>

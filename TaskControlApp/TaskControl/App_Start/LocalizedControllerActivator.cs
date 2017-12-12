@@ -59,7 +59,7 @@ namespace TaskControl.App_Start
         }
       }
 
-    
+
       //language parameter does not exist in the route
       if (requestContext.RouteData.Values["lang"] == null)
       {
@@ -68,7 +68,7 @@ namespace TaskControl.App_Start
         {
           lang = _dbLanguage;
         }
-        
+
         //if not fallback to default
         else
         {
@@ -85,12 +85,12 @@ namespace TaskControl.App_Start
         {
           lang = _dbLanguage;
           //if they are different, use the one configured in the db
-          if(_dbLanguage != requestContext.RouteData.Values["lang"].ToString())
+          if (_dbLanguage != requestContext.RouteData.Values["lang"].ToString())
           {
             requestContext.RouteData.Values.Remove("lang");
             requestContext.RouteData.Values.Add("lang", lang);
           }
-         
+
         }
         //if not set the one from the route
         else
@@ -101,7 +101,7 @@ namespace TaskControl.App_Start
 
       }
 
-      if (lang != _DefaultLanguage)
+      if (lang != _DefaultLanguage || _dbLanguage == null)
       {
         try
         {

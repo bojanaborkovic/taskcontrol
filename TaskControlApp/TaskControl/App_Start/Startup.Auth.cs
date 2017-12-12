@@ -74,11 +74,11 @@ namespace TaskControl
       //   appId: "",
       //   appSecret: "");
 
-      //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-      //{
-      //    ClientId = "",
-      //    ClientSecret = ""
-      //});
+      app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+      {
+        ClientId = "517257882530-6d4vm0p56qjn3prdo08nrsbvvmiv0m6e.apps.googleusercontent.com",
+        ClientSecret = "rs9OBMSBd6nNuPyBG1cmqadH"
+      });
     }
   }
 }

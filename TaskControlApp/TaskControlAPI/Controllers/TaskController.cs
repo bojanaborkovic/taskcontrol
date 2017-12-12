@@ -49,13 +49,13 @@ namespace TaskControlAPI.Controllers
 
     [HttpGet]
     [ActionName("GetAllTasksDetails")]
-    public HttpResponseMessage GetAllTasksDetails()
+    public HttpResponseMessage GetAllTasksDetails([FromUri] long userId)
     {
       _log.DebugFormat("GetAllTasksDetails invoked...");
 
       try
       {
-        var taskskRet = _taskService.GetAllTasksDetails();
+        var taskskRet = _taskService.GetAllTasksDetails(userId);
         if (taskskRet != null && taskskRet.RecordCount > 0)
         {
           _log.DebugFormat("GetAllTasksDetails finished with : {0}", taskskRet.Tasks.ToString());
@@ -199,6 +199,30 @@ namespace TaskControlAPI.Controllers
       catch (Exception ex)
       {
         _log.ErrorFormat("Error during fetching task... {0}", ex.Message);
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+      }
+    }
+
+    [HttpGet]
+    [ActionName("GetTaskComments")]
+    public HttpResponseMessage GetTaskComments(long taskId)
+    {
+      _log.DebugFormat("GetTaskComments invoked with taskId: {0} ...", taskId.ToString());
+
+      try
+      {
+        var comments = _taskService.GetTaskComments(taskId);
+        if (comments != null && comments.RecordCount > 0)
+        {
+          _log.DebugFormat("GetTaskComments finished with : {0}", comments.TaskComments.ToString());
+          return Request.CreateResponse(HttpStatusCode.OK, comments);
+
+        }
+        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error getting comments");
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error during fetching comments... {0}", ex.Message);
         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
       }
     }

@@ -8,7 +8,6 @@
 
 <h2><span @*class="glyphicon glyphicon-user"*@></span>  @Resources.Resources.CreateNewUser_Label </h2>
 
-<button type="button" onclick="location.href='@Url.Action("Index", "User")'" class="btn btn-secondary btn-lg"> @Resources.Resources.BackButton_Label </button>
 <br/>
 <br/>
 
@@ -73,14 +72,24 @@
 				@Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @id = "phonenumber" })
 			</div>
 		</div>
-		<input type="submit" class="btn btn-primary btn-lg" value="@Resources.Resources.Create_Button" /> 
+
+    <div class="form-group">
+      <div class="col-10">
+        <input type="submit" value="@Resources.Resources.Create_Button" class="btn btn-primary btn-lg" />
+      </div>
+    </div>
 	</form>
 
 
   }
 
+<br/>
+<br/>
+<p>
+  @Html.ActionLink(Resources.Resources.BackToList_Link, "Index")
+  </p>
 
-<script type="text/javascript">
+  <script type="text/javascript">
     $(document).ready(function () {
       if($('.field-validation-error') != null && $('.field-validation-error').length > 0)
       {
@@ -88,4 +97,4 @@
       }
       //console.log("bojana");
     });
-</script>
+  </script>

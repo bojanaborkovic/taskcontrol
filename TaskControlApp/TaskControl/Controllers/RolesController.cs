@@ -80,7 +80,7 @@ namespace TaskControl.Controllers
     {
       RoleViewModel newRole = new RoleViewModel();
       var projects = projectServiceClient.GetAllProjects(null);
-      if(projects != null && projects.RecordCount > 0)
+      if (projects != null && projects.RecordCount > 0)
       {
         newRole.ProjectsAccess = MapProjectsToView(projects);
       }
@@ -91,7 +91,7 @@ namespace TaskControl.Controllers
     {
       List<ProjectViewModel> projectsMapped = new List<ProjectViewModel>();
 
-      foreach(var project in projects.Projects)
+      foreach (var project in projects.Projects)
       {
         projectsMapped.Add(new ProjectViewModel()
         {
@@ -112,7 +112,7 @@ namespace TaskControl.Controllers
       {
         model.DateCreated = DateTime.UtcNow;
         var ret = rolesServiceClient.AddNewRole(MapRoleModelToEntity(model));
-        return Json(new { success = true});
+        return Json(new { success = true });
       }
       else
       {

@@ -1,7 +1,8 @@
 ﻿@model  TaskControl.Models.DashboardViewModel
 @{ 
   string getTaskInfoById = Url.Action("GetTaskInfoById", "Dashboard");
-   string updateTaskStatusUrl = Url.Action("UpdateTaskStatus", "Dashboard");
+  string updateTaskStatusUrl = Url.Action("UpdateTaskStatus", "Dashboard");
+  var lang = ViewBag.CurrentLanguage;
 }
 
 
@@ -127,7 +128,10 @@
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (result) {
-          document.getElementById('taskInfoBox').innerHTML = PrepareInfo(result);
+          var url = '@getTaskInfoById';
+          var parts = url.split('/TaskControl/', 2);
+          var lang = parts[1].substring(0, 2);
+          document.getElementById('taskInfoBox').innerHTML = PrepareInfo(result, lang);
           document.getElementById('taskInfoBox').style.display = "block";
         },
         error: function (result) {
@@ -136,15 +140,46 @@
       });
     }
 
-    function PrepareInfo(result) {
+    function PrepareInfo(result, lang) {
       var htmlText = '';
       for (var key in result) {
         if (result.hasOwnProperty(key)) {
-          htmlText += '<p> <b>' + key + '</b>: ' + result[key] + '</p>';
+          htmlText += '<p> <b>' + Translate(key, lang) + '</b>: ' + result[key] + '</p>';
         }
       }
 
       return htmlText;
+    }
+
+    function Translate(key, lang)
+    {
+      if(lang == null || lang == undefined || lang == "en" || lang == '')
+      {
+        return key;
+      }
+      else
+      {
+        switch (key) {
+          case "Title":
+            text = "Назив";
+            break;
+          case "Status":
+            text = "Статус";
+            break;
+          case "Asignee":
+            text = "Задужени";
+            break;
+          case "Start":
+            text = "Старт";
+            break;
+          case "End":
+            text = "Крај";
+            break;
+          default:
+            text = key;
+        }
+        return text;
+      }
     }
 
   });

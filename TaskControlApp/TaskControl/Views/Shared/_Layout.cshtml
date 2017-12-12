@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - TaskControl </title>
+  <meta name="google-signin-client_id" content="517257882530-6d4vm0p56qjn3prdo08nrsbvvmiv0m6e.apps.googleusercontent.com">
 
 
   <link rel="stylesheet" href="~/Content/dist/css/app.min.css">
@@ -12,7 +13,10 @@
   <link rel="stylesheet" href="~/Content/fullcalendar.print.css" media="print"/>
   <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
  
-  
+  <link rel="shortcut icon" href="~/Content/images/TaskControlICO.ico" />
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
   
   <script src="~/Scripts/jquery-bundle.min.js"></script>
   <script src="~/Scripts/jqueryui-bundle.min.js"></script>
@@ -40,8 +44,10 @@
 				
 				
             </div>
+
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                  <li><img src="~/Content/images/TaskControlIcon.png" class="logo" /></li>
                     <li>@Html.ActionLink(@Resources.Resources.Home_Menu_Item, "Index", "Dashboard")</li>
 										<li>@Html.ActionLink(@Resources.Resources.Projects_Menu_Item, "Index", "Project")</li>
 										<li>@Html.ActionLink(@Resources.Resources.Tasks_Menu_Item, "Index", "Task")</li>

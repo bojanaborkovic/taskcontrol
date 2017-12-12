@@ -248,6 +248,12 @@ namespace TaskControlAPI
            defaults: new { controller = "Task", action = "GetTaskHistory" }
            );
 
+      config.Routes.MapHttpRoute(
+          name: "GetTaskComments",
+          routeTemplate: "tasks/getcomments",
+          defaults: new { controller = "Task", action = "GetTaskComments" }
+          );
+
 
       #endregion
 

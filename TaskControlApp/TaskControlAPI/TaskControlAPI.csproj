@@ -255,6 +255,8 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="log4net.config" />
+    <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\LocalPublish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

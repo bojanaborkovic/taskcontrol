@@ -105,5 +105,10 @@ namespace DataModel
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTasksAssigneStatusHistory_Result>("GetTasksAssigneStatusHistory");
         }
+    
+        public virtual ObjectResult<GetAllTasksDetails_Result> GetAllTasksDetails1()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllTasksDetails_Result>("GetAllTasksDetails1");
+        }
     }
 }

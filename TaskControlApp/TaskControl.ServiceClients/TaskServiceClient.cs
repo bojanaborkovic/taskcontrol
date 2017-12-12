@@ -43,9 +43,9 @@ namespace TaskControl.ServiceClients
       return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "tasks", "create"), task);
     }
 
-    public TasksDetailsReturn GetAllTasksDetails()
+    public TasksDetailsReturn GetAllTasksDetails(long userId)
     {
-      return Get<TasksDetailsReturn>(new Uri(string.Format("{0}/{1}", BaseUri.ToString(), "details")));
+      return Get<TasksDetailsReturn>(new Uri(string.Format("{0}/{1}?userId={2}", BaseUri.ToString(), "details", userId)));
     }
 
     public BasicReturn UpdateTask(TaskEntity task)
@@ -74,6 +74,12 @@ namespace TaskControl.ServiceClients
     {
       string url = string.Format("{0}/{1}?taskId={2}", BaseUri.ToString(), "gettaskhistory", taskId);
       return Get<TaskAuditReturn>(new Uri(url));
+    }
+
+    public TaskCommentsReturn GetTaskComments(long taskId)
+    {
+      string url = string.Format("{0}/{1}?taskId={2}", BaseUri.ToString(), "getcomments", taskId);
+      return Get<TaskCommentsReturn>(new Uri(url));
     }
   }
 }

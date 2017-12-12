@@ -25,6 +25,8 @@ namespace DataModel.UnitOfWork
     private GenericRepository<TaskAsigneeHistory> _taskAsigneeHistoryRepository;
     private GenericRepository<TaskStatusHistory> _taskStatusHistoryRepository;
     private GenericRepository<Note> _notesRepository;
+    private GenericRepository<Comment> _commentsRepository;
+
     internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
     private bool disposed = false;
     #endregion
@@ -174,6 +176,19 @@ namespace DataModel.UnitOfWork
       }
     }
 
+    public GenericRepository<Comment> CommentRepository
+    {
+      get
+      {
+        if (this._commentsRepository == null)
+        {
+          this._commentsRepository = new GenericRepository<Comment>(context);
+        }
+        return _commentsRepository;
+      }
+    }
+
+
 
 
     #endregion
@@ -230,11 +245,11 @@ namespace DataModel.UnitOfWork
     }
 
 
-    public List<TaskDetailsResult> GetAllTasksDetails()
+    public List<GetAllTasksDetails_Result> GetAllTasksDetails()
     {
       using (var context = new TaskControlEntities())
       {
-        var tasks = context.GetAllTasksDetails();
+        var tasks = context.GetAllTasksDetails1();
 
         return tasks.ToList();
       }

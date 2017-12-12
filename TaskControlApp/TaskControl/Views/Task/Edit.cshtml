@@ -54,6 +54,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+        @Html.HiddenFor(model => model.Id)
         <div class="form-group">
           <b class="control-label col-md-2"> @Resources.Resources.Title_Label </b>
             <div class="col-md-10">
@@ -152,7 +153,10 @@
 
 		var availableTags = @Html.Raw(projectNames);
 
-    var availableUsernames = @Html.Raw(userNames);
+	  var availableUsernames = @Html.Raw(userNames);
+
+	  //fix for chrome!!! to get rid of US date validation
+	  jQuery.validator.methods["date"] = function (value, element) { return true; } 
 
 		$(".autocomplete").autocomplete({
 			source: availableTags

@@ -20,11 +20,11 @@ namespace TaskControl.ServiceClients
     {
       endpoint = string.Empty;
       string apiURL = ConfigurationManager.AppSettings["TaskControlApiURL"];
-      if(string.IsNullOrEmpty(apiURL))
+      if (string.IsNullOrEmpty(apiURL))
       {
         apiURL = "http://localhost/TaskControlAPI/";
       }
-      BaseUri = new Uri(string.Format("{0}{1}", apiURL , repoName));
+      BaseUri = new Uri(string.Format("{0}{1}", apiURL, repoName));
       client.DefaultRequestHeaders.Accept.Clear();
       client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
@@ -62,7 +62,7 @@ namespace TaskControl.ServiceClients
 
     public BasicReturn UpdateUser(UserEntity user)
     {
-      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "user", "update"), user);
+      return ExecutePost<BasicReturn>(string.Format("{0}/{1}", "users", "update"), user);
     }
 
     public SearchRolesReturn GetAllRoles()

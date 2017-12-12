@@ -30,15 +30,16 @@ namespace TaskControl.Controllers
 
       string userName = System.Web.HttpContext.Current.User.Identity.Name;
       var user = userServiceClient.GetUserByUsername(userName);
-      
-      if(user != null)
+
+
+      if (user != null)
       {
         ViewBag.UserId = user.Id.ToString();
       }
-      
+
       var retTaskDetails = taskServiceClient.GetAllTasksDetails(GetUserId());
 
-      if(user != null)
+      if (user != null)
       {
         var tasksForUser = taskServiceClient.GetTasksForUser(user.Id, null);
         if (tasksForUser != null && tasksForUser.RecordCount > 0)
@@ -48,13 +49,13 @@ namespace TaskControl.Controllers
       }
 
       var taskHistory = taskServiceClient.GetTaskHistory(null);
-      if(taskHistory != null && taskHistory.RecordCount > 0)
+      if (taskHistory != null && taskHistory.RecordCount > 0)
       {
         model.TaskAuditViewModel = new List<TaskAudit>();
         if (taskHistory != null)
         {
-         var take = taskHistory.TasksAudit.Take(30).ToList();
-         model.TaskAuditViewModel = take;
+          var take = taskHistory.TasksAudit.Take(50).ToList();
+          model.TaskAuditViewModel = take;
         }
       }
 
@@ -66,17 +67,12 @@ namespace TaskControl.Controllers
         model.OwnersProjects = MapOwnersProjects(projectsForOwner);
       }
 
-     
+
       ViewBag.TaskList = JsonConvert.SerializeObject(model.TaskViewModel, new JsonSerializerSettings
       {
         ContractResolver = new CamelCasePropertyNamesContractResolver()
       });
       return View("Index", model);
-    }
-
-    private List<TaskAuditViewModel> MapTasksAudit(List<TaskAudit> tasksAudit)
-    {
-      throw new NotImplementedException();
     }
 
     [HttpGet]
@@ -114,9 +110,9 @@ namespace TaskControl.Controllers
       string userName = System.Web.HttpContext.Current.User.Identity.Name;
       var user = userServiceClient.GetUserByUsername(userName);
       SearchTasksReturn ret = new SearchTasksReturn();
-      if(user != null)
+      if (user != null)
       {
-         ret = taskServiceClient.GetTasksForUser(user.Id, projectId);
+        ret = taskServiceClient.GetTasksForUser(user.Id, projectId);
       }
       DashboardViewModel model = new DashboardViewModel();
       model.TaskViewModel = new List<DashboardTaskViewModel>();
@@ -126,8 +122,8 @@ namespace TaskControl.Controllers
         var records = MapTasksToDashboard(ret);
         model.TaskViewModel = records;
       }
-     
-     
+
+
       return PartialView("TasksOnProject", model);
     }
 
@@ -137,6 +133,10 @@ namespace TaskControl.Controllers
     {
       var ret = taskServiceClient.GetTaskByIdCustom(taskId);
       var records = MapTaskToDashboard(ret);
+
+      var language = HttpContext.Request.RequestContext.RouteData.Values["lang"];
+
+      ViewBag.CurrentLanguage = language;
 
       var serializedRecords = JsonConvert.SerializeObject(records, new IsoDateTimeConverter() { DateTimeFormat = "dd-MM-yyyy HH:mm:ss" });
 
@@ -155,19 +155,6 @@ namespace TaskControl.Controllers
       return Json(new { success = true });
     }
 
-    private DashboardTaskViewModel MapTaskToDashboard(TaskEntityExtendedReturn ret)
-    {
-      DashboardTaskViewModel task = new DashboardTaskViewModel();
-      task.Id = ret.Id;
-      task.Title = ret.Title;
-      task.Status = ret.Status;
-      task.Start = ret.DateCreated;
-      task.End = ret.DueDate;
-      task.Asignee = ret.Asignee;
-
-      return task;
-    }
-
     [HttpGet]
     public ActionResult Calendar()
     {
@@ -177,6 +164,9 @@ namespace TaskControl.Controllers
       ViewBag.UserId = userId.ToString();
 
       var projectsForOwner = projectServiceClient.GetProjectsByOwner(userId);
+
+      var currentLanguage = HttpContext.Request.RequestContext.RouteData.Values["lang"];
+      ViewBag.CurrentLanguage = currentLanguage;
 
       DashboardViewModel model = new DashboardViewModel();
       model.OwnersProjects = new List<ProjectViewModel>();
@@ -188,7 +178,7 @@ namespace TaskControl.Controllers
         model.TaskViewModel = MapTasksToDashboard(ret);
       }
 
-      if(projectsForOwner != null)
+      if (projectsForOwner != null)
       {
         model.OwnersProjects = MapOwnersProjects(projectsForOwner);
       }
@@ -222,12 +212,25 @@ namespace TaskControl.Controllers
     }
 
 
-    // GET: Dashboard/Details/5
     public ActionResult Details(int id)
     {
       return View();
     }
 
+
+    [HttpGet]
+    public ActionResult GetAllHistory()
+    {
+      var taskHistory = taskServiceClient.GetTaskHistory(null);
+      List<TaskAudit> model = new List<TaskAudit>();
+
+      if (taskHistory != null && taskHistory.RecordCount > 0)
+      {
+        model = taskHistory.TasksAudit;
+      }
+
+      return View("TaskHistory", model);
+    }
 
     #region mappers
 
@@ -235,7 +238,7 @@ namespace TaskControl.Controllers
     {
       List<DashboardTaskViewModel> tasksDashboard = new List<DashboardTaskViewModel>();
 
-      if(ret != null && ret.RecordCount > 0)
+      if (ret != null && ret.RecordCount > 0)
       {
         foreach (var task in ret.Tasks)
         {
@@ -283,7 +286,7 @@ namespace TaskControl.Controllers
     //  List<TaskAuditViewModel> auditList = new List<TaskAuditViewModel>();
     //  var statuses = ViewData[StatusPreparer.ViewDataKey] as List<StatusEntity>;
 
-  
+
 
     //  if (tasksAudit != null && tasksAudit.Count > 0)
     //  {
@@ -338,6 +341,23 @@ namespace TaskControl.Controllers
       return tasksDashboard;
     }
 
+    private List<TaskAuditViewModel> MapTasksAudit(List<TaskAudit> tasksAudit)
+    {
+      throw new NotImplementedException();
+    }
+
+    private DashboardTaskViewModel MapTaskToDashboard(TaskEntityExtendedReturn ret)
+    {
+      DashboardTaskViewModel task = new DashboardTaskViewModel();
+      task.Id = ret.Id;
+      task.Title = ret.Title;
+      task.Status = ret.Status;
+      task.Start = ret.DateCreated;
+      task.End = ret.DueDate;
+      task.Asignee = ret.Asignee;
+
+      return task;
+    }
     private long GetUserId()
     {
       string userName = System.Web.HttpContext.Current.User.Identity.Name;

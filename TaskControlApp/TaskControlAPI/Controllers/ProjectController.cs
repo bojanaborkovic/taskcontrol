@@ -26,11 +26,11 @@ namespace TaskControlAPI.Controllers
     // GET: projects/all
     [HttpGet]
     [ActionName("GetAllProjects")]
-    public HttpResponseMessage GetAllProjects()
+    public HttpResponseMessage GetAllProjects([FromUri] long? userId)
     {
       _log.DebugFormat("GetAllProjects invoked...");
       //var projects = _projectService.GetAllProjects();
-      var retProjects = _projectService.GetProjectsWithOwner();
+      var retProjects = _projectService.GetProjectsWithOwner(userId);
       if (retProjects != null)
       {
         if (retProjects.Projects.Any())

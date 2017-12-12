@@ -30,9 +30,9 @@ namespace TaskControl.ServiceClients
       return ExecutePost<BaseProjectReturn>(string.Format("{0}/{1}", "projects", "create"), project);
     }
 
-    public GetProjectReturn GetAllProjects()
+    public GetProjectReturn GetAllProjects(long? userId)
     {
-      return Get<GetProjectReturn>(new Uri(string.Format("{0}{1}{2}", BaseUri.ToString(), "projects/", "/all")));
+      return Get<GetProjectReturn>(new Uri(string.Format("{0}{1}{2}?userId={3}", BaseUri.ToString(), "projects/", "/all", userId)));
     }
 
     public BaseProjectReturn GetProjectById(long Id)
@@ -63,7 +63,7 @@ namespace TaskControl.ServiceClients
       return ExecutePost<ProjectNotesReturn>(string.Format("{0}/{1}", "projects", "newnote"), note);
     }
 
-    public GetProjectReturn GetProjectsWithOwner()
+    public GetProjectReturn GetProjectsWithOwner(long? userId)
     {
       throw new NotImplementedException();
     }

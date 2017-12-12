@@ -75,14 +75,24 @@ namespace BusinessServices
       return null;
     }
 
-    public GetProjectReturn GetAllProjects()
+    public GetProjectReturn GetAllProjects(long? userId)
     {
       _log.DebugFormat("GetAllProjects invoked");
       GetProjectReturn ret = new GetProjectReturn();
 
       try
       {
-        var projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name));
+        List<Project> projects = new List<Project>();
+        if (userId != null)
+        {
+          List<long> projectAcess = CheckProjectAccessForUser((long)userId);
+          projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name)).Where(t => projectAcess.Contains(t.Id)).ToList();
+
+        }
+        else
+        {
+          projects = _unitOfWork.ProjectRepository.Get(orderBy: q => q.OrderBy(d => d.Name)).ToList();
+        }
         if (projects.Any())
         {
           var config = new MapperConfiguration(cfg =>
@@ -106,6 +116,26 @@ namespace BusinessServices
 
 
       return null;
+    }
+
+    private List<long> CheckProjectAccessForUser(long userId)
+    {
+      List<long> projectIDs = new List<long>();
+      var role = _unitOfWork.UserInRoleRepository.Get().Where(x => x.UserId == userId).SingleOrDefault();
+      if(role != null)
+      {
+        long roleId = role.RoleId;
+        var projectAccess = _unitOfWork.RoleClaimsRepository.GetAll().Where(x => x.RoleId == roleId).ToList();
+        if(projectAccess != null && projectAccess.Count > 0)
+        {
+          foreach(var access in projectAccess)
+          {
+            projectIDs.Add(access.ProjectId);
+          }
+        }
+      }
+
+      return projectIDs;
     }
 
     public ProjectStatisticsReturn GetProjectStatistics(long projectId)
@@ -205,19 +235,36 @@ namespace BusinessServices
       return null;
     }
 
-    public GetProjectReturn GetProjectsWithOwner()
+    public GetProjectReturn GetProjectsWithOwner(long? userId)
     {
       _log.DebugFormat("GetProjectsWithOwner invoked");
       GetProjectReturn ret = new GetProjectReturn();
 
       try
       {
-        var projects = _unitOfWork.GetProjectsWithOwner();
-        List<ProjectEntity> listOfProjects = new List<ProjectEntity>();
-        listOfProjects = MapProjectsList(projects);
-        ret.Projects = listOfProjects;
-        ret.RecordCount = listOfProjects.Count;
-        return ret;
+        List<ProjectResult> projects = new List<ProjectResult>();
+        if(userId != null)
+        {
+          List<long> projectAcess = CheckProjectAccessForUser((long)userId);
+          projects = _unitOfWork.GetProjectsWithOwner().Where(t => projectAcess.Contains(t.ProjectId)).ToList();
+
+          List<ProjectEntity> listOfProjects = new List<ProjectEntity>();
+          listOfProjects = MapProjectsList(projects);
+          ret.Projects = listOfProjects;
+          ret.RecordCount = listOfProjects.Count;
+          return ret;
+        }
+        else
+        {
+          var projectsEntities = _unitOfWork.ProjectRepository.GetAll().ToList();
+
+          List<ProjectEntity> listOfProjects = new List<ProjectEntity>();
+          listOfProjects = MapProjects(projectsEntities);
+          ret.Projects = listOfProjects;
+          ret.RecordCount = listOfProjects.Count;
+          return ret;
+        }
+
 
       }
       catch (Exception ex)
@@ -225,6 +272,18 @@ namespace BusinessServices
         _log.ErrorFormat("Error search users... {0}", ex.Message);
       }
       return null;
+    }
+
+    private List<ProjectEntity> MapProjects(List<Project> projectsEntities)
+    {
+      List<ProjectEntity> projectsMapped = new List<ProjectEntity>();
+
+      foreach (var item in projectsEntities)
+      {
+        projectsMapped.Add(new ProjectEntity() { Id = item.Id, Name = item.Name, OwnerId = item.OwnerId.HasValue ? item.OwnerId.Value : 0, Owner = GetAuthorById(item.OwnerId.Value) });
+      }
+
+      return projectsMapped;
     }
 
     public ProjectNotesReturn GetProjectNotes(long projectId)

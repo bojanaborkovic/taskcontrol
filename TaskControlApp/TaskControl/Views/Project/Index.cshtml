@@ -4,7 +4,10 @@
     ViewBag.Title = Resources.Resources.Projects_Label;
 }
 
-<h2> @Resources.Resources.Projects_Label</h2>
+<h2 class="text-primary">@Resources.Resources.Projects_Label</h2>
+
+
+<br/>
 
 <p>
   <button class="btn btn-default btn-lg btn-success" type="button" onclick="location.href='@Url.Action("Create", "Project")'">
@@ -35,17 +38,17 @@
         <div class="progress">
           <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@Html.DisplayFor(modelItem => item.TotalProgress)"
                aria-valuemin="0" aria-valuemax="100" style="width:@Html.DisplayFor(modelItem => item.TotalProgress)%">
-           Complete 
+           @Html.DisplayFor(modelItem => item.TotalProgress)%  @Resources.Resources.Complete_ProgressBar_Label 
           </div>
         </div>
 				<div class="alert alert-success" role="alert">
-					<strong>@Html.DisplayFor(modelItem => item.CompletedCount) tasks</strong> @Resources.Resources.Complete_ProgressBar_Label
+					<strong>@Html.DisplayFor(modelItem => item.CompletedCount) @Resources.Resources.Tasks_Label</strong> @Resources.Resources.Complete_ProgressBar_Label
 				</div>
 				<div class="alert alert-warning" role="alert">
-					<strong>@Html.DisplayFor(modelItem => item.InProgressCount) tasks</strong> @Resources.Resources.InProgress_PlanningBoard_Title
+					<strong>@Html.DisplayFor(modelItem => item.InProgressCount) @Resources.Resources.Tasks_Label</strong> @Resources.Resources.InProgress_PlanningBoard_Title
 				</div>
 				<div class="alert alert-danger" role="alert">
-					<strong>@Html.DisplayFor(modelItem => item.ToDoCount)  tasks</strong> @Resources.Resources.ToDo_PlanningBoard_Title
+					<strong>@Html.DisplayFor(modelItem => item.ToDoCount)  @Resources.Resources.Tasks_Label</strong> @Resources.Resources.ToDo_PlanningBoard_Title
 				</div>
         <div>
          

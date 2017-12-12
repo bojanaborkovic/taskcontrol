@@ -79,6 +79,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About application.
+        /// </summary>
+        public static string AboutApp {
+            get {
+                return ResourceManager.GetString("AboutApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account.
         /// </summary>
         public static string Account_Title {
@@ -151,11 +160,38 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application was developed as a project for final exam (BSc degree)..
+        /// </summary>
+        public static string AppDescription_Text {
+            get {
+                return ResourceManager.GetString("AppDescription_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software tasks management system.
+        /// </summary>
+        public static string AppInfo_Text {
+            get {
+                return ResourceManager.GetString("AppInfo_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assignee.
         /// </summary>
         public static string Assignee_Label {
             get {
                 return ResourceManager.GetString("Assignee_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Associate your.
+        /// </summary>
+        public static string Associate_Text {
+            get {
+                return ResourceManager.GetString("Associate_Text", resourceCulture);
             }
         }
         
@@ -192,6 +228,15 @@ namespace Resources {
         public static string Change_Button {
             get {
                 return ResourceManager.GetString("Change_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to changed asignee from.
+        /// </summary>
+        public static string ChangedAssigneeFrom_Text {
+            get {
+                return ResourceManager.GetString("ChangedAssigneeFrom_Text", resourceCulture);
             }
         }
         
@@ -246,6 +291,33 @@ namespace Resources {
         public static string ChangeSettings_Label {
             get {
                 return ResourceManager.GetString("ChangeSettings_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to changed status from.
+        /// </summary>
+        public static string ChangeStatusFrom_Text {
+            get {
+                return ResourceManager.GetString("ChangeStatusFrom_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to.
+        /// </summary>
+        public static string ChangeStatusTo_Text {
+            get {
+                return ResourceManager.GetString("ChangeStatusTo_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to.
+        /// </summary>
+        public static string ChangeTo_Text {
+            get {
+                return ResourceManager.GetString("ChangeTo_Text", resourceCulture);
             }
         }
         
@@ -345,6 +417,15 @@ namespace Resources {
         public static string Create_Button {
             get {
                 return ResourceManager.GetString("Create_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create new account..
+        /// </summary>
+        public static string CreateNewAccount_Text {
+            get {
+                return ResourceManager.GetString("CreateNewAccount_Text", resourceCulture);
             }
         }
         
@@ -475,6 +556,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit user.
+        /// </summary>
+        public static string EditUser_Title {
+            get {
+                return ResourceManager.GetString("EditUser_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
         public static string Email_Label {
@@ -484,11 +574,30 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a user name for this site below and click the Register button to finish
+        ///        logging in..
+        /// </summary>
+        public static string EnterEmail_Text {
+            get {
+                return ResourceManager.GetString("EnterEmail_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export to excel.
         /// </summary>
         public static string ExportToExcel_Button {
             get {
                 return ResourceManager.GetString("ExportToExcel_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use another service to log in..
+        /// </summary>
+        public static string ExternalLogin_Text {
+            get {
+                return ResourceManager.GetString("ExternalLogin_Text", resourceCulture);
             }
         }
         
@@ -570,6 +679,15 @@ namespace Resources {
         public static string LastName_Label {
             get {
                 return ResourceManager.GetString("LastName_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load everything.
+        /// </summary>
+        public static string LoadEverything_Label {
+            get {
+                return ResourceManager.GetString("LoadEverything_Label", resourceCulture);
             }
         }
         
@@ -669,6 +787,24 @@ namespace Resources {
         public static string NewTask_Title {
             get {
                 return ResourceManager.GetString("NewTask_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on project.
+        /// </summary>
+        public static string OnProject_Text {
+            get {
+                return ResourceManager.GetString("OnProject_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on task.
+        /// </summary>
+        public static string OnTask_Text {
+            get {
+                return ResourceManager.GetString("OnTask_Text", resourceCulture);
             }
         }
         
@@ -808,6 +944,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Register_Text {
+            get {
+                return ResourceManager.GetString("Register_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register as new user.
         /// </summary>
         public static string RegisterNewUser_Link {
@@ -898,11 +1043,11 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to You&apos;ve successfully authenticated with.
         /// </summary>
-        public static string String1 {
+        public static string SuccessAuth_Text {
             get {
-                return ResourceManager.GetString("String1", resourceCulture);
+                return ResourceManager.GetString("SuccessAuth_Text", resourceCulture);
             }
         }
         
@@ -912,6 +1057,15 @@ namespace Resources {
         public static string TaskComments_Title {
             get {
                 return ResourceManager.GetString("TaskComments_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task history.
+        /// </summary>
+        public static string TaskHistory_Label {
+            get {
+                return ResourceManager.GetString("TaskHistory_Label", resourceCulture);
             }
         }
         

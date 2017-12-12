@@ -11,10 +11,10 @@ namespace BusinessServices.Interfaces
   public interface IProjectService
   {
     BaseProjectReturn GetProjectById(long Id);
-    GetProjectReturn GetAllProjects();
+    GetProjectReturn GetAllProjects(long? userId);
     BaseProjectReturn CreateProject(ProjectEntity project);
     BaseProjectReturn UpdateProject(ProjectEntity project);
-    GetProjectReturn GetProjectsWithOwner();
+    GetProjectReturn GetProjectsWithOwner(long? userId);
     BaseProjectReturn GetProjectByName(string projectName);
     ProjectStatisticsReturn GetProjectStatistics(long projectId);
 

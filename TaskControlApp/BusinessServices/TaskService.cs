@@ -148,13 +148,15 @@ namespace BusinessServices
       return ret;
     }
 
-    public TasksDetailsReturn GetAllTasksDetails()
+    public TasksDetailsReturn GetAllTasksDetails(long userId)
     {
       _log.DebugFormat("GetAllTasksDetails invoked");
       TasksDetailsReturn ret = new TasksDetailsReturn();
       try
       {
-        var tasks = _unitOfWork.GetAllTasksDetails();
+        List<long> projectAcess = CheckProjectAccessForUser(userId);
+
+        var tasks = _unitOfWork.GetAllTasksDetails().Where(t => projectAcess.Contains(t.ProjectId));
         var taskSorted = tasks.OrderByDescending(x => x.DateCreated).ToList();
         List<TaskEntityExtended> tasksWithDetails = new List<TaskEntityExtended>();
 
@@ -199,7 +201,7 @@ namespace BusinessServices
       {
         var tasks = _unitOfWork.TaskRepository.GetAll().Where(x => x.Asignee == userId).ToList();
 
-        if(projectId != null)
+        if (projectId != null)
         {
           tasks = tasks.Where(x => x.ProjectId == projectId).ToList();
         }
@@ -231,9 +233,9 @@ namespace BusinessServices
     private List<TaskEntity> MapAdditionalFields(List<TaskEntity> taskskMapped)
     {
       List<TaskEntity> tasks = new List<TaskEntity>();
-      if(taskskMapped != null && taskskMapped.Count > 0)
+      if (taskskMapped != null && taskskMapped.Count > 0)
       {
-        foreach(var item in taskskMapped)
+        foreach (var item in taskskMapped)
         {
           tasks.Add(new TaskEntity()
           {
@@ -297,7 +299,7 @@ namespace BusinessServices
       TaskAuditReturn ret = new TaskAuditReturn();
       try
       {
-        if(taskId == null)
+        if (taskId == null)
         {
           // get all changes on all tasks
           var statusHistory = _unitOfWork.TaskStatusHistoryRepository.GetAll();
@@ -316,7 +318,7 @@ namespace BusinessServices
         }
         if (ret.TasksAudit.Any())
         {
-         
+
           _log.DebugFormat("GetTaskHistory finished with : {0}", ret.TasksAudit.ToString());
           ret.RecordCount = ret.RecordCount;
           ret.StatusCode = "OK";
@@ -331,14 +333,61 @@ namespace BusinessServices
       return ret;
     }
 
+    public TaskCommentsReturn GetTaskComments(long taskId)
+    {
+      _log.DebugFormat("GetTaskComments invoked for taskId : {0}", taskId);
+      TaskCommentsReturn ret = new TaskCommentsReturn();
+      try
+      {
+        List<DataModel.Comment> comments = new List<DataModel.Comment>();
+        comments = _unitOfWork.CommentRepository.GetAll().Where(x => x.TaskId == taskId).ToList();
+
+        if (comments != null && comments.Any())
+        {
+          comments = comments.OrderByDescending(x => x.DateCreated).ToList();
+          TaskCommentsReturn commentsMapped = MapComments(comments);
+          _log.DebugFormat("GetTaskComments finished with : {0}", commentsMapped.ToString());
+          ret.TaskComments = commentsMapped.TaskComments;
+          ret.RecordCount = commentsMapped.RecordCount;
+          ret.StatusCode = "OK";
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.ErrorFormat("Error fetching comments... {0}", ex.Message);
+        ret.ErrorMessage = ex.Message;
+      }
+      return ret;
+    }
+
+    private TaskCommentsReturn MapComments(List<DataModel.Comment> comments)
+    {
+      TaskCommentsReturn ret = new TaskCommentsReturn();
+      ret.TaskComments = new List<BussinesService.Interfaces.Responses.Task.Comment>();
+      foreach (var comment in comments)
+      {
+        ret.TaskComments.Add(new BussinesService.Interfaces.Responses.Task.Comment()
+        {
+          AuthorId = comment.Author,
+          AuthorName = GetUsernamebyId(comment.Author),
+          Content = comment.Text,
+          TaskId = comment.TaskId,
+          DateCreated = (DateTime)comment.DateCreated
+        });
+      }
+
+      ret.RecordCount = ret.TaskComments.Count;
+      return ret;
+    }
+
     private TaskAuditReturn MergeHistoryLists(IEnumerable<TaskAsigneeHistory> asigneeHistory, IEnumerable<TaskStatusHistory> statusHistory)
     {
       TaskAuditReturn ret = new TaskAuditReturn();
       ret.TasksAudit = new List<TaskAudit>();
 
       if (statusHistory != null && statusHistory.Count() > 0)
-      {       
-        foreach(var historyItem in statusHistory)
+      {
+        foreach (var historyItem in statusHistory)
         {
           if (historyItem.StatusAfter != historyItem.StatusBefore)
           {
@@ -353,15 +402,17 @@ namespace BusinessServices
               ChangedFrom = GetStatusNameById(historyItem.StatusBefore),
               ChangedOnString = historyItem.ChangeDate != null ? historyItem.ChangeDate.ToString() : string.Empty,
               ChangedToId = historyItem.StatusAfter,
-              ChangedTo = GetStatusNameById(historyItem.StatusAfter)
+              ChangedTo = GetStatusNameById(historyItem.StatusAfter),
+              ProjectId = GetTaskProjectByTaskId(historyItem.TaskId),
+              ProjectName = GetTaskNameByTaskId(historyItem.TaskId)
             });
           }
         }
       }
 
-      if(asigneeHistory != null && asigneeHistory.Count() > 0)
+      if (asigneeHistory != null && asigneeHistory.Count() > 0)
       {
-        foreach(var historyItem in asigneeHistory)
+        foreach (var historyItem in asigneeHistory)
         {
           if (historyItem.AsigneeAfter != historyItem.AsigneeBefore)
           {
@@ -377,7 +428,9 @@ namespace BusinessServices
               ChangedFrom = GetUsernamebyId(historyItem.AsigneeBefore),
               ChangedOnString = historyItem.ChangeDate != null ? historyItem.ChangeDate.ToString() : string.Empty,
               ChangedToId = historyItem.AsigneeAfter,
-              ChangedTo = GetUsernamebyId(historyItem.AsigneeAfter)
+              ChangedTo = GetUsernamebyId(historyItem.AsigneeAfter),
+              ProjectId = GetTaskProjectByTaskId(historyItem.TaskId),
+              ProjectName = GetTaskNameByTaskId(historyItem.TaskId)
 
             });
           }
@@ -389,15 +442,45 @@ namespace BusinessServices
 
       ret.TasksAudit = ret.TasksAudit.OrderByDescending(x => x.ChangedOnString).ToList();
 
-      return ret; 
-      
+      return ret;
+
+    }
+
+    private string GetTaskNameByTaskId(long taskId)
+    {
+      string projectName = string.Empty;
+
+      var task = _unitOfWork.TaskRepository.Get(x => x.Id == taskId).FirstOrDefault();
+      if (task != null)
+      {
+        var project = _unitOfWork.ProjectRepository.GetByID(task.ProjectId);
+        if (project != null)
+        {
+          return project.Name;
+        }
+      }
+
+      return projectName;
+    }
+
+    private long GetTaskProjectByTaskId(long taskId)
+    {
+      var task = _unitOfWork.TaskRepository.Get(x => x.Id == taskId).FirstOrDefault();
+      if (task != null)
+      {
+        return task.ProjectId;
+      }
+      else
+      {
+        return 0;
+      }
     }
 
     private string GetTaskName(long taskId)
     {
       string taskName = string.Empty;
       var task = _unitOfWork.TaskRepository.Get(x => x.Id == taskId).FirstOrDefault();
-      if(task != null)
+      if (task != null)
       {
         taskName = task.Title;
       }
@@ -408,10 +491,10 @@ namespace BusinessServices
     private string GetStatusNameById(int? statusBefore)
     {
       string statusName = "N/A";
-      if(statusBefore != null)
+      if (statusBefore != null)
       {
         var status = _unitOfWork.StatusRepository.Get(x => x.Id == statusBefore).First();
-        if(status != null)
+        if (status != null)
         {
           statusName = status.Name;
         }
@@ -441,10 +524,10 @@ namespace BusinessServices
     private string GetUsernamebyId(long? changeBy)
     {
       string username = "N/A";
-      if(changeBy != null)
+      if (changeBy != null)
       {
         var user = _unitOfWork.UserRepository.Get(x => x.Id == changeBy).First();
-        if(user != null)
+        if (user != null)
         {
           username = user.UserName;
         }
@@ -468,11 +551,31 @@ namespace BusinessServices
       return priority;
     }
 
+    private List<long> CheckProjectAccessForUser(long userId)
+    {
+      List<long> projectIDs = new List<long>();
+      var role = _unitOfWork.UserInRoleRepository.Get().Where(x => x.UserId == userId).SingleOrDefault();
+      if (role != null)
+      {
+        long roleId = role.RoleId;
+        var projectAccess = _unitOfWork.RoleClaimsRepository.GetAll().Where(x => x.RoleId == roleId).ToList();
+        if (projectAccess != null && projectAccess.Count > 0)
+        {
+          foreach (var access in projectAccess)
+          {
+            projectIDs.Add(access.ProjectId);
+          }
+        }
+      }
+
+      return projectIDs;
+    }
+
 
     #endregion
 
     #region mappers
-    private List<TaskEntityExtended> MapTasks(List<TaskDetailsResult> tasks)
+    private List<TaskEntityExtended> MapTasks(List<GetAllTasksDetails_Result> tasks)
     {
       List<TaskEntityExtended> tasksDetails = new List<TaskEntityExtended>();
 
@@ -490,35 +593,15 @@ namespace BusinessServices
           Reporter = task.Reporter,
           Project = task.Project,
           Priority = task.Priority,
-          IssueType = task.IssueType
+          IssueType = task.IssueType,
+          ProjectId = task.ProjectId
 
         });
       }
 
       return tasksDetails;
     }
-    //private List<TaskAudit> MapTasksAudit(List<GetTasksAssigneStatusHistory_Result> tasksAudit)
-    //{
-    //  List<TaskAudit> audit = new List<TaskAudit>();
 
-    //  foreach (var item in tasksAudit)
-    //  {
-    //    audit.Add(new TaskAudit()
-    //    {
-    //      TaskId = item.TaskId,//}
-    //      AsigneeBefore = item.AsigneeBefore,
-    //      AsigneeAfter = item.AsigneeAfter,
-    //      AsigneeChangedOnDate = item.AssigneChangedOn,
-    //      AsigneeChangedBy = item.AssigneChangedBy,
-    //      StatusBefore = item.StatusBefore,
-    //      StatusAfter = item.StatusAfter,
-    //      StatusChangedOnDate = (DateTime)item.StatusChangedOn,
-    //      StatusChangedBy = item.StatusChangeBy
-    //    });
-    //  }
-
-    //  return audit;
-    
     private TaskEntityExtendedReturn MapToTaskEntity(GetTaskResult getTaskResult)
     {
       TaskEntityExtendedReturn taskEntity = new TaskEntityExtendedReturn();

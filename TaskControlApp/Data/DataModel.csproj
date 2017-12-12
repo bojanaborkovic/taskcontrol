@@ -76,6 +76,9 @@
       <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GenericRepository\GenericRepository.cs" />
+    <Compile Include="GetAllTasksDetails_Result.cs">
+      <DependentUpon>TaskControlModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetProjectStatistics_Result.cs">
       <DependentUpon>TaskControlModel.tt</DependentUpon>
     </Compile>
