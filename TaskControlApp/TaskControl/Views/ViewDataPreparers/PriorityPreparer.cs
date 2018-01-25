@@ -10,28 +10,23 @@ using TaskControlDTOs;
 
 namespace TaskControl.ViewDataPreparers
 {
-  public class StatusPreparer : ActionFilterAttribute, IDataPreparer<StatusEntity>
+  public class PriorityPreparer : ActionFilterAttribute, IDataPreparer<PriorityEntity>
   {
-    private UtilityServiceClient utilityServiceClient = new UtilityServiceClient("status");
+    private UtilityServiceClient utilityServiceClient = new UtilityServiceClient("priority");
     //public IssueTypePreparer()
     //{
     //	AddDefaultItem = false;
     //}
-    public IList<StatusEntity> GetDataItems()
+    public IList<PriorityEntity> GetDataItems()
     {
-      var ret = utilityServiceClient.GetAllStatuses();
-      List<StatusEntity> statuses = new List<StatusEntity>();
-      if (ret != null)
-      {
-        statuses = JsonConvert.DeserializeObject<List<StatusEntity>>(ret);
-      }
-
+      var ret = utilityServiceClient.GetPriorities();
+      List<PriorityEntity> statuses = JsonConvert.DeserializeObject<List<PriorityEntity>>(ret);
       return statuses;
     }
 
     //public bool AddDefaultItem { get; set; }
 
-    public static string ViewDataKey { get { return "Statuses"; } }
+    public static string ViewDataKey { get { return "Priority"; } }
 
     public override void OnActionExecuting(System.Web.Mvc.ActionExecutingContext filterContext)
     {

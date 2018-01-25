@@ -269,23 +269,23 @@ namespace BusinessServices
           throw new Exception(string.Format("Role with Id {0} does not exist!", userInRole.RoleId));
         }
 
-        var userInRoleEntity = new AspNetUserRole() { UserId = userInRole.UserId, RoleId = userInRole.RoleId };
+        var oldUserInRole = _unitOfWork.UserInRoleRepository.GetByID(userInRole.UserId);
 
-        var usersRole = _unitOfWork.UserInRoleRepository.GetByID(userInRole.UserId, userInRole.RoleId);
-
-        if (usersRole == null)
+        //no role assigned to user
+        if (oldUserInRole == null)
         {
+          var userInRoleEntity = new AspNetUserRole() { UserId = userInRole.UserId, RoleId = userInRole.RoleId };
           _unitOfWork.UserInRoleRepository.Insert(userInRoleEntity);
           _unitOfWork.Save();
           ret.StatusCode = "Success";
         }
-
+        //update user's role
         else
         {
-          var message = string.Format("User {0} is already in role {1}", userInRole.UserId, userInRole.RoleId);
-          _log.DebugFormat(message);
-          ret.ErrorMessage = message;
-          return ret;
+          var userInRoleEntity = new AspNetUserRole() { UserId = userInRole.UserId, RoleId = userInRole.RoleId };
+          _unitOfWork.UserInRoleRepository.Update(userInRoleEntity);
+          _unitOfWork.Save();
+          ret.StatusCode = "Success";
         }
 
 

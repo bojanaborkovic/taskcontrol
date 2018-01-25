@@ -25,7 +25,7 @@ namespace TaskControl.ViewDataPreparers
       {
         statuses = JsonConvert.DeserializeObject<List<StatusEntity>>(ret);
       }
-
+     
       return statuses;
     }
 

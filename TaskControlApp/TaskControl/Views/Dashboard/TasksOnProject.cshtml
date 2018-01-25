@@ -129,8 +129,12 @@
         dataType: "json",
         success: function (result) {
           var url = '@getTaskInfoById';
-          var parts = url.split('/TaskControl/', 2);
-          var lang = parts[1].substring(0, 2);
+          var afterSlash = url.substr(url.indexOf("/") + 1);
+          var lang = afterSlash.substring(0, 2);
+          if (lang == undefined || lang == null)
+          {
+            lang = 'en';
+          }
           document.getElementById('taskInfoBox').innerHTML = PrepareInfo(result, lang);
           document.getElementById('taskInfoBox').style.display = "block";
         },

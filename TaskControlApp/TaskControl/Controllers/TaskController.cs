@@ -16,6 +16,8 @@ using System.Web.UI.WebControls;
 using System.Web.UI;
 using System.IO;
 using System.Text;
+using System.Globalization;
+using System.Threading;
 
 namespace TaskControl.Controllers
 {
@@ -25,6 +27,11 @@ namespace TaskControl.Controllers
     private TaskServiceClient taskServiceClient = new TaskServiceClient("tasks") { DoSerialize = true };
     private UserServiceClient userServiceClient = new UserServiceClient("users") { DoSerialize = true };
     private ProjectServiceClient projectServiceClient = new ProjectServiceClient();
+
+    public TaskController()
+    {
+      Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
+    }
 
     // GET: Tasks
     //public ActionResult Index()

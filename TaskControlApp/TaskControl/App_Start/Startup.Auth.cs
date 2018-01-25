@@ -76,8 +76,8 @@ namespace TaskControl
 
       app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
       {
-        ClientId = "517257882530-6d4vm0p56qjn3prdo08nrsbvvmiv0m6e.apps.googleusercontent.com",
-        ClientSecret = "rs9OBMSBd6nNuPyBG1cmqadH"
+        ClientId = "517257882530-o0get58uo75or14jpo406mbehvcpd5tf.apps.googleusercontent.com",
+        ClientSecret = "XBz5QWGNQWAVttkLOed2WAQd"
       });
     }
   }

@@ -32,7 +32,8 @@ namespace TaskControl.ServiceClients
 
     public GetProjectReturn GetAllProjects(long? userId)
     {
-      return Get<GetProjectReturn>(new Uri(string.Format("{0}{1}{2}?userId={3}", BaseUri.ToString(), "projects/", "/all", userId)));
+      string url = string.Format("{0}{1}/{2}?userId={3}", BaseUri.ToString(), "projects", "all", userId);
+      return Get<GetProjectReturn>(new Uri(url));
     }
 
     public BaseProjectReturn GetProjectById(long Id)
@@ -67,7 +68,7 @@ namespace TaskControl.ServiceClients
     {
       throw new NotImplementedException();
     }
-    
+
     public ProjectStatisticsReturn GetProjectStatistics(long projectId)
     {
       string url = string.Format("{0}{1}/{2}?projectId={3}", BaseUri.ToString(), "projects", "getstatistics", projectId);

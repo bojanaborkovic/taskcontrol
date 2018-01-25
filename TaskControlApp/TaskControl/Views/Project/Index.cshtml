@@ -26,12 +26,12 @@
 		<div class="card">	
 			<div class="card-block">
 
-				<h2 class="card-title">
-					@Html.ActionLink(item.Name, "EditProject", new { projectId = item.Id })
-				</h2>
+        <h4>
+          @Html.ActionLink(item.Name, "EditProject", new { projectId = item.Id })
+          </h4>
 
-				<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
-					<span>@Resources.Resources.Owner_Label : @Html.DisplayFor(modelItem => item.Owner)</span>
+          <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+					<span style="word-wrap: break-word;min-width: 50px;max-width: 160px;">@Resources.Resources.Owner_Label : @Html.DisplayFor(modelItem => item.Owner)</span>
 					
 					<br />
 					<br />

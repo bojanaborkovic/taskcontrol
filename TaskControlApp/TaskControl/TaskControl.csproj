@@ -232,9 +232,9 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="ViewDataPreparers\IDataPreparer.cs" />
+    <Compile Include="ViewDataPreparers\IssueTypePreparer.cs" />
     <Compile Include="ViewDataPreparers\PriorityPreparer.cs" />
     <Compile Include="ViewDataPreparers\StatusPreparer.cs" />
-    <Compile Include="ViewDataPreparers\IssueTypePreparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
@@ -346,6 +346,7 @@
     <Content Include="Views\Manage\ChangeLanguage.cshtml" />
     <Content Include="Views\User\EditUser.cshtml" />
     <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\bojanab.tech - Web Deploy.pubxml" />
     <Content Include="Views\Dashboard\TaskHistory.cshtml" />
   </ItemGroup>

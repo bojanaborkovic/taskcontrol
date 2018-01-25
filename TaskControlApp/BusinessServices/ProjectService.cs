@@ -19,11 +19,15 @@ namespace BusinessServices
     private readonly DataModel.UnitOfWork.UnitOfWork _unitOfWork = new UnitOfWork();
     internal static readonly ILog _log = LogManager.GetLogger(typeof(UnitOfWork));
 
-    //public ProjectService()
-    //{
-    //	_unitOfWork = new UnitOfWork();
-    //}
+    #region constructors
+    public ProjectService()
+    {
+      _unitOfWork = new UnitOfWork();
+    }
+    #endregion
 
+
+    #region IProjectService members
     public BaseProjectReturn CreateProject(ProjectEntity projectEntity)
     {
 
@@ -70,7 +74,7 @@ namespace BusinessServices
         IMapper mapper = config.CreateMapper();
         var mappedProject = mapper.Map<Project, BaseProjectReturn>(project);
         return mappedProject;
-        
+
       }
       return null;
     }
@@ -116,26 +120,6 @@ namespace BusinessServices
 
 
       return null;
-    }
-
-    private List<long> CheckProjectAccessForUser(long userId)
-    {
-      List<long> projectIDs = new List<long>();
-      var role = _unitOfWork.UserInRoleRepository.Get().Where(x => x.UserId == userId).SingleOrDefault();
-      if(role != null)
-      {
-        long roleId = role.RoleId;
-        var projectAccess = _unitOfWork.RoleClaimsRepository.GetAll().Where(x => x.RoleId == roleId).ToList();
-        if(projectAccess != null && projectAccess.Count > 0)
-        {
-          foreach(var access in projectAccess)
-          {
-            projectIDs.Add(access.ProjectId);
-          }
-        }
-      }
-
-      return projectIDs;
     }
 
     public ProjectStatisticsReturn GetProjectStatistics(long projectId)
@@ -231,7 +215,6 @@ namespace BusinessServices
         _log.ErrorFormat("Error during fetching projects... {0}", ex.Message);
       }
 
-
       return null;
     }
 
@@ -243,7 +226,7 @@ namespace BusinessServices
       try
       {
         List<ProjectResult> projects = new List<ProjectResult>();
-        if(userId != null)
+        if (userId != null)
         {
           List<long> projectAcess = CheckProjectAccessForUser((long)userId);
           projects = _unitOfWork.GetProjectsWithOwner().Where(t => projectAcess.Contains(t.ProjectId)).ToList();
@@ -314,19 +297,19 @@ namespace BusinessServices
       ProjectNotesReturn ret = new ProjectNotesReturn();
       try
       {
-         
-          _log.DebugFormat("Creating note : {0}", note.ToString());
-          DataModel.Note mappedNote = new DataModel.Note();
-          mappedNote.DateCreated = note.DateCreated;
-          mappedNote.ProjectId = note.ProjectId;
-          mappedNote.Text = note.Content;
-          mappedNote.Author = note.AuthorId;
-          _unitOfWork.NoteRepository.Insert(mappedNote);
-          _unitOfWork.Save();
- 
-          var projectNotes = _unitOfWork.NoteRepository.GetAll().Where(x => x.ProjectId == note.ProjectId).ToList();
-          ret.Notes = MapProjectNotes(projectNotes);
-          ret.RecordCount = projectNotes.Count;
+
+        _log.DebugFormat("Creating note : {0}", note.ToString());
+        DataModel.Note mappedNote = new DataModel.Note();
+        mappedNote.DateCreated = note.DateCreated;
+        mappedNote.ProjectId = note.ProjectId;
+        mappedNote.Text = note.Content;
+        mappedNote.Author = note.AuthorId;
+        _unitOfWork.NoteRepository.Insert(mappedNote);
+        _unitOfWork.Save();
+
+        var projectNotes = _unitOfWork.NoteRepository.GetAll().Where(x => x.ProjectId == note.ProjectId).ToList();
+        ret.Notes = MapProjectNotes(projectNotes);
+        ret.RecordCount = projectNotes.Count;
 
       }
       catch (Exception ex)
@@ -336,67 +319,6 @@ namespace BusinessServices
         ret.ErrorMessage = ex.Message;
       }
       return ret;
-    }
-
-    private List<BussinesService.Interfaces.Responses.Project.Note> MapProjectNotes(List<DataModel.Note> projectNotes)
-    {
-      List<BussinesService.Interfaces.Responses.Project.Note> notes = new List<BussinesService.Interfaces.Responses.Project.Note>();
-      if(projectNotes != null && projectNotes.Count > 0)
-      {
-        foreach(var note in projectNotes)
-        {
-          notes.Add(new BussinesService.Interfaces.Responses.Project.Note()
-          {
-            AuthorId = (long)note.Author,
-            Content = note.Text,
-            DateCreated = (DateTime)note.DateCreated,
-            NoteId = note.Id,
-            ProjectId = note.ProjectId,
-            ProjectName = GetProjectNameById(note.ProjectId),
-            AuthorName = GetAuthorById(note.Author)
-          });
-        }
-      }
-
-      return notes;
-    }
-
-    private string GetAuthorById(long? author)
-    {
-      string authorName = string.Empty;
-      if(author != null)
-      {
-        var user = _unitOfWork.UserRepository.Get(x => x.Id == author).FirstOrDefault();
-        if(user != null)
-        {
-          authorName = user.UserName;
-        }
-      }
-      return authorName;
-    }
-
-    private string GetProjectNameById(long projectId)
-    {
-      string projectName = string.Empty;
-      var project = _unitOfWork.ProjectRepository.Get(x => x.Id == projectId).FirstOrDefault();
-      if(project != null)
-      {
-        projectName = project.Name;
-      }
-
-      return projectName;
-    }
-
-    private List<ProjectEntity> MapProjectsList(List<ProjectResult> projects)
-    {
-      List<ProjectEntity> projectsMapped = new List<ProjectEntity>();
-
-      foreach (var item in projects)
-      {
-        projectsMapped.Add(new ProjectEntity() { Id = item.ProjectId, Name = item.Name, OwnerId = item.OwnerId, Owner = item.Owner });
-      }
-
-      return projectsMapped;
     }
 
     public BaseProjectReturn GetProjectByName(string projectName)
@@ -418,15 +340,101 @@ namespace BusinessServices
       return null;
     }
 
+    #endregion
+
+
+    #region mappers and helpers
+    private List<ProjectEntity> MapProjectsList(List<ProjectResult> projects)
+    {
+      List<ProjectEntity> projectsMapped = new List<ProjectEntity>();
+
+      foreach (var item in projects)
+      {
+        projectsMapped.Add(new ProjectEntity() { Id = item.ProjectId, Name = item.Name, OwnerId = item.OwnerId, Owner = item.Owner });
+      }
+
+      return projectsMapped;
+    }
+
     private BaseProjectReturn MapProject(Project project)
     {
       BaseProjectReturn ret = new BaseProjectReturn();
       ret.Id = project.Id;
       ret.Name = project.Name;
-      ret.Owner =  project.OwnerId != null ? (long)project.OwnerId : 0;
+      ret.Owner = project.OwnerId != null ? (long)project.OwnerId : 0;
       return ret;
     }
 
-   
+    private List<long> CheckProjectAccessForUser(long userId)
+    {
+      List<long> projectIDs = new List<long>();
+      var role = _unitOfWork.UserInRoleRepository.Get().Where(x => x.UserId == userId).SingleOrDefault();
+      if (role != null)
+      {
+        long roleId = role.RoleId;
+        var projectAccess = _unitOfWork.RoleClaimsRepository.GetAll().Where(x => x.RoleId == roleId).ToList();
+        if (projectAccess != null && projectAccess.Count > 0)
+        {
+          foreach (var access in projectAccess)
+          {
+            projectIDs.Add(access.ProjectId);
+          }
+        }
+      }
+
+      return projectIDs;
+    }
+
+    private List<BussinesService.Interfaces.Responses.Project.Note> MapProjectNotes(List<DataModel.Note> projectNotes)
+    {
+      List<BussinesService.Interfaces.Responses.Project.Note> notes = new List<BussinesService.Interfaces.Responses.Project.Note>();
+      if (projectNotes != null && projectNotes.Count > 0)
+      {
+        foreach (var note in projectNotes)
+        {
+          notes.Add(new BussinesService.Interfaces.Responses.Project.Note()
+          {
+            AuthorId = (long)note.Author,
+            Content = note.Text,
+            DateCreated = (DateTime)note.DateCreated,
+            NoteId = note.Id,
+            ProjectId = note.ProjectId,
+            ProjectName = GetProjectNameById(note.ProjectId),
+            AuthorName = GetAuthorById(note.Author)
+          });
+        }
+      }
+
+      return notes;
+    }
+
+    private string GetAuthorById(long? author)
+    {
+      string authorName = string.Empty;
+      if (author != null)
+      {
+        var user = _unitOfWork.UserRepository.Get(x => x.Id == author).FirstOrDefault();
+        if (user != null)
+        {
+          authorName = user.UserName;
+        }
+      }
+      return authorName;
+    }
+
+    private string GetProjectNameById(long projectId)
+    {
+      string projectName = string.Empty;
+      var project = _unitOfWork.ProjectRepository.Get(x => x.Id == projectId).FirstOrDefault();
+      if (project != null)
+      {
+        projectName = project.Name;
+      }
+
+      return projectName;
+    }
+
+    #endregion
+
   }
 }
