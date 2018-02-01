@@ -47,8 +47,25 @@ namespace BusinessServices
 
           _unitOfWork.ProjectRepository.Insert(mappedProject);
           _unitOfWork.Save();
-          scope.Complete();
+
           ret.Id = mappedProject.Id;
+
+          //assign project to existing role of the user
+          var role = _unitOfWork.UserInRoleRepository.Get().Where(x => x.UserId == mappedProject.OwnerId).Single();
+
+          if (role != null)
+          {
+            _unitOfWork.RoleClaimsRepository.Insert(new RoleClaimsOnProject()
+            {
+              ProjectId = mappedProject.Id,
+              RoleId = role.RoleId,
+              HaveAcess = true
+            });
+
+            _unitOfWork.Save();
+          }
+
+          scope.Complete();
 
         }
       }

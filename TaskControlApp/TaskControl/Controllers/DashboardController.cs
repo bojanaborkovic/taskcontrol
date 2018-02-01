@@ -15,7 +15,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TaskControl.Controllers
 {
-  [Authorize(Roles = "Admin, IT Admin, User")]
+  //[Authorize(Roles = "Admin, IT Admin, User")]
   public class DashboardController : Controller
   {
     private TaskServiceClient taskServiceClient = new TaskServiceClient("tasks") { DoSerialize = true };
