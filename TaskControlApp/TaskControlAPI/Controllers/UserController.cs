@@ -189,7 +189,7 @@ namespace TaskControlAPI.Controllers
       try
       {
         var ret = _userService.AddUserToRole(userInRole);
-        if (ret == null)
+        if (ret != null && ret.StatusCode == "Success")
         {
           _log.DebugFormat("AddUserToRole finished with");
           return Request.CreateResponse(HttpStatusCode.OK);

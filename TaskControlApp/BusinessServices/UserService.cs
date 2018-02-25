@@ -269,7 +269,7 @@ namespace BusinessServices
           throw new Exception(string.Format("Role with Id {0} does not exist!", userInRole.RoleId));
         }
 
-        var oldUserInRole = _unitOfWork.UserInRoleRepository.GetByID(userInRole.UserId);
+        var oldUserInRole = _unitOfWork.UserInRoleRepository.GetByID(userInRole.UserId, userInRole.RoleId);
 
         //no role assigned to user
         if (oldUserInRole == null)
